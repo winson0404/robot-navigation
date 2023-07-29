@@ -1,0 +1,13 @@
+python download.py --save_path ../../data/ \
+                   --test \
+                   --dataset
+
+
+
+// original
+python download.py --save_path <PATH_TO_SAVE> \
+                   --train \
+                   --test \
+                   --subset \
+                   --annotations \
+                   --dataset

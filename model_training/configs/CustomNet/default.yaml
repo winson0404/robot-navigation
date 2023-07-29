@@ -1,0 +1,36 @@
+project_name: Table_CustomNet
+experiment_name: tf_convert_test4_sgd
+dataset:
+  dataset_path: /home/weixiong0404/Documents/table-nav/data/blue_pad
+  targets:
+  - front
+  - left
+  - right
+  - previous
+  image_size: [320, 240]
+  subset: -1
+random_seed: 42
+device: 'cuda'
+model:
+  name: 'CustomNet'  # 'MobileNetV3_large' or 'AlexNet' or 'WinsonNet'
+  pretrained: False
+  freezed: False
+  start_epoch: 0
+  full_frame: False
+optimizer:
+  optimizer: sgd # adam, sgd, rmsprop
+  lr: 0.0005
+  momentum: 0.9
+  weight_decay: 0.0001
+scheduler:
+  start_factor: 0.001
+train_params:
+  epochs: 100
+  num_workers: 16
+  train_batch_size: 1
+  validation_batch_size: 1
+  early_stopping: 10
+  dropout: 0
+metric_params:
+  metrics: ['accuracy', 'f1_score', 'precision', 'recall']
+  average: 'weighted'
