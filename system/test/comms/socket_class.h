@@ -19,24 +19,25 @@ namespace comms
     {
     private:
         const int port;
-        int server_socket;
+        SOCKET server_socket;
         const char *host;
 
     public:
         SocketServer(const int port, const char *host);
         ~SocketServer();
         bool Listen();
+        SOCKET GetServerSocket();
         RemoteClient AcceptConnection();
         bool Send(SOCKET socket, const char *data, int data_length);
         bool Receive(SOCKET socket, char *data, int data_length);
-        void CloseSocket();
+        void CloseSocket(SOCKET socket);
     };
 
     class SocketClient
     {
     private:
         const int port;
-        int client_socket;
+        SOCKET client_socket;
         const char *host;
 
     public:
@@ -45,6 +46,6 @@ namespace comms
         int Connect(const char *host);
         bool Send(SOCKET socket, const char *data, int data_length);
         bool Receive(SOCKET socket, char *data, int data_length);
-        void CloseSocket();
+        void CloseSocket(SOCKET socket);
     };
 }

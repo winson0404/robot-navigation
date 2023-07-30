@@ -8,7 +8,6 @@
 
 #include "socket_class.h"
 
-
 comms::SocketServer::SocketServer(const int port, const char *host) : port(port), server_socket(INVALID_SOCKET), host(host)
 {
     this->server_socket = socket(AF_INET, SOCK_STREAM, 0);

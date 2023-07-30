@@ -8,16 +8,17 @@ int main(){
 
     comms::SocketClient client(PORT, HOST);
 
-    const char* data = "From Client 1";
+    const char* data = "Hi from Client ";
     char output[1024];
     // connect to server
-    int client_socket= client.Connect(HOST);
+    int host_socket= client.Connect(HOST);
     
     // send data to server
 
 
-    client.Send(client_socket, data, 1024);
+    client.Send(host_socket, data, 1024);
 
-    client.Receive(client_socket, output, 1024);
+    client.Receive(host_socket, output, 1024);
+    std::cout << "Received from server: " << output << std::endl;
 
 }

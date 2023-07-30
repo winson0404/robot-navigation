@@ -8,18 +8,23 @@
 
 #include "socket_class.h"
 
-
-
-void handleClient(comms::RemoteClient client, comms::SocketServer& server) {
+void handleClient(comms::RemoteClient client, comms::SocketServer &server)
+{
     char buffer[1024];
-    while (true) {
+    while (true)
+    {
 
         // Receive data from the client
 
-        if (!server.Receive(client.client_socket, buffer, 1024)){
+        if (!server.Receive(client.client_socket, buffer, 1024))
+        {
             // exit and terminate the thread
+            server.CloseSocket(client.client_socket);
             break;
         }
+        std::cout << "Received from client: " << buffer << std::endl;
+
+        server.Send(client.client_socket, buffer, strlen(buffer));
 
         // int bytesRead = recv(client.client_socket, buffer, sizeof(buffer), 0);
         // if (bytesRead <= 0) {
@@ -35,16 +40,11 @@ void handleClient(comms::RemoteClient client, comms::SocketServer& server) {
     }
 }
 
-int main() {
+int main()
+{
     const int BACKLOG = 5;
     comms::RemoteClient client;
     comms::SocketServer server(PORT, HOST);
-
-
-    if (!server.Listen()){
-        std::cerr << "Error listening for connections!" << std::endl;
-        return 1;
-    }
 
     // std::cout << "Server started. Listening on port " << comms:PORT << std::endl;
 
@@ -53,8 +53,15 @@ int main() {
     // Accept incoming connections and create a thread for each client
     while (true)
     {
+
+        if (!server.Listen())
+        {
+            std::cerr << "Error listening for connections!" << std::endl;
+            return 1;
+        }
         client = server.AcceptConnection();
-        if (client.client_socket == -1) {
+        if (client.client_socket == -1)
+        {
             std::cerr << "Error accepting connection!" << std::endl;
             continue;
         }
@@ -63,7 +70,7 @@ int main() {
         clientThreads.back().detach();
     }
 
-    server.CloseSocket();
-    
+    server.CloseSocket(server.GetServerSocket());
+
     return 0;
 }

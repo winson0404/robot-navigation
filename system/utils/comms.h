@@ -1,3 +1,4 @@
+#pragma once
 #include <sys/socket.h>
 #include <string>
 #include "utils.h"
@@ -7,24 +8,7 @@
 //create a class for tcp socket
 
 namespace inputs{
-    class UDPServer{
-        private:
-            int sock;
-            int port;
-            int client;
-            socklen_t size;
-        public:
-            UDPServer(int port);
 
-    };
-
-    inputs::InputState listener(){
-        inputs::InputState input_state;
-
-        std::thread t0(receive_handler, "visual");
-        
-
-    }
 
     void* receive_handler(char* data){
         // char buffer[1024] = {0};
