@@ -9,44 +9,50 @@ namespace system_fnc
 {
     void handleClient(comms::RemoteClient client, comms::SocketServer &server, inputs::InputState *input_state)
     {
-
-        if (input_state == nullptr)
+        while (true)
         {
+            std::cout << "start handleClient" << std::endl;
+            if (input_state == nullptr)
+            {
 
-            std::cerr << "Input state is null!" << std::endl;
-            exit(1);
+                std::cerr << "Input state is null!" << std::endl;
+                exit(1);
+            }
+            char tag[1];
+            std::cout << "Before receive" << std::endl;
+            server.Receive(client.client_socket, tag, 1);
+            int received_tag = (int)tag[0];
+            std::cout << "tag: " << received_tag << std::endl;
+            // tag[0] = tag[0] - '0';
+
+            char length[1];
+            server.Receive(client.client_socket, length, 1);
+            int data_length = (int)length[0];
+            std::cout << "length: " << data_length << std::endl;
+
+            // char *buffer = new char[data_length];
+            char buffer[data_length];
+            server.Receive(client.client_socket, buffer, data_length);
+            switch (received_tag)
+            {
+            case inputs::VISUAL_TAG:
+                input_state->visual = inputs::visual_process(buffer);
+                break;
+            case inputs::SENSOR1_TAG:
+                input_state->sensor1 = inputs::sensor1_process(buffer);
+                break;
+            default:
+                std::cerr << "Invalid tag received: " << tag << std::endl;
+                exit(1);
+            }
         }
-        char *tag;
-        server.Receive(client.client_socket, tag, 1);
-        tag[0] = tag[0] - '0';
-
-        char* length;
-        server.Receive(client.client_socket, length, 2);
-
-        int data_length = std::stoi(length);
-        char* buffer = new char[data_length];
-        server.Receive(client.client_socket, buffer, data_length);
-
-        switch ((int)tag[0])
-        {
-        case inputs::VISUAL_TAG:
-            input_state->visual = inputs::visual_process(buffer);
-            break;
-        case inputs::SENSOR1_TAG:
-            input_state->sensor1 = inputs::sensor1_process(buffer);
-            break;
-        default:
-            std::cerr << "Invalid tag received: " << tag << std::endl;
-            exit(1);
-        }
-
-        delete[] buffer;
+        // delete[] buffer;
     }
 
     void listener(inputs::InputState *input_state)
     {
         const int port = 12345;
-        const char *host = "localhost";
+        const char *host = "127.0.0.1";
         // comms::SocketServer server(12345, "localhost");
 
         const int BACKLOG = 5;

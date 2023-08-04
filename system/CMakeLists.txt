@@ -13,6 +13,8 @@ project(table_nav_system)
 
 # Set the C++ standard version
 set(CMAKE_CXX_STANDARD 11)
+SET(GCC_COVERAGE_COMPILE_FLAGS "-fno-stack-protector")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 
 # Add the main executable target
 add_executable(table_nav_system main.cpp)

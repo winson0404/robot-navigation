@@ -52,12 +52,12 @@ namespace comms
     {
         char buffer[data_length] = {0};
         int bytesRead = recv(clientSocket, buffer, data_length, 0);
-        if (bytesRead <= 0)
-        {
-            std::cout << "Socket closed\n";
-            CloseSocket(clientSocket);
-            return false;
-        }
+        // if (bytesRead <= 0)
+        // {
+        //     std::cout << "Socket closed\n";
+        //     CloseSocket(clientSocket);
+        //     return false;
+        // }
         data = strcpy(data, buffer);
 
         return true;
