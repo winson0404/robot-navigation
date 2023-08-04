@@ -43,8 +43,8 @@ namespace inputs
         Sensor1Output *sensor1 = nullptr;
     };
 
-    VisualOutput *visual_process(char *buffer);
-    Sensor1Output *sensor1_process(char *buffer);
+    VisualOutput *visual_process(char *buffer, int data_length);
+    Sensor1Output *sensor1_process(char *buffer, int data_length);
 
 }
 

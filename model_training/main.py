@@ -7,6 +7,7 @@ from utils.util import full_frame_preprocess, full_frame_postprocess, crop_roi_i
 from omegaconf import OmegaConf
 from utils.transform import Compose
 import socket
+import time
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
 model_path = r"output/Table_CustomNet/tf_convert_test3/best_model.onnx"
@@ -75,7 +76,8 @@ if __name__ == "__main__":
                 client.Send('0', out.argmax())
                 direction = target_dict[out.argmax()]
                 # print(direction)
-                cv2.imshow(camera_name, frame)
+                # cv2.imshow(camera_name, frame)
+                time.sleep(2)
         except Exception as e:
             print(e)
             # breakpoint()

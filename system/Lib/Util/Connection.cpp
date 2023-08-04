@@ -36,10 +36,10 @@ namespace system_fnc
             switch (received_tag)
             {
             case inputs::VISUAL_TAG:
-                input_state->visual = inputs::visual_process(buffer);
+                input_state->visual = inputs::visual_process(buffer, data_length);
                 break;
             case inputs::SENSOR1_TAG:
-                input_state->sensor1 = inputs::sensor1_process(buffer);
+                input_state->sensor1 = inputs::sensor1_process(buffer, data_length);
                 break;
             default:
                 std::cerr << "Invalid tag received: " << tag << std::endl;

@@ -8,6 +8,7 @@ int main(){
 
     comms::SocketClient client(PORT, HOST);
 
+    
     const char* data = "Hi from Client ";
     char output[1024];
     // connect to server
