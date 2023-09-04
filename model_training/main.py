@@ -50,8 +50,8 @@ class TCP_Client():
             
 if __name__ == "__main__":
     
-    camera_name = "/dev/video0"
-    cap = cv2.VideoCapture(0)
+    camera_name = "/dev/video2"
+    cap = cv2.VideoCapture(camera_name)
     inf_session = ort.InferenceSession(model_path, providers=provider)
     model_out_name = [i.name for i in inf_session.get_outputs()]
     transform = Compose(input_shape[1:])
@@ -76,8 +76,8 @@ if __name__ == "__main__":
                 client.Send('0', out.argmax())
                 direction = target_dict[out.argmax()]
                 # print(direction)
-                # cv2.imshow(camera_name, frame)
-                time.sleep(2)
+                cv2.imshow(camera_name, frame)
+                # time.sleep(2)
         except Exception as e:
             print(e)
             # breakpoint()
