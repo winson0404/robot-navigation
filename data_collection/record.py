@@ -2,7 +2,7 @@ import cv2
 import os
 
 
-category = ["front", "left", "right"]
+category = ["no_objects", "left", "middle", "right", "all"]
 
 def validation_save_location(save_location):
     if not os.path.exists(save_location):
@@ -19,27 +19,17 @@ def capture_postprocess(counter, default_direction, save_root_path, pressed_key,
         cv2.imwrite(save_path, frame)
         print("Saved", save_path)
         cv2.destroyWindow("Captured Frame")
+
         
-    if (pressed_key == ord('1')):
-        direction = category[0]
-        save_path = os.path.join(save_root_path, direction, f"{direction}{counter}.png")
-        cv2.imwrite(save_path, frame)
-        print("Saved", save_path)
-        cv2.destroyWindow("Captured Frame")
-    if (pressed_key == ord('2')):
-        direction = category[1]
-        save_path = os.path.join(save_root_path, direction, f"{direction}{counter}.png")
-        cv2.imwrite(save_path, frame)
-        print("Saved", save_path)
-        cv2.destroyWindow("Captured Frame")
-    if (pressed_key == ord('3')):
-        direction = category[2]
-        save_path = os.path.join(save_root_path, direction, f"{direction}{counter}.png")
-        cv2.imwrite(save_path, frame)
-        print("Saved", save_path)
-        cv2.destroyWindow("Captured Frame")
+    for i in range(len(category)):
+        if (pressed_key == ord(str(i+1))):
+            direction = category[i]
+            validation_save_location(os.path.join(save_root_path, direction))
+            save_path = os.path.join(save_root_path, direction, f"{direction}{counter}.png")
+            cv2.imwrite(save_path, frame)
+            print("Saved", save_path)
+            cv2.destroyWindow("Captured Frame")
         
-    
     if (pressed_key == ord('e')):
         # cap.release()
         cv2.destroyWindow("Captured Frame")
