@@ -1,7 +1,7 @@
 project_name: Table_CustomNet
 experiment_name: tf_convert_test4_sgd
 dataset:
-  dataset_path: /home/weixiong0404/Documents/table-nav/data/blue_pad
+  dataset_path: D:\Wei_Xiong\projects\table-navigation\data
   targets:
   - no_objects
   - left
@@ -10,7 +10,7 @@ dataset:
   - all
   - left_mid
   - right_mid
-  image_size: [320, 240]
+  image_size: [320, 96]
   subset: -1
 random_seed: 42
 device: 'cuda'

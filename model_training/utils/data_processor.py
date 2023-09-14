@@ -58,7 +58,7 @@ class DataProcessor:
         noisy_image = cv2.add(image, noise)
         return noisy_image
     
-    def crop_roi(frame, x, y, w, h):
+    def crop_roi(self, frame, x, y, w, h):
         x = int(x)
         y = int(y)
         w = int(w)

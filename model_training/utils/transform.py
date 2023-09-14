@@ -8,7 +8,7 @@ class Compose(object):
         image_height, image_width = input_size
         self.transform = transforms.Compose([
             transforms.ToPILImage(),
-            transforms.Resize((image_height, image_width)),
+            # transforms.Resize((image_height, image_width)),
             # transforms.Resize((224, 224)),
             # transforms.Grayscale(num_output_channels=3),
             transforms.ToTensor(),

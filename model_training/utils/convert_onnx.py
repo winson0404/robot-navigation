@@ -24,7 +24,6 @@ def save_onnx(model: nn.Module, output_dir: str, name: str, input_shape: Tuple[i
     """
 
     onnx_path = os.path.join(output_dir, f"{name}.onnx")
-
     dummy_input = torch.randn(1, *input_shape)
     transform = Compose(input_shape[1:])
     # breakpoint()

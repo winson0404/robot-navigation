@@ -5,7 +5,7 @@ from utils.transform import Compose
 from utils.constants import DATASET_OPERATION
 from utils.logger import Logger
 from utils.convert_onnx import save_onnx
-from dataset.dataset import BluePadDataset
+from dataset.dataset import MixedSurfaceDataset
 import logging
 from omegaconf import OmegaConf
 from tqdm import tqdm
@@ -59,7 +59,7 @@ class ClassificationTrainer:
         
         return optimizer
     
-    def _run_epoch(self, device:str, current_epoch:int, train_loader:BluePadDataset, lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR=None)->None:
+    def _run_epoch(self, device:str, current_epoch:int, train_loader:MixedSurfaceDataset, lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR=None)->None:
         
         # set to train mode
         self.model.train()
@@ -85,7 +85,8 @@ class ClassificationTrainer:
 
                 # breakpoint()
                 #convert labels to tensor
-                labels = torch.tensor(labels, dtype=torch.long, device=device)
+                # breakpoint()
+                labels = torch.tensor(labels[0], dtype=torch.long, device=device)
                 loss = criterion(output, labels)
             
                 loss_value = loss.item()
@@ -107,7 +108,7 @@ class ClassificationTrainer:
         if self.logger is not None:
             self.logger.log("train", {"loss": loss_value, "epoch": current_epoch})
 
-    def _run_eval(self, device:str, current_epoch:int, validation_loader:BluePadDataset, mode:str="valid")->None:
+    def _run_eval(self, device:str, current_epoch:int, validation_loader:MixedSurfaceDataset, mode:str="valid")->None:
         f1_score = None
         
         # theres a chance that user dont wanna do validation
@@ -146,13 +147,13 @@ class ClassificationTrainer:
         
         transform = Compose(input_size=self.conf.dataset.image_size)
         
-        train_dataset = BluePadDataset(
+        train_dataset = MixedSurfaceDataset(
             self.conf,
             op=DATASET_OPERATION.TRAIN,
             transform=transform
         )
         
-        validation_dataset = BluePadDataset(
+        validation_dataset = MixedSurfaceDataset(
             self.conf,
             op=DATASET_OPERATION.VALIDATION,
             transform=transform
@@ -186,7 +187,7 @@ class ClassificationTrainer:
         return model
     
     def run_test(self)->None:
-        train_dataset = BluePadDataset(
+        train_dataset = MixedSurfaceDataset(
             self.conf,
             op=DATASET_OPERATION.TEST,
             transform=Compose(input_size=self.conf.dataset.image_size)

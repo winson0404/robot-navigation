@@ -8,7 +8,7 @@ setting = {
     "weight_decay": [0.0001, 0.0005, 0.001],
     "batch_size": [16, 32],
     "optimizer": ["sgd", "adam", "rmsprop"],
-    "epochs": [10, 20, 30],
+    "epochs": [80, 100, 120],
     "dropout": [0.2, 0.3, 0.4, 0.5],
 }
 
@@ -19,18 +19,19 @@ variation_numbers = 10
 # choose 3 different setting randomly
 # random_seed = 42
 
-config_root = "configs"
+config_root = "configs/CustomNetV2"
 
-conf = OmegaConf.load("configs/default.yaml")
-project_name = "MobileNetV3_small"
-image_size = 224
+conf = OmegaConf.load("configs/CustomNetV2/default.yaml")
+project_name = "CustomNetV2"
+image_width = 320
+image_height = 96
 os.makedirs(os.path.join(config_root, project_name), exist_ok=True)
 for i in range(variation_numbers):
     conf.project_name = project_name
     
     # random settings
     conf.model.name = project_name
-    conf.dataset.image_size = [image_size, image_size]
+    conf.dataset.image_size = [image_width, image_height]
     conf.optimizer.optimizer = random.choice(setting["optimizer"])
     conf.optimizer.lr = random.choice(setting["lr"])
     conf.optimizer.momentum = random.choice(setting["momentum"])

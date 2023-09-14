@@ -190,6 +190,7 @@ def build_model(
         ),
         "AlexNet": AlexNet(num_classes=num_classes, pretrained=pretrained, freezed=freezed, dropout=conf.train_params.dropout),
         "CustomNet": CustomNet(num_classes=num_classes, dropout=conf.train_params.dropout),
+        "CustomNetV2": CustomNet(num_classes=num_classes, dropout=conf.train_params.dropout),
     }
 
     model = models[model_name]

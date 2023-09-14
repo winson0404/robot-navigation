@@ -1,5 +1,5 @@
 project_name: CustomNetV2
-experiment_name: default
+experiment_name: nine_sgd_120
 dataset:
   dataset_path: D:\Wei_Xiong\projects\table-navigation\data
   targets:
@@ -10,30 +10,36 @@ dataset:
   - all
   - left_mid
   - right_mid
-  image_size: [320, 240]
+  image_size:
+  - 320
+  - 96
   subset: -1
 random_seed: 42
-device: 'cuda'
+device: cuda
 model:
-  name: 'CustomNetV2'  # 'MobileNetV3_large' or 'AlexNet' or 'WinsonNet'
-  pretrained: False
-  freezed: False
+  name: CustomNetV2
+  pretrained: false
+  freezed: false
   start_epoch: 0
-  full_frame: False
+  full_frame: false
 optimizer:
-  optimizer: sgd # adam, sgd, rmsprop
-  lr: 0.005
+  optimizer: sgd
+  lr: 0.0001
   momentum: 0.9
   weight_decay: 0.0005
 scheduler:
   start_factor: 0.001
 train_params:
-  epochs: 20
+  epochs: 120
   num_workers: 16
   train_batch_size: 32
   validation_batch_size: 32
   early_stopping: 10
-  dropout: 0.5
+  dropout: 0.4
 metric_params:
-  metrics: ['accuracy', 'f1_score', 'precision', 'recall']
-  average: 'weighted'
+  metrics:
+  - accuracy
+  - f1_score
+  - precision
+  - recall
+  average: weighted

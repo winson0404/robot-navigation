@@ -128,6 +128,8 @@ class MixedSurfaceDataset(torch.utils.data.Dataset):
         
         if self.transform:
             for(i, image) in enumerate(image_o):
+                image = self.processor.crop_roi(image, 0, 240*0.6, 320, 240*0.4)
+                # breakpoint()
                 image_o[i] = self.transform(image)
         
         

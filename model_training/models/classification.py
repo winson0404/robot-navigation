@@ -96,11 +96,11 @@ class CustomNet(torch.nn.Module):
 			nn.ReLU(inplace=True),
 			nn.MaxPool2d(kernel_size=2, stride=2),
 		)
-  
+
 		self.head = nn.Sequential(
 			nn.Dropout(p=dropout, inplace=True),
    			# nn.Linear(64 * 40 * 30, 128), # image size should be 320x240
-   			nn.Linear(64 * 40 * 30, 128), # image size should be 320x240
+   			nn.Linear(64 * 40 * 12, 128), # image size should be 320x240
 			nn.ReLU(inplace=True),
 			nn.Linear(128, 128),
 			nn.ReLU(inplace=True),
