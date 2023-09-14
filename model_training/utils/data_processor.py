@@ -57,3 +57,10 @@ class DataProcessor:
         noise = np.random.normal(mean, stddev, image.shape).astype(np.uint8)
         noisy_image = cv2.add(image, noise)
         return noisy_image
+    
+    def crop_roi(frame, x, y, w, h):
+        x = int(x)
+        y = int(y)
+        w = int(w)
+        h = int(h)
+        return frame[y:y+h, x:x+w]
