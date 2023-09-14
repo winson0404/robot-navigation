@@ -2,10 +2,11 @@ import cv2
 import os
 
 
-counter = 0
-image_width = 640 
+image_width = 640
 image_height = 480
-category = ["no_objects", "left", "middle", "right", "all"]
+camera_index = 2
+category = ["no_objects", "left", "middle", "right", "all" ,"left_mid", "right_mid"]
+
 
 def validation_save_location(save_location):
     if not os.path.exists(save_location):
@@ -14,6 +15,20 @@ def validation_save_location(save_location):
         return False
     
     return True
+
+def get_counter():
+    if validation_save_location("counter.txt"):
+        with open("counter.txt", "r") as f:
+            counter = int(f.read())
+    else:
+        counter = 0
+        
+    return counter
+
+def update_counter(counter):
+    with open("counter.txt", "w") as f:
+        f.write(str(counter))
+    return counter
         
 def draw_rectangle(frame, x, y, w, h):
     x = int(x)
@@ -36,15 +51,18 @@ def save_image(frame, path):
     # write counter
     cv2.imwrite(path, frame)
     print("Saved", path)
+    counter = get_counter()
     with open("counter.txt", "w") as f:
         f.write(str(counter))
     counter+=1
+    update_counter(counter)
         
 def capture_postprocess(default_direction, save_root_path, pressed_key, frame, original_frame):
     cv2.imshow("Captured Frame", frame)
     pressed_key = cv2.waitKey(0) & 0xFF
     
     if (pressed_key == 32):
+        counter = get_counter()
         save_path = os.path.join(save_root_path, default_direction, f"{default_direction}{counter}.png")
         save_image(original_frame, save_path)
         cv2.destroyWindow("Captured Frame")
@@ -52,6 +70,7 @@ def capture_postprocess(default_direction, save_root_path, pressed_key, frame, o
         
     for i in range(len(category)):
         if (pressed_key == ord(str(i+1))):
+            counter = get_counter()
             direction = category[i]
             validation_save_location(os.path.join(save_root_path, direction))
             save_path = os.path.join(save_root_path, direction, f"{direction}{counter}.png")
@@ -62,16 +81,14 @@ def capture_postprocess(default_direction, save_root_path, pressed_key, frame, o
         # cap.release()
         cv2.destroyWindow("Captured Frame")
 
-
 if __name__ == "__main__":
-    
     if validation_save_location("counter.txt"):
         with open("counter.txt", "r") as f:
             counter = int(f.read())
     else:
         counter = 0
-    
-    
+
+
     while(True):
         validation_save_location("output")
         # os.system("pause")
@@ -80,11 +97,16 @@ if __name__ == "__main__":
             break
         table = os.path.join("output", table)
         validation_save_location(table)
-
-        direction = input("Enter direction: ")
+        
+        prompt = "Available directions:\n"
+        for i in range(len(category)):
+            prompt += f"{i+1}. {category[i]} \n"
+        
+        
+        direction = category[int(input(prompt))-1]
         save_path = f"./{table}/{direction}/"
         validation_save_location(save_path)
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(camera_index)
         while(True):
             ret, frame = cap.read()
             # write the bottom 20% of the frame
@@ -99,4 +121,4 @@ if __name__ == "__main__":
             if (pressed_key == ord('q')):
                 cap.release()
                 cv2.destroyAllWindows()
-                break
+                break   
