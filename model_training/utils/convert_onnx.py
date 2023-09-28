@@ -44,6 +44,7 @@ def save_onnx(model: nn.Module, output_dir: str, name: str, input_shape: Tuple[i
         output_names=["output"])
     
     model = model.to("cuda")
+    print(f"Model saved to {onnx_path}")
 
 
 if __name__ == "__main__":

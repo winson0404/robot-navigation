@@ -11,10 +11,10 @@ import socket
 import time
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"/home/weixiong0404/Documents/workspace/table-navigation/model_training/output/CustomNetV2/two_adam_80/best_model.onnx"
+model_path = r"D:\Wei_Xiong\projects\table-navigation\model_training\output\CustomNetV2\two_adam_80_default\best_model.onnx"
 provider = ['CPUExecutionProvider']
 threshold = 0.5
-conf = OmegaConf.load("configs/CustomNetv2/default.yaml")
+conf = OmegaConf.load("configs/CustomNetv2/CustomNetv2/default.yaml")
 input_shape=(3, conf.dataset.image_size[0], conf.dataset.image_size[1])
 target_dict = {i: label for i, label in enumerate(conf.dataset.targets)}
 
@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 # resize frame 
                 frame = cv2.resize(frame, (320, 240))
                 roi = processor.crop_roi(frame, 0, 240*0.6, 320, 240*0.4)
-                roi = cv2.resize(roi, (96, 320))
+                # roi = cv2.resize(roi, (96, 320))
                 out = inf_session.run(model_out_name, {'images': transform(roi).unsqueeze(0).numpy()})[0]
                 # bbox, score = full_frame_postprocess(out, ratio, dwdh, threshold)
                 # if score >= threshold:
@@ -108,6 +108,7 @@ if __name__ == "__main__":
                 #     draw_image(frame, bbox, score, gesture)
                 # client.Send('0', out.argmax())
                 direction = target_dict[out.argmax()]
+                print(direction)
                 # print(direction)
                 # breakpoint()
                 frame = post_process(frame, direction)

@@ -86,6 +86,7 @@ docs/_build/
 
 # Independent folder
 /experiments/
+/data_collection/
 /data/
 output/
 /wandb/
