@@ -11,10 +11,10 @@ import socket
 import time
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"D:\Wei_Xiong\projects\table-navigation\model_training\output\CustomNetV2\two_adam_80_default\best_model.onnx"
+model_path = r"output/CustomNetV2/two_adam_80_default/best_model.onnx"
 provider = ['CPUExecutionProvider']
 threshold = 0.5
-conf = OmegaConf.load("configs/CustomNetv2/CustomNetv2/default.yaml")
+conf = OmegaConf.load("output/CustomNetV2/two_adam_80_default/default.yaml")
 input_shape=(3, conf.dataset.image_size[0], conf.dataset.image_size[1])
 target_dict = {i: label for i, label in enumerate(conf.dataset.targets)}
 
@@ -79,11 +79,11 @@ class TCP_Client():
 if __name__ == "__main__":
     
     camera_name = "/dev/video0"
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(camera_name)
     inf_session = ort.InferenceSession(model_path, providers=provider)
     model_out_name = [i.name for i in inf_session.get_outputs()]
     transform = Compose(input_shape[1:])
-    # client = TCP_Client('127.0.0.1', 12345)
+    client = TCP_Client('127.0.0.1', 12345)
     processor = DataProcessor()
         
     while cap.isOpened():
@@ -106,7 +106,7 @@ if __name__ == "__main__":
                 #     out = model_path.run(gesture_out_name, {'images': cropped_image/255})[0]
                 #     gesture = target_dict[out.argmax()]
                 #     draw_image(frame, bbox, score, gesture)
-                # client.Send('0', out.argmax())
+                client.Send('0', out.argmax())
                 direction = target_dict[out.argmax()]
                 print(direction)
                 # print(direction)

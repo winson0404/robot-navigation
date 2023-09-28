@@ -12,24 +12,33 @@ namespace inputs
         {
             if (i == 2)
                 a = (int)buffer[i];
-            std::cout << (int)buffer[i] << std::endl;
+            // std::cout << (int)buffer[i] << std::endl;
         }
         switch (a)
         {
         case 0:
-            std::cout << "forward" << std::endl;
+            std::cout << "Received from model: " << "no_objects" << std::endl;
             break;
         case 1:
-            std::cout << "left" << std::endl;
+            std::cout << "Received from model: " <<"left" << std::endl;
             break;
         case 2:
-            std::cout << "right" << std::endl;
+            std::cout << "Received from model: " << "mid" << std::endl;
             break;
         case 3:
-            std::cout << "backward" << std::endl;
+            std::cout << "Received from model: " << "right" << std::endl;
+            break;
+        case 4:
+            std::cout << "Received from model: " << "all" << std::endl;
+            break;
+        case 5:
+            std::cout << "Received from model: " << "left_mid" << std::endl;
+            break;
+        case 6:
+            std::cout << "Received from model: " << "right_mid" << std::endl;
             break;
         default:
-            std::cout << "default" << std::endl;
+            std::cout << "invalid data, discarding" << std::endl;
             break;
         }
         output->prediction = a;
