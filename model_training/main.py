@@ -78,7 +78,7 @@ class TCP_Client():
             
 if __name__ == "__main__":
     
-    camera_name = "/dev/video0"
+    camera_name = "/dev/video2"
     cap = cv2.VideoCapture(camera_name)
     inf_session = ort.InferenceSession(model_path, providers=provider)
     model_out_name = [i.name for i in inf_session.get_outputs()]
