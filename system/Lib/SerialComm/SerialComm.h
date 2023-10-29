@@ -1,5 +1,6 @@
 #pragma once
 #include <unistd.h>
+#include <libserial/SerialPort.h>
 // #include <iostream>
 #define SOCKET int
 #define INVALID_SOCKET -1
@@ -18,35 +19,18 @@ namespace comms
 
     class SerialComm
     {
-    protected:
-        const int port;
+    private:
+        const char *serial_port_name;
+        LibSerial::SerialPort serial_port;
         SOCKET _socket;
         const char *host;
 
     public:
-        SerialComm(const int port, const char *host);
+        SerialComm(const char *serial_port);
         ~SerialComm();
-        SOCKET GetSocket();
-        bool Send(SOCKET clientSocket, const char *data, int data_length);
-        bool Receive(SOCKET clientSocket, char *data, int data_length);
-        void CloseSocket(SOCKET socket);
-    };
-
-    class SocketServer : public SerialComm
-    {
-    public:
-        SocketServer(const int port, const char *host);
-        ~SocketServer();
-        bool Listen(int max);
-        RemoteClient AcceptConnection();
-    };
-
-    class SocketClient : public SerialComm
-    {
-
-    public:
-        SocketClient(const int port, const char *host);
-        ~SocketClient();
-        int Connect(const char *host);
+        bool Initialize();
+        bool Send();
+        bool Receive();
+        bool ClosePort();
     };
 }
