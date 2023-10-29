@@ -1,15 +1,25 @@
 #pragma once
 #include <unistd.h>
 #include <libserial/SerialPort.h>
+#include <string>
 // #include <iostream>
-#define SOCKET int
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-#define PORT 12345
-#define HOST "127.0.0.1"
-
 namespace comms
 {
+    struct SerialSettings{
+        SerialSettings():
+            serial_port_name("/dev/ttyACM0"),
+            flow_control(LibSerial::FlowControl::FLOW_CONTROL_NONE),
+            parity(LibSerial::Parity::PARITY_NONE),
+            stop_bits(LibSerial::StopBits::STOP_BITS_1),
+            baud_rate(LibSerial::BaudRate::BAUD_9600)
+        {}
+        char *serial_port_name;
+        LibSerial::FlowControl flow_control;
+        LibSerial::Parity parity;
+        LibSerial::StopBits stop_bits;
+        LibSerial::BaudRate baud_rate;
+    };
+
     struct RemoteClient
     {
         int client_socket;
@@ -20,17 +30,16 @@ namespace comms
     class SerialComm
     {
     private:
-        const char *serial_port_name;
+        comms::SerialSettings settings;
+        char *serial_port_name;
         LibSerial::SerialPort serial_port;
-        SOCKET _socket;
-        const char *host;
 
     public:
-        SerialComm(const char *serial_port);
+        SerialComm(comms::SerialSettings settings);
         ~SerialComm();
         bool Initialize();
-        bool Send();
-        bool Receive();
+        bool Send(std::string &data);
+        bool Receive(std::string &data);
         bool ClosePort();
     };
 }
