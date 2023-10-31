@@ -20,13 +20,6 @@ namespace comms
         LibSerial::BaudRate baud_rate;
     };
 
-    struct RemoteClient
-    {
-        int client_socket;
-        char *sin_addr;
-        __uint16_t sin_port;
-    };
-
     class SerialComm
     {
     private:
@@ -35,10 +28,11 @@ namespace comms
         LibSerial::SerialPort serial_port;
 
     public:
+        // SerialComm();
         SerialComm(comms::SerialSettings settings);
         ~SerialComm();
         bool Initialize();
-        bool Send(std::string &data);
+        bool Send(std::string data);
         bool Receive(std::string &data);
         bool ClosePort();
     };

@@ -1,5 +1,7 @@
 #include <iostream>
-#include <libserial/SerialPort.h>
+#include <string>
+// #include <libserial/SerialPort.h>
+#include "SerialComm.h"
 
 #include "Utils.h"
 
@@ -83,40 +85,49 @@ namespace system_fnc
 
     void control(movement::MOVEMENT move, char *SERIAL_PORT)
     {
-        LibSerial::SerialPort serial_port;
-        // send
-        std::cout << "================Sending Control: " << move << std::endl;
 
-        try
-        {
-            // Open the Serial Port at the desired hardware port.
-            serial_port.Open(SERIAL_PORT);
-        }
-        catch (const LibSerial::OpenFailed &)
-        {
-            std::cerr << "The serial port did not open correctly." << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        // Set the serial port settings (make sure to match with Arduino's settings)
-        // Set the baud rate of the serial port.
-        serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_9600);
 
-        // Set the number of data bits.
-        // serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_5);
+        comms::SerialSettings settings = comms::SerialSettings();
+        settings.serial_port_name = SERIAL_PORT;
+        comms::SerialComm serial_comm(settings);
 
-        // Turn off hardware flow control.
-        serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
 
-        // Disable parity.
-        serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
 
-        // Set the number of stop bits.
-        serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
+        serial_comm.Send(std::to_string((int)move));
+        // LibSerial::SerialPort serial_port;
+        // // send
+        // std::cout << "================Sending Control: " << move << std::endl;
 
-        serial_port.WriteByte((char)move);
+        // try
+        // {
+        //     // Open the Serial Port at the desired hardware port.
+        //     serial_port.Open(SERIAL_PORT);
+        // }
+        // catch (const LibSerial::OpenFailed &)
+        // {
+        //     std::cerr << "The serial port did not open correctly." << std::endl;
+        //     exit(EXIT_FAILURE);
+        // }
+        // // Set the serial port settings (make sure to match with Arduino's settings)
+        // // Set the baud rate of the serial port.
+        // serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_9600);
 
-        // Wait until the data has actually been transmitted.
-        serial_port.DrainWriteBuffer() ;
+        // // Set the number of data bits.
+        // // serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_5);
+
+        // // Turn off hardware flow control.
+        // serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
+
+        // // Disable parity.
+        // serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
+
+        // // Set the number of stop bits.
+        // serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
+
+        // serial_port.WriteByte((char)move);
+
+        // // Wait until the data has actually been transmitted.
+        // serial_port.DrainWriteBuffer() ;
     }
 
 }

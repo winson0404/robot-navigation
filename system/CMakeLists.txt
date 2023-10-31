@@ -27,6 +27,7 @@ add_executable(table_nav_system main.cpp)
 
 # Include directories for your project
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Lib/Socket)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Lib/SerialComm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Lib/Util)
 
 # Add source files for the Lib/Socket target
@@ -36,6 +37,10 @@ add_library(Socket SHARED
     Lib/Socket/Socket.cpp
     Lib/Socket/TcpSocket.h
 )
+
+add_library(SerialComm SHARED
+    Lib/SerialComm/SerialComm.cpp
+    Lib/SerialComm/SerialComm.h)
 
 add_library(Util SHARED
     Lib/Util/Input.cpp
@@ -56,10 +61,13 @@ add_library(Util SHARED
 
 # Link libraries to the main executable target
 target_link_libraries(Util Socket)
+target_link_libraries(Util SerialComm)
 target_link_libraries(table_nav_system PRIVATE Util)
-target_include_directories(table_nav_system PRIVATE ${SERIAL_INCLUDE_DIRS})
-target_link_libraries(table_nav_system PRIVATE ${SERIAL_LDFLAGS} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(table_nav_system PRIVATE ${LibSerial_LIBRARIES})
+# target_link_libraries(table_nav_system PRIVATE Socket)
+# target_link_libraries(table_nav_system PRIVATE SerialComm)
+target_include_directories(SerialComm PRIVATE ${SERIAL_INCLUDE_DIRS})
+target_link_libraries(SerialComm PRIVATE ${SERIAL_LDFLAGS} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(SerialComm PRIVATE ${LibSerial_LIBRARIES})
 
 # Optionally, you can add additional compiler flags if needed
 # For example, uncomment the following line to enable warnings:

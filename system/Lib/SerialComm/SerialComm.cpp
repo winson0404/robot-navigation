@@ -8,6 +8,7 @@
 
 namespace comms
 {
+    // SerialComm::SerialComm(){}
 
     SerialComm::SerialComm(comms::SerialSettings _settings):
         settings(_settings)
@@ -17,6 +18,12 @@ namespace comms
         // LibSerial::SerialPort serial_port;
         this->Initialize();
     }
+
+    // SerialComm::SerialComm(){
+    //     this->settings = comms::SerialSettings();
+    //     this->serial_port_name = this->settings.serial_port_name;
+    //     this->Initialize();
+    // }
 
     SerialComm::~SerialComm()
     {
@@ -29,7 +36,14 @@ namespace comms
         {
 
             this->serial_port.Open(this->settings.serial_port_name);
+
+            // Set the serial port settings (make sure to match with Arduino's settings)
+            this->serial_port.SetBaudRate(this->settings.baud_rate);
+            this->serial_port.SetFlowControl(this->settings.flow_control);
+            this->serial_port.SetParity(this->settings.parity);
+            this->serial_port.SetStopBits(this->settings.stop_bits);
             std::cout << "Successfully connected to " << this->serial_port_name << std::endl;
+
         }
 
         catch (const LibSerial::OpenFailed &)
@@ -38,17 +52,23 @@ namespace comms
             exit(EXIT_FAILURE);
         }
 
+        return true;
 
-        // Set the serial port settings (make sure to match with Arduino's settings)
-        this->serial_port.SetBaudRate(this->settings.baud_rate);
-        this->serial_port.SetFlowControl(this->settings.flow_control);
-        this->serial_port.SetParity(this->settings.parity);
-        this->serial_port.SetStopBits(this->settings.stop_bits);
+
     }
 
-    bool SerialComm::Send(std::string &data){
+    bool SerialComm::Send(std::string data){
         this->serial_port.Write(data);
         this->serial_port.DrainWriteBuffer();
+
+        return true;
+    }
+    
+    bool SerialComm::Receive(std::string &data){
+        this->serial_port.Read(data);
+
+
+        return true;
     }
 
 }
