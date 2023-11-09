@@ -44,7 +44,8 @@ add_library(SerialComm SHARED
 
 add_library(Util SHARED
     Lib/Util/Input.cpp
-    Lib/Util/Connection.cpp
+    Lib/Util/TcpConnection.cpp
+    Lib/Util/SerialConnection.cpp
     Lib/Util/PostWork.cpp
     Lib/Util/Utils.h
 )

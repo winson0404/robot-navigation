@@ -9,7 +9,6 @@ namespace system_fnc
 {
     void status_checker(inputs::InputState *input_state)
     {
-        std::cout<< "Status checker" << std::endl;
         if (input_state == nullptr)
         {
 
@@ -19,8 +18,12 @@ namespace system_fnc
 
         // previous_move = movement::LEFT;
 
+        //create artificial memory leak to test if its running
+        // int *leak = new int[1000000];
         while (true)
         {
+            // leak = new int[1000000];
+            std::cout<< "Status checker" << std::endl;
             if (input_state->visual == nullptr)
                 continue;
             if (input_state->sensor1 == nullptr)

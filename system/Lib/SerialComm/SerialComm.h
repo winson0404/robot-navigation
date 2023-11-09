@@ -7,7 +7,7 @@ namespace comms
 {
     struct SerialSettings{
         SerialSettings():
-            serial_port_name("/dev/ttyACM0"),
+            // serial_port_name("/dev/ttyACM0"),
             flow_control(LibSerial::FlowControl::FLOW_CONTROL_NONE),
             parity(LibSerial::Parity::PARITY_NONE),
             stop_bits(LibSerial::StopBits::STOP_BITS_1),

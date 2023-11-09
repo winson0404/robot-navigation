@@ -49,7 +49,7 @@ namespace system_fnc
         // delete[] buffer;
     }
 
-    void listener(inputs::InputState *input_state)
+    void tcp_listener(inputs::InputState *input_state)
     {
         const int port = 12345;
         const char *host = "127.0.0.1";
