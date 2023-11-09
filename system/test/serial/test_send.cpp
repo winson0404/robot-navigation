@@ -35,35 +35,39 @@ int main()
 
     // Set the number of stop bits.
     serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
+    // while(true){
+    //     char start_bit;
+    //     serial_port.ReadByte(start_bit);
+    //     std::cout << "Start Bit: " << (int)start_bit << std::endl;
+    //     if (start_bit != 100){
+    //         std::cout << "Invalid start bit received: " << (int)start_bit << std::endl;
+    //         continue;
+    //     }
+    //     char tag;
+    //     serial_port.ReadByte(tag);
+    //     char data_length;
+    //     serial_port.ReadByte(data_length);
+    //     std::cout << "Tag: " << (int)tag << std::endl;
+    //     std::cout << "Data Length: " << (int)data_length << std::endl;
+
+    //     float data;
+    //     char* dataPointer = reinterpret_cast<char*>(&data);
+    //     for (int i = 0; i < data_length; ++i) {
+    //         serial_port.ReadByte(*dataPointer);
+    //         std::cout<< "Data: " << (int)*dataPointer << std::endl;
+    //         dataPointer++;
+    //     }
+
+    //     std::cout << "Data: " << data << std::endl;
+
+
+    // }
     while(true){
-        char start_bit;
-        serial_port.ReadByte(start_bit);
-        std::cout << "Start Bit: " << (int)start_bit << std::endl;
-        if (start_bit != 100){
-            std::cout << "Invalid start bit received: " << (int)start_bit << std::endl;
-            continue;
-        }
-        char tag;
-        serial_port.ReadByte(tag);
-        char data_length;
-        serial_port.ReadByte(data_length);
-        std::cout << "Tag: " << (int)tag << std::endl;
-        std::cout << "Data Length: " << (int)data_length << std::endl;
-
-        float data;
-        char* dataPointer = reinterpret_cast<char*>(&data);
-        for (int i = 0; i < data_length; ++i) {
-            serial_port.ReadByte(*dataPointer);
-            std::cout<< "Data: " << (int)*dataPointer << std::endl;
-            dataPointer++;
-        }
-
-        std::cout << "Data: " << data << std::endl;
-
+        char test = 'm';
+        serial_port.WriteByte(test);
+    
 
     }
-
-   
 
     // char data[data_length];
     // std::string data;
