@@ -37,6 +37,9 @@ int main()
     serial_port.SetStopBits(LibSerial::StopBits::STOP_BITS_1);
     while(true){
         char start_bit;
+        if (serial_port.IsDataAvailable() == false){
+            continue;
+        }
         serial_port.ReadByte(start_bit);
         std::cout << "Start Bit: " << (int)start_bit << std::endl;
         if (start_bit != 100){

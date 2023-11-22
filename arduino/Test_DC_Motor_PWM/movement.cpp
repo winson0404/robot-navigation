@@ -10,7 +10,9 @@ void init_setup(){
   pinMode(pMotorRSpeedCtrl, OUTPUT);
 
   // Set motor direction, CW.
-  spinFront(LEFT_MOTOR);
+  // spinFront(LEFT_MOTOR);
+  spinStop(LEFT_MOTOR);
+  spinStop(RIGHT_MOTOR);
 
   nSpeed = 0;
 

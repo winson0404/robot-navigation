@@ -32,11 +32,14 @@ void loop()
   // }
 
   moveFront();
-  delay(2000);
+  delay(1000);
   moveStop();
   delay(2000);
   moveBack();
+  delay(1000);
+  moveStop();
   delay(2000);
+  // delay(250);
   /*
   nSpeed = nSpeed + 10;
   analogWrite(pMotorLSpeedCtrl,nSpeed);

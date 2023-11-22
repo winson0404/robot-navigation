@@ -8,14 +8,15 @@ void loop() {
   // byte dataBytes[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F}; // "Hello" in ASCII
   char tag = 1;
   char start_bit = 100;
-  float data = 3.152f;
-  float *floatPointer = &data;
-  char* dataPointer = reinterpret_cast<char *>(floatPointer);
+  // float data = 3.152f;
+  ushort data 3152
+  // float *floatPointer = &data;
+  // char* dataPointer = reinterpret_cast<char *>(floatPointer);
   char data_length = sizeof(float);
 
-  char *recv_data;
-  Serial.readBytes(recv_data, 1);
-  Serial.write(recv_data, 1);
+  // char *recv_data;
+  // Serial.readBytes(recv_data, 1);
+  // Serial.write(recv_data, 1);
 
   // Send the data over the serial port
   Serial.write(&start_bit, sizeof(char));
