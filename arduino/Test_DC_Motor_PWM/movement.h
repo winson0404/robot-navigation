@@ -18,8 +18,8 @@ const int pMotorRSpeedCtrl = 6;  // on the Arduino reference, pin 5 and 6 has
 // Global variables                           
 static int nSpeed;
 
-void init_setup();
-
+void movement_setup();
+void movement_handler(char* data, char &packet_length, char &task);
 void adjustSpeed(int motor, int speed);
 
 void spinBack(int motor);

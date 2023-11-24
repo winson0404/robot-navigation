@@ -1,10 +1,17 @@
+
+const int TEST1 = 2;
+const int TEST2 = 4;
+
 void setup() {
   // Start the serial communication
   Serial.begin(9600);
+  pinMode(TEST1, OUTPUT);
+  pinMode(TEST2, OUTPUT);
+  digitalWrite(TEST1, LOW);
+  digitalWrite(TEST2, LOW);
 }
-
-void loop() {
-  // Your data to be sent as bytes
+void send(){
+// Your data to be sent as bytes
   // byte dataBytes[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F}; // "Hello" in ASCII
   // char packet[5];
   char tag = 1;
@@ -50,4 +57,48 @@ void loop() {
 
   // Wait for a short duration before sending the next data
   // delay(500); // Adjust the delay as needed
+}
+
+void receive(){
+  char* data;
+  char start_bit = -1;
+  char task= 0, packet_length=0;
+  Serial.readBytes(data, 1);
+  if ((int)*data == 0){ //start bit received
+    //do stuffs
+    // Serial.println("Start bit received");
+    // data++;
+    data = nullptr;
+    Serial.readBytes(data, 1);
+    task = *data;
+    // data++;
+    data = nullptr;
+    Serial.readBytes(data, 1);
+    packet_length = *data;
+    // data++;
+    data = nullptr;
+    Serial.readBytes(data, (int) packet_length);
+    Serial.print("Task:");
+    Serial.println((int) task);
+    Serial.print("Packet Length:");
+    Serial.println((int) packet_length);
+    // Serial.write(&task, 1);
+    // Serial.write(&packet_length, 1);
+    if ((int) task == 1){    
+      digitalWrite(TEST1, HIGH);
+      delay(400);
+      digitalWrite(TEST1, LOW);
+    }
+    if ((int)packet_length == 5){
+      digitalWrite(TEST2, HIGH);
+      delay(400);
+      digitalWrite(TEST2, LOW);
+
+    }
+  }
+  // Serial.println((int)*data);
+}
+void loop() {
+  // send();
+  receive();
 }

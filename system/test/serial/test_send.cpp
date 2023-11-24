@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <libserial/SerialPort.h>
+#include<unistd.h>  
 
 int main()
 {
@@ -8,7 +9,7 @@ int main()
 
     LibSerial::SerialPort serial_port;
     // send
-    std::cout << "================Receiving Control: " << std::endl;
+    std::cout << "================Sending Control: " << std::endl;
 
     // try
     // {
@@ -62,10 +63,49 @@ int main()
 
 
     // }
-    while(true){
-        char test = 'm';
-        serial_port.WriteByte(test);
+    // while(true){
+    //     char test = 'm';
+    //     serial_port.WriteByte(test);
     
+
+    // }
+
+    char start_bit = 0;
+    char task = 1;
+    char movement = 1;
+    char movement_length = sizeof(movement);
+    unsigned short speed = 200;
+    unsigned short* speedPointer = &speed;
+    LibSerial::DataBuffer speedBuffer;
+    for (int i = 0; i < sizeof(speed); ++i) {
+        speedBuffer.push_back(*speedPointer);
+        speedPointer++;
+    }
+
+    char speed_length = sizeof(speed);
+    // char packet_length = sizeof(start_bit) + sizeof(task) + sizeof(movement) + sizeof(speed);
+    char packet_length = sizeof(movement_length) + sizeof(movement) + sizeof(speed_length) + sizeof(speed);
+    while(true){
+        std::cout<< "Sending Start Bit: " << (int)start_bit << std::endl;
+        serial_port.WriteByte(start_bit);
+        serial_port.WriteByte(task);
+        serial_port.WriteByte(packet_length);
+        serial_port.WriteByte(movement_length);
+        serial_port.WriteByte(movement);
+        serial_port.WriteByte(speed_length);
+        serial_port.WriteByte(speed_length);
+        serial_port.WriteByte(speed_length);
+        // serial_port.Write(speedBuffer);
+        // serial_port.DrainWriteBuffer();
+
+        //sleep for 1000 ms
+        // char _task;
+        // char _packet_length;
+        // serial_port.ReadByte(_task);
+        // serial_port.ReadByte(_packet_length);
+        // std::cout<< "Received Task: " << (int)_task << std::endl;
+        // std::cout<< "Received Packet Length: " << (int)_packet_length << std::endl;
+        sleep(1);
 
     }
 
@@ -87,5 +127,4 @@ int main()
     // newFloatValue = reinterpret_cast<float*>(data.c_str() + 2);
 
     // Wait until the data has actually been transmitted.
-    serial_port.DrainWriteBuffer();
 }
