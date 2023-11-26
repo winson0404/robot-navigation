@@ -47,7 +47,7 @@ namespace system_fnc
     extern movement::MOVEMENT previous_move;
     void handleClient(comms::RemoteClient client, comms::SocketServer &server, inputs::InputState *input_state);
     void tcp_listener(inputs::InputState *input_state);
-    void serial_listener(comms::SerialSettings settings, inputs::InputState *input_state);
+    void serial_listener(comms::SerialComm serial_comm, inputs::InputState *input_state);
     void status_checker(inputs::InputState *input_state);
     void control(movement::MOVEMENT move, char *SERIAL_PORT);
     movement::MOVEMENT decision_maker(
