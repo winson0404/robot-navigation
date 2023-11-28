@@ -1,6 +1,8 @@
 #ifndef MOVEMENT_FUNCTIONS_H
 #define MOVEMENT_FUNCTIONS_H
 #include <Arduino.h>
+#include "comms.h"
+#include "utils.h"
 
 
 
@@ -34,9 +36,6 @@ namespace movement{
     void moveLeft();
     void moveRight();
     void moveStop();
-
-
-
 
 }
 

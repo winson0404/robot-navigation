@@ -1,6 +1,8 @@
-#ifndef MOVEMENT_FUNCTIONS_H
-#define MOVEMENT_FUNCTIONS_H
+#ifndef SENSOR_FUNCTIONS_H
+#define SENSOR_FUNCTIONS_H
 #include <Arduino.h>
+
+#include "comms.h"
 
 namespace sensor
 {

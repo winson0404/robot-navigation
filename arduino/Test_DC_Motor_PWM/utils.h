@@ -1,23 +1,10 @@
-#pragma once
+#ifndef UTILS_FUNCTIONS_H
+#define UTILS_FUNCTIONS_H
 #include <Arduino.h>
+#include <string.h>
 
 
-unsigned short convert_ushort(char* data, char data_length){
-  unsigned short *output;
-  for (int i = 0; i < data_length; i++){
-    (output + i) = data;
-    data++;
-  }
+unsigned short convert_ushort(char* data, char data_length);
 
-  return *output;
-}
 
-// unsigned short convert_ushort(char* data, char data_length){
-//   unsigned short *output;
-//   for (int i = 0; i < data_length; i++){
-//     (output + i) = data;
-//     data++;
-//   }
-
-//   return *output;
-// }
+#endif
