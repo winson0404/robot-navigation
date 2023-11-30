@@ -10,13 +10,14 @@ void sensor::sensor_setup()
 
 void sensor::sensor_handler(char *data, char &packet_length, char &task)
 {
+
     unsigned short sensor_data = 3152;
     char sensor_data_size = 2;
     unsigned short *sensor_data_ptr = &sensor_data;
     char* data_chunk;
     //put size of sensor data, and then sensor data
     // memcpy(data_chunk, &sensor_data_size, 1);
-    data_chunk = (char*)malloc(sensor_data_size+1);
+    data_chunk = (char*)malloc(sensor_data_size+1); //TODO look into array size instead of malloc
     data_chunk[0] = sensor_data_size;
     
     memcpy(data_chunk+1, sensor_data_ptr, sensor_data_size);
@@ -25,4 +26,5 @@ void sensor::sensor_handler(char *data, char &packet_length, char &task)
 
     packet_length = 3;
     task = comms::SENSOR;
+    delete data_chunk;
 }

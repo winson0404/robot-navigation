@@ -54,6 +54,7 @@ int main()
         char start_bit;
         if (!serial_port.IsDataAvailable())
         {
+            serial_port.
             if (!send_task)
             {
                 char start_bit = 0;

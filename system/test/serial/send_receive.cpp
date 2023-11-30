@@ -19,7 +19,7 @@ int main()
     serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
 
     bool send_task = false;
-    int i = 0;  
+    int i = 0;
     while (true)
     {
         // std::string data = "test";
@@ -30,14 +30,20 @@ int main()
         std::string received_data;
         // serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
         // serial_port.DrainWriteBuffer();
-        std::cout<< "Waiting for data..." << std::endl;
+        std::cout << "Waiting for data..." << std::endl;
         // serial_port.SetSerialPortBlockingStatus(false);
-        std::cout << "DTR: " << serial_port.GetDTR() << std::endl;
-        std::cout << "RTS: " << serial_port.GetRTS() << std::endl;
-        // serial_port.Read(received_data, 1);
+        // std::cout << "DTR: " << serial_port.GetDTR() << std::endl;
+        // std::cout << "RTS: " << serial_port.GetRTS() << std::endl;
 
-        std::cout<< "Received Data: " << received_data << std::endl;
-        
+        if (serial_port.IsDataAvailable())
+        {
+
+            serial_port.Read(received_data, 1);
+            std::cout << "Received Data: " << received_data << std::endl;
+            if (data == 'a')
+                break;
+        }
+        else
+            continue;
     }
-
 }

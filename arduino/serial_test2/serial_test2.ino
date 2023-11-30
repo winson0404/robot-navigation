@@ -12,11 +12,11 @@ void loop()
     Serial.readBytes(data, 1);
     //convert data to string
     //print string
-    // Serial.println(*data);
+    Serial.println(*data);
 
   }
 
 
-  delay(1000);
+  // delay(1000);
   
 }

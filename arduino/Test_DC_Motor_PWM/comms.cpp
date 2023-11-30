@@ -25,7 +25,8 @@ namespace comms
     if (Serial.available())
     {
       char start_bit = -1;
-      // char task= 0, packet_length=0;
+      // char task= 0, packet_length=0;'
+      //TODO one shot reading with end marker
       Serial.readBytes(data, 1);
       if ((int)*data == 0)
       { // start bit received
@@ -39,6 +40,7 @@ namespace comms
         if ((int) packet_length > 0)
           Serial.readBytes(data, (int)packet_length);
       }
+      Serial.flush();
     }
   }
 
