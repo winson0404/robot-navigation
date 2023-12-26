@@ -18,12 +18,15 @@ int main()
     // Disable parity.
     serial_port.SetParity(LibSerial::Parity::PARITY_NONE);
 
+    serial_port.FlushIOBuffers();
+
     bool send_task = false;
     int i = 0;
     while (true)
     {
         // std::string data = "test";
         char data = 'a';
+        serial_port.DrainWriteBuffer();
         serial_port.WriteByte(data);
 
         // receive
@@ -35,13 +38,14 @@ int main()
         // std::cout << "DTR: " << serial_port.GetDTR() << std::endl;
         // std::cout << "RTS: " << serial_port.GetRTS() << std::endl;
 
-        if (serial_port.IsDataAvailable())
+        if (serial_port.IsDataAvailable() && serial_port.GetNumberOfBytesAvailable() >= 1)
         {
 
             serial_port.Read(received_data, 1);
             std::cout << "Received Data: " << received_data << std::endl;
-            if (data == 'a')
-                break;
+            if (received_data == "a")
+                // break;
+                std::cout<<"========================================"<<std::endl;
         }
         else
             continue;

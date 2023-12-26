@@ -26,7 +26,7 @@ int main()
     serial_port.SetBaudRate(LibSerial::BaudRate::BAUD_9600);
 
     // Set the number of data bits.
-    // serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_5);
+    serial_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_DEFAULT);
 
     // Turn off hardware flow control.
     serial_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
