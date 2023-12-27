@@ -19,7 +19,7 @@ void setup()
     digitalWrite(TEST1, LOW);
     digitalWrite(TEST2, LOW);
 
-    Serial.println("<Arduino is ready>");
+    Serial.println("<started>");
 }
 
 // Turn on Left and Right motors at different speeds.
@@ -97,9 +97,10 @@ void showNewData()
 
         digitalWrite(TEST1, LOW);
         digitalWrite(TEST2, LOW);
-        char temp = 101;
+        unsigned short data = 3152;
+        char* cdata = reinterpret_cast<char*>(&data);
         Serial.print("<");
-        Serial.write(&temp, 1);
+        Serial.write(cdata, 2);
         Serial.print(">");
         Serial.flush();
         newData = false;
