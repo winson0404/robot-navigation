@@ -21,6 +21,9 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     output.append(int.to_bytes(task, 1, byteorder="little"))
     packet_length += 1
     
+    output.append(int.to_bytes(len(data_size), 1, byteorder="little"))
+    packet_length += 1
+    
     counter = 0
     for _ in data_size:
         _data_size = data_size[counter]
@@ -44,38 +47,56 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     #initialize as - byte
     # checksum = 0
     # checksum = int.to_bytes(checksum, 1, byteorder="little")
-    checksum = sum(bytearray(b"".join(output[1:])))
+    # checksum = sum(bytearray(b"".join(output[1:])))
     # checksum = checksum % 256
-    output[1] = int.to_bytes(checksum, 1, byteorder="little")
+    output[1] = int.to_bytes(0, 1, byteorder="little")
     
     output.append(int.to_bytes(endMarker, 1, byteorder="little"))
     # output.append(int.to_bytes(checksum, 1, byteorder="little"))
     
     return bytearray(b"".join(output))
     
-    
-    
     # return [struct.pack("B", i) for i in List]
 
-def postprocess(data:List[bytes])->Tuple[int, List[int]]:
+def postprocess(data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
     # for i, byte in enumerate(data):
-    # protocol task|packet_length|data_length|data
-    task = bytearray_to_int(data[0])
-    packet_length = bytearray_to_int(data[1])
-    # breakpoint()
-    # breakpoint()
-    data = data[2:]
+    # protocol checksum|packet_length|task|num_data|[data_length|data]
     counter = 0
-    output = []
-    while packet_length != 0:
-        data_length = bytearray_to_int(data[counter])
+    # breakpoint()
+    checksum = 0
+    counter += 1
+    packet_length = bytearray_to_int(data[counter])
+    counter += 1
+    task = bytearray_to_int(data[counter])
+    counter += 1
+    num_data = bytearray_to_int(data[counter])
+    counter += 1
+    data_length = []
+    results = []
+    for i in range(num_data):
+        _data_length = bytearray_to_int(data[counter])
+        data_length.append(_data_length)
         counter += 1
-        data_seg = data[counter:counter+data_length]
-        output.append(bytearray_to_int(list_to_bytearray(data_seg)))
-        counter += data_length
-        packet_length -= 1 + data_length
+        _data = bytearray_to_int(list_to_bytearray(data[counter:counter+_data_length]))
+        results.append(_data)
+        counter += _data_length
+        
+    return task, results
+    # task = bytearray_to_int(data[0])
+    # packet_length = bytearray_to_int(data[1])
+    # # breakpoint()
+    # data = data[2:]
+    # counter = 0
+    # output = []
+    # while packet_length != 0:
+    #     data_length = bytearray_to_int(data[counter])
+    #     counter += 1
+    #     data_seg = data[counter:counter+data_length]
+    #     output.append(bytearray_to_int(list_to_bytearray(data_seg)))
+    #     counter += data_length
+    #     packet_length -= 1 + data_length
     
-    return task, output
+    # return task, output
 
 
 def bytearray_to_int(bytelist:bytearray)->int:
@@ -87,7 +108,7 @@ def list_to_bytearray(bytelist:List[bytes])->bytearray:
 def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
     data = []
     x = "z"  # any value that is not an end- or startMarker
-    byteCount = -1  # to allow for the fact that the last increment will be one too many
+    byteCount = 0  # to allow for the fact that the last increment will be one too many
     # wait for the start character
     while ord(x) != startMarker:
         x = ser.read()
