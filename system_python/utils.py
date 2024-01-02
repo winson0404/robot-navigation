@@ -3,32 +3,53 @@ from typing import List, Tuple
 import struct
 import constant
 
-def structure_data(startMarker:int, endMarker:int, task:int, packet_length:int, data_size:List[int], data:List[int])->bytearray:
+def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int], data:List[int])->bytearray:
     output = [int.to_bytes(startMarker, 1, byteorder="little")]
     
     # protocol task|packet_length|data_length|data
     # task
-    output.append(int.to_bytes(task, 1, byteorder="little"))
-    # packet_length
+        
+    checksum = 0
+    packet_length = 0
+    
+    output.append(int.to_bytes(checksum, 1, byteorder="little"))
+    packet_length += 1
+    
     output.append(int.to_bytes(packet_length, 1, byteorder="little"))
-    # data_length
+    packet_length += 1
+
+    output.append(int.to_bytes(task, 1, byteorder="little"))
+    packet_length += 1
+    
     counter = 0
-    while packet_length != 0:
+    for _ in data_size:
         _data_size = data_size[counter]
         output.append(int.to_bytes(_data_size, 1, byteorder="little"))
-        packet_length -= 1
+        packet_length += 1
         # data
         _data = data[counter]
         temp_byte = []
-        _temp_data = int.to_bytes(_data, _data_size, byteorder="big")
+        _temp_data = int.to_bytes(_data, _data_size, byteorder="little")
+        # breakpoint()
         for i in range(_data_size):
             output.append(_temp_data[i:i+1])
             # output.append(int.to_bytes(_data, _data_size, byteorder="little"))    
-        packet_length -= _data_size
+        packet_length += _data_size
         counter += 1
         # end marker
     # breakpoint()
+    output[2] = int.to_bytes(packet_length, 1, byteorder="little")
+    #calculate checksum
+    
+    #initialize as - byte
+    # checksum = 0
+    # checksum = int.to_bytes(checksum, 1, byteorder="little")
+    checksum = sum(bytearray(b"".join(output[1:])))
+    # checksum = checksum % 256
+    output[1] = int.to_bytes(checksum, 1, byteorder="little")
+    
     output.append(int.to_bytes(endMarker, 1, byteorder="little"))
+    # output.append(int.to_bytes(checksum, 1, byteorder="little"))
     
     return bytearray(b"".join(output))
     
@@ -41,7 +62,7 @@ def postprocess(data:List[bytes])->Tuple[int, List[int]]:
     # protocol task|packet_length|data_length|data
     task = bytearray_to_int(data[0])
     packet_length = bytearray_to_int(data[1])
-    breakpoint()
+    # breakpoint()
     # breakpoint()
     data = data[2:]
     counter = 0
@@ -67,7 +88,6 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
     data = []
     x = "z"  # any value that is not an end- or startMarker
     byteCount = -1  # to allow for the fact that the last increment will be one too many
-
     # wait for the start character
     while ord(x) != startMarker:
         x = ser.read()
@@ -76,6 +96,7 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
         if ser.in_waiting == 0:
             return data, byteCount
     
+    print(f"Receiving {ser.in_waiting} bytes")
     # print("Start marker found: ", ord(x))
 
     # save data until the end marker is found
@@ -96,7 +117,7 @@ def sendToArduino(ser: Serial, send_bytes:bytearray)->None:
         pass
 
 
-def waitForArduino(ser):
+def waitForArduino(ser: Serial)->None:
 
     # wait until the Arduino sends 'Arduino Ready' - allows time for Arduino reset
     # it also ensures that any bytes left over from a previous message are discarded
@@ -117,4 +138,3 @@ def waitForArduino(ser):
             
             
     print("Arduino is ready")
-        

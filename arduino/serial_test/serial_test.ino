@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+// #include <vector>
 
 int numChars = 32;
 char *receivedChars;
@@ -15,9 +16,9 @@ bool newData = false;
 struct packet
 {
     int task;
-    int packet_length;
-    int data_length;
-    unsigned short data;
+    int num_data;
+    int* data_length;
+    unsigned short* data;
 };
 
 packet postprocess(char *data)
@@ -28,36 +29,36 @@ packet postprocess(char *data)
     // data_length: 1 byte
     // data: (data_length) byte
     packet p;
-    int counter = 0;
+    // checksum : 0 
+    // packet_length : 1
+    // task : 2
+    // num_data : 3
+    int counter = 2;
     char task = data[counter];
     counter++;
-    char packet_length = data[counter];
-    counter++;
     p.task = (int)task;
-    p.packet_length = (int)packet_length;
-    while (packet_length > 0)
+    p.num_data = (int)data[counter];
+    counter++;
+    p.data_length = (int*) malloc(p.num_data);
+    p.data = (unsigned short*) malloc(p.num_data);
+    for (int i = 0; i < p.num_data; i++)
     {
-        int 
-        exit() = (int)data[counter];
+        p.data_length[i] = (int)data[counter];
         counter++;
         // unsigned short data_value = 0;
-        char* temp_data = (char*) malloc((data_length));
-        for (int i = 0; i < data_length; i++)
+        char* temp_data = (char*) malloc(p.data_length[i]);
+        for (int j = 0; j < p.data_length[i]; j++)
         {
-            temp_data[i] = data[counter];
+            temp_data[j] = data[counter];
             // data_value = data_value << 8;
             // data_value = data_value | data[counter];
             counter++;
         }
 
-
-
         
-        p.data_length = data_length;
         unsigned short *data_value = reinterpret_cast<unsigned short*>(temp_data);
-        p.data = *data_value;
+        p.data[i] = *data_value;
         free(temp_data);
-        packet_length--;
     }
 
 
@@ -170,10 +171,11 @@ void showNewData()
     }
 }
 
-void recvWithStartEndMarkers(char *data)
+packet recvWithStartEndMarkers(char *data)
 {
     static bool recvInProgress = false;
     static uint8_t ndx = 0;
+    packet p;
     char rc;
     // memset(data, '\0', 32);
 
@@ -185,6 +187,8 @@ void recvWithStartEndMarkers(char *data)
         if (recvInProgress == true)
         {
             int data_count = 0;
+            int packet_length = 0;
+            char checksum;
             if (rc != endMarker)
             {
                 // digitalWrite(TEST1, HIGH);
@@ -193,6 +197,15 @@ void recvWithStartEndMarkers(char *data)
                 // delay(500);
                 data[ndx] = rc;
                 ndx++;
+
+                if (ndx == 0){
+                  checksum = data[ndx];
+                }
+                else if (ndx == 1){
+                  packet_length = data[ndx];
+                }
+
+
                 data_count++;
                 if (ndx >= numChars)
                 {
@@ -208,12 +221,12 @@ void recvWithStartEndMarkers(char *data)
                 recvInProgress = false;
                 ndx = 0;
                 newData = true;
-                // if (data_count != 5){
+                if (data_count != packet_length){
 
-                //     digitalWrite(TEST1, HIGH);
-                //     delay(1000);
-                //     newData = false;
-                // }
+                    digitalWrite(TEST1, HIGH);
+                    delay(1000);
+                    newData = false;
+                }
             }
         }
 
