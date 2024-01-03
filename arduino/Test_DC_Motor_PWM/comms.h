@@ -4,6 +4,17 @@
 
 namespace comms
 {
+    struct packet
+    {
+        char checksum;
+        char packet_length;
+        char task;
+        char num_data;
+        char *data_length;
+        unsigned short *data;
+    };
+
+    // serial mode
     const bool RECEIVE = 1;
     const bool SEND = 0;
 

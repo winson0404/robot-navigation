@@ -111,10 +111,11 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
     byteCount = 0  # to allow for the fact that the last increment will be one too many
     # wait for the start character
     while ord(x) != startMarker:
+        # print(ser.in_waiting)
         x = ser.read()
-        # print(ord(x))
 
         if ser.in_waiting == 0:
+            # breakpoint()
             return data, byteCount
     
     print(f"Receiving {ser.in_waiting} bytes")
@@ -147,15 +148,16 @@ def waitForArduino(ser: Serial)->None:
     
     msg = ""
     while list_to_bytearray(msg) != constant.arduino_start_message:
+        # breakpoint()
         # print("Waiting for Arduino to be ready")
-        while ser.in_waiting > 0: 
+        while ser.in_waiting >= 9: 
             # print("Available byte count: ", ser.in_waiting)   
             msg, _ = recvFromArduino(ser, 60, 62)
             # check for empty msg
             if msg == "":
                 print("Empty message received")
                 continue
-            break# python3 requires parenthesis
+            break
             
             
     print("Arduino is ready")

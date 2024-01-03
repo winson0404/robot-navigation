@@ -97,6 +97,13 @@ packet structure_data(char task, char num_data, char *data_length, unsigned shor
     return p;
 }
 
+void clear_buffer(){
+    while(Serial.available() > 0){
+        Serial.read();
+    }
+
+}
+
 void send(packet send_packet)
 {
     char *cdata = reinterpret_cast<char *>(&send_packet);
@@ -115,7 +122,6 @@ void send(packet send_packet)
     }
     Serial.print(endMarker);
     Serial.flush();
-    mode = 'r';
 }
 // {
 //     // Your data to be sent as bytes
@@ -176,15 +182,13 @@ void send(packet send_packet)
 
 void showNewData()
 {
-    if (newData == true)
-    {
 
         // Serial.print("This just in ... ");
         if ((int)received_packet.task == 2)
         {
             digitalWrite(TEST1, HIGH);
         }
-        if ((int)received_packet.packet_length == 10)
+        if (received_packet.data[0] == 3152)
         {
             digitalWrite(TEST2, HIGH);
         }
@@ -192,7 +196,7 @@ void showNewData()
         {
             digitalWrite(TEST3, HIGH);
         }
-        delay(2000);
+        delay(500);
         // // if (strcmp(receivedChars, target_string) == 0)
         // {
         //     // Serial.println("Matched");
@@ -214,9 +218,6 @@ void showNewData()
         // Serial.print("<");
         // Serial.write(receivedChars, 5);
         // Serial.print(">");
-        newData = false;
-        mode = 'w';
-    }
 }
 
 void recvWithStartEndMarkers(char *data)
@@ -242,6 +243,7 @@ void recvWithStartEndMarkers(char *data)
                 // delay(500);
                 // digitalWrite(TEST1, LOW);
                 // delay(500);
+                digitalWrite(ERROR1, HIGH);
                 data[ndx] = rc;
                 ndx++;
 
@@ -271,17 +273,20 @@ void recvWithStartEndMarkers(char *data)
                 newData = true;
                 if (data_count != packet_length)
                 {
-
                     digitalWrite(ERROR1, HIGH);
-                    delay(1000);
+                    delay(100);
                     digitalWrite(ERROR1, LOW);
+
+                    clear_buffer();
                     newData = false;
+                    mode = 'w';
+                    break;
                 }
             }
         }
 
         else if (rc == startMarker)
-        {
+        {                    
             // Serial.print("In start ");
             recvInProgress = true;
         }
@@ -300,7 +305,6 @@ void setup()
     digitalWrite(TEST2, HIGH);
     digitalWrite(TEST3, HIGH);
     digitalWrite(ERROR1, HIGH);
-    delay(100);
     digitalWrite(TEST1, LOW);
     digitalWrite(TEST2, LOW);
     digitalWrite(TEST3, LOW);
@@ -308,7 +312,9 @@ void setup()
     receivedChars = (char *)malloc(numChars * sizeof(char)); // Allocate memory for receivedChars
     received_packet.data_length = (char *)malloc(16 * sizeof(char));
     received_packet.data = (unsigned short *)malloc(16 * sizeof(unsigned short));
+    // clear_buffer();
     Serial.print("<started>");
+    // delay(10000);
 }
 
 void loop()
@@ -320,11 +326,13 @@ void loop()
         if (newData == true)
         {
             postprocess(receivedChars, &received_packet);
+            showNewData();
+            newData = false;
+            mode = 'w';
         }
-        showNewData();
     }
 
-    else if (mode == 'w')
+    if (mode == 'w')
     {
         char task = 2;
         char num_data = 2;
@@ -338,6 +346,7 @@ void loop()
         
         packet send_data = structure_data(task, num_data, data_length, data);
         send(send_data);
+        mode = 'r';
         free(data_length);
         free(data);
     }
