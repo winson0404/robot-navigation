@@ -12,9 +12,6 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     checksum = 0
     packet_length = 0
     
-    output.append(int.to_bytes(checksum, 1, byteorder="little"))
-    packet_length += 1
-    
     output.append(int.to_bytes(packet_length, 1, byteorder="little"))
     packet_length += 1
 
@@ -40,8 +37,10 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
         packet_length += _data_size
         counter += 1
         # end marker
-    # breakpoint()
-    output[2] = int.to_bytes(packet_length, 1, byteorder="little")
+    # breakpoint()    
+    output.append(int.to_bytes(checksum, 1, byteorder="little"))
+    packet_length += 1
+    output[1] = int.to_bytes(packet_length, 1, byteorder="little")
     #calculate checksum
     
     #initialize as - byte
@@ -49,7 +48,7 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     # checksum = int.to_bytes(checksum, 1, byteorder="little")
     # checksum = sum(bytearray(b"".join(output[1:])))
     # checksum = checksum % 256
-    output[1] = int.to_bytes(0, 1, byteorder="little")
+    # output[1] = int.to_bytes(0, 1, byteorder="little")
     
     output.append(int.to_bytes(endMarker, 1, byteorder="little"))
     # output.append(int.to_bytes(checksum, 1, byteorder="little"))
@@ -64,7 +63,7 @@ def postprocess(data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
     counter = 0
     # breakpoint()
     checksum = 0
-    counter += 1
+    # counter += 1
     packet_length = bytearray_to_int(data[counter])
     counter += 1
     task = bytearray_to_int(data[counter])
@@ -80,7 +79,8 @@ def postprocess(data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
         _data = bytearray_to_int(list_to_bytearray(data[counter:counter+_data_length]))
         results.append(_data)
         counter += _data_length
-        
+    
+    checksum = bytearray_to_int(data[counter])
     return task, results
     # task = bytearray_to_int(data[0])
     # packet_length = bytearray_to_int(data[1])
@@ -110,6 +110,8 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
     x = "z"  # any value that is not an end- or startMarker
     byteCount = 0  # to allow for the fact that the last increment will be one too many
     # wait for the start character
+    # breakpoint()
+    print(f"Receiving {ser.in_waiting} bytes")
     while ord(x) != startMarker:
         # print(ser.in_waiting)
         x = ser.read()
@@ -118,8 +120,7 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
             # breakpoint()
             return data, byteCount
     
-    print(f"Receiving {ser.in_waiting} bytes")
-    # print("Start marker found: ", ord(x))
+    print("Start marker found: ", ord(x))
 
     # save data until the end marker is found
     while ord(x) != endMarker:
@@ -127,7 +128,8 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
             data.append(x)
             byteCount += 1
         x = ser.read()
-    # print("Returning from recvFromArduino")
+    print("Returning from recvFromArduino")
+    # breakpoint()
     return data, byteCount
 
 def sendToArduino(ser: Serial, send_bytes:bytearray)->None:
@@ -137,7 +139,26 @@ def sendToArduino(ser: Serial, send_bytes:bytearray)->None:
     #wait until send finishes
     while ser.out_waiting > 0:
         pass
+def get_response(ser: Serial)->int:
+    while True:
+        if ser.in_waiting >= 3:
+            response, _ = recvFromArduino(ser, 60, 62)
+            response = bytearray_to_int(response[0])
+            if response == 0:
+                print("Response received: Success")
+                break
+            elif response == 1:
+                print("Response received: Fail")
+                break
+        # else:
+        #     print("Waiting for response")
 
+def send_response(ser: Serial, startMarker:int, endMarker:int, response: int)->None:
+    output = [int.to_bytes(startMarker, 1, byteorder="little")]
+    output.append(int.to_bytes(response, 1, byteorder="little"))
+    output.append(int.to_bytes(endMarker, 1, byteorder="little"))
+    sendToArduino(ser, list_to_bytearray(output))
+    print("Response sent")
 
 def waitForArduino(ser: Serial)->None:
 
@@ -159,5 +180,5 @@ def waitForArduino(ser: Serial)->None:
                 continue
             break
             
-            
+    # ser.reset_input_buffer()
     print("Arduino is ready")
