@@ -1,6 +1,7 @@
 from serial import Serial
 from typing import List, Tuple
 import struct
+import time
 import constant
 
 def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int], data:List[int])->bytearray:
@@ -140,6 +141,7 @@ def sendToArduino(ser: Serial, send_bytes:bytearray)->None:
     while ser.out_waiting > 0:
         pass
 def get_response(ser: Serial)->int:
+    start_time = time.time()
     while True:
         if ser.in_waiting >= 3:
             response, _ = recvFromArduino(ser, 60, 62)
@@ -150,6 +152,12 @@ def get_response(ser: Serial)->int:
             elif response == 1:
                 print("Response received: Fail")
                 break
+            else:
+                print("Response received: Unknown")
+                break
+        elif time.time() - start_time > 5:
+            print("Timeout")
+            break
         # else:
         #     print("Waiting for response")
 

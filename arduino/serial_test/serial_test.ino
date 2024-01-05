@@ -2,6 +2,7 @@
 #include <string.h>
 // #include <vector>
 #include <SoftwareSerial.h>
+#include <MemoryUsage.h>
 
 struct packet
 {
@@ -77,10 +78,10 @@ void postprocess(char *data, packet *p)
     counter++;
     p->num_data = data[counter];
     counter++;
-    free(p->data_length);
-    free(p->data);
-    p->data_length = (char *)malloc((int)p->num_data);
-    p->data = (unsigned short *)malloc((int)p->num_data);
+    // free(p->data_length);
+    // free(p->data);
+    // p->data_length = (char *)malloc((int)p->num_data);
+    // p->data = (unsigned short *)malloc((int)p->num_data);
     for (int i = 0; i < p->num_data; i++)
     {
         p->data_length[i] = data[counter];
@@ -98,6 +99,7 @@ void postprocess(char *data, packet *p)
         unsigned short *data_value = reinterpret_cast<unsigned short *>(temp_data);
         p->data[i] = *data_value;
         free(temp_data);
+        // free(data_value);
     }
     p->checksum = data[counter];
 }
@@ -230,6 +232,7 @@ void recvWithStartEndMarkers(char *data, bool &newData)
     // memset(data, '\0', 32);
 
     // if (Serial.available() > 0) {
+    // digitalWrite(ERROR2, HIGH);
     while (ser.available() > 0 && newData == false)
     {
         rc = ser.read();
@@ -245,7 +248,7 @@ void recvWithStartEndMarkers(char *data, bool &newData)
                 // delay(500);
                 // digitalWrite(TEST1, LOW);
                 // delay(500);
-                digitalWrite(ERROR1, HIGH);
+                // digitalWrite(ERROR1, HIGH);
                 data[ndx] = rc;
                 ndx++;
                 if (ndx == 0)
@@ -262,7 +265,7 @@ void recvWithStartEndMarkers(char *data, bool &newData)
 
                 if(ser.overflow()){
                   clear_buffer();
-                  digitalWrite(ERROR2, HIGH);
+                  // digitalWrite(ERROR2, HIGH);
                   send_response(1);
                   break;
                 }
@@ -275,7 +278,7 @@ void recvWithStartEndMarkers(char *data, bool &newData)
                 // delay(1000);
                 recvInProgress = false;
                 ndx = 0;
-                digitalWrite(ERROR1, LOW);
+                // digitalWrite(ERROR2, LOW);
                 newData = true;
                 // Serial.println("End marker found");
                 // Serial.println(ser.available());
@@ -304,6 +307,7 @@ void recvWithStartEndMarkers(char *data, bool &newData)
     // if (newData == false)
       // ser.write("<0>");
       // return;
+    Serial.println("End rec");
 }
 
 void setup()
@@ -324,8 +328,9 @@ void setup()
     digitalWrite(TEST3, LOW);
     digitalWrite(ERROR1, LOW);
     receivedChars = (char *)malloc(numChars * sizeof(char)); // Allocate memory for receivedChars
-    received_packet.data_length = (char *)malloc(2 * sizeof(char));
-    received_packet.data = (unsigned short *)malloc(2 * sizeof(unsigned short));
+    received_packet.data_length = (char *)malloc(numChars * sizeof(char));
+    received_packet.data = (unsigned short *)malloc(numChars * sizeof(unsigned short));
+    FREERAM_PRINT
     // clear_buffer();
     // ser.print("<started>");
     // Serial.println("HI");
@@ -350,7 +355,7 @@ void loop()
         // digitalWrite(ERROR2, LOW);
         // delay(1000);
     }
-
+    FREERAM_PRINT
     // if (mode == 'w')
     // {
     //     char task = 3;
