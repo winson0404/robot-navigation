@@ -2,63 +2,77 @@
 
 namespace comms
 {
-  void comms_setup(int baud_rate)
+  void comms_setup()
   {
-    Serial.begin(baud_rate);
+    ser.begin(baud_rate);
+    // ser.listen();
   }
 
-  void comms_listener(bool &comm_state, char &task, char *data, char &packet_length)
+  void comms_listener(bool &comm_state, packet &p)
   {
     if (comm_state == RECEIVE)
     {
-      handle_receive(task, data, packet_length);
+      handle_receive(p);
     }
     else
     {
-      handle_send(task, data, packet_length);
+      handle_send(p);
       comm_state = RECEIVE;
     }
   }
 
-  bool handle_receive(char &task, char *data, char &packet_length)
+  bool handle_receive(packet &p)
   {
-    if (Serial.available())
+  }
+
+  bool handle_send(packet &p)
+  {
+  }
+
+  packet packet_post_process(uint8_t *data)
+  {
+    // protocol for data: <task|packet_length|data_length|data>
+    // task: 1 byte
+    // packet_length: 1 byte
+    // data_length: 1 byte
+    // data: (data_length) byte
+
+    // packet p;
+    // checksum : 0
+    // packet_length : 1
+    // task : 2
+    // num_data : 3
+
+    packet p;
+    p.data_length = (uint8_t *)malloc(sizeof(uint8_t) * constants::MAX_DATA_LENGTH);
+    p.data = (uint16_t *)malloc(sizeof(uint16_t) * constants::MAX_DATA_LENGTH);
+
+    int counter = 0;
+    p.packet_length = data[counter++];
+    p.task = data[counter++];
+    p.num_data = data[counter++];
+
+    for (int i = 0; i < p.num_data; i++)
     {
-      char start_bit = -1;
-      // char task= 0, packet_length=0;'
-      //TODO one shot reading with end marker
-      Serial.readBytes(data, 1);
-      if ((int)*data == 0)
-      { // start bit received
-        data = nullptr;
-        Serial.readBytes(data, 1);
-        task = *data;
-        data = nullptr;
-        Serial.readBytes(data, 1);
-        packet_length = *data;
-        data = nullptr;
-        if ((int) packet_length > 0)
-          Serial.readBytes(data, (int)packet_length);
+      p.data_length[i] = data[counter++];
+      uint8_t *temp = (uint8_t *)malloc(p.data_length[i]);
+      for (int j = 0; j < p.data_length[i]; j++)
+      {
+        temp[j] = data[counter++];
       }
-      Serial.flush();
+
+      p.data[i] = *(reinterpret_cast<uint16_t *>(temp));
+      free(temp);
     }
+
+    
   }
 
-  bool handle_send(char &task, char *data, char &packet_length)
+
+  void free_packet(packet &p)
   {
-    if (Serial.availableForWrite())
-    {
-      char start_bit = 1;
-      char end_bit = 'c';
-      // Serial.flush();
-      Serial.write(&start_bit, 1);
-      Serial.write(&task, 1);
-      Serial.write(&packet_length, 1);
-      Serial.write(data, packet_length);
-      // Serial.write(&end_bit, 1);
-
-      // Serial.flush();
-
-    }
+    free(p.data_length);
+    free(p.data);
   }
+
 }

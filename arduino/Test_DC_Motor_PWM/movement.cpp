@@ -22,7 +22,13 @@ namespace movement
     nSpeed = 0;
   }
 
-  void movement_handler(char *data, char &packet_length, char &task)
+  void movement_handler(comms::packet p)
+  {
+    char *data = p.data;
+    char &packet_length = p.packet_length;
+    char &task = p.task;
+
+    // if (Serial.available() > 0
   {
     char direction_size = *data;
     data++;

@@ -8,7 +8,7 @@ void sensor::sensor_setup()
     pinMode(A3, INPUT);
 }
 
-void sensor::sensor_handler(char *data, char &packet_length, char &task)
+void sensor::sensor_handler(packet p)
 {
 
     unsigned short sensor_data = 3152;

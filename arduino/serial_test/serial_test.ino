@@ -87,7 +87,7 @@ void postprocess(char *data, packet *p)
         p->data_length[i] = data[counter];
         counter++;
         // unsigned short data_value = 0;
-        char *temp_data = (char *)malloc((int)p->data_length[i]);
+        char *temp_data = (char *)malloc(p->data_length[i]);
         for (int j = 0; j < (int)p->data_length[i]; j++)
         {
             temp_data[j] = data[counter];
@@ -195,29 +195,16 @@ void showNewData()
 {
         // Serial.print("This just in ... ");
         bool correctness = false;
-        if ((int)received_packet.task == 3)
-        {
-            digitalWrite(TEST1, HIGH);
-        }
-        if (received_packet.data[0] == 3152)
-        {
-            digitalWrite(TEST2, HIGH);
-        }
-        if (received_packet.data[1] == 2431)
-        {
-            digitalWrite(TEST3, HIGH);
-        }
 
         if (received_packet.data[0] == 3152 && received_packet.data[1] == 2431 && (int)received_packet.task == 3){
           send_response(0);
+          digitalWrite(TEST3, HIGH);
+          delay(100);
         }
         else{
           send_response(1);
         }
-        delay(100);
 
-        digitalWrite(TEST1, LOW);
-        digitalWrite(TEST2, LOW);
         digitalWrite(TEST3, LOW);
         // Serial.print("<");
         // Serial.write(receivedChars, 5);
@@ -284,9 +271,9 @@ void recvWithStartEndMarkers(char *data, bool &newData)
                 // Serial.println(ser.available());
                 if (data_count != packet_length)
                 {
-                    digitalWrite(ERROR1, HIGH);
-                    delay(100);
-                    digitalWrite(ERROR1, LOW);
+                    // digitalWrite(ERROR1, HIGH);
+                    // delay(100);
+                    // digitalWrite(ERROR1, LOW);
 
                     clear_buffer();
                     newData = false;
@@ -349,31 +336,31 @@ void loop()
             postprocess(receivedChars, &received_packet);
             showNewData();
             new_data = false;
-            // mode = 'w';
+            mode = 'w';
         }
         // delay(1000);
         // digitalWrite(ERROR2, LOW);
         // delay(1000);
     }
     FREERAM_PRINT
-    // if (mode == 'w')
-    // {
-    //     char task = 3;
-    //     char num_data = 2;
+    if (mode == 'w')
+    {
+        char task = 3;
+        char num_data = 2;
 
-    //     char *data_length = (char *)malloc(num_data * sizeof(char));
-    //     unsigned short *data = (unsigned short *)malloc(num_data * sizeof(unsigned short));
-    //     data_length[0] = 2;
-    //     data[0] = 1234;
-    //     data_length[1] = 2;
-    //     data[1] = 5678;
+        char *data_length = (char *)malloc(num_data * sizeof(char));
+        unsigned short *data = (unsigned short *)malloc(num_data * sizeof(unsigned short));
+        data_length[0] = 2;
+        data[0] = 1234;
+        data_length[1] = 2;
+        data[1] = 5678;
         
-    //     packet send_data = structure_data(task, num_data, data_length, data);
-    //     send(send_data);
-    //     // mode = 'r';
-    //     free(data_length);
-    //     free(data);
-    // }
+        packet send_data = structure_data(task, num_data, data_length, data);
+        send(send_data);
+        mode = 'r';
+        free(data_length);
+        free(data);
+    }
 
     // send((char)received_packet.task, (char)received_packet.data_length, (char)p.packet_length, p.data);
     // if(Serial.available())
