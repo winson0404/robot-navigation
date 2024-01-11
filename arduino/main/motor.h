@@ -1,14 +1,13 @@
-#ifndef MOVEMENT_FUNCTIONS_H
-#define MOVEMENT_FUNCTIONS_H
+#ifndef MOTOR_FUNCTIONS_H
+#define MOTOR_FUNCTIONS_H
 #include <Arduino.h>
 #include "comms.h"
 #include "utils.h"
 
-
-
-namespace movement{
+namespace motor{
     const int LEFT_MOTOR = 0;
     const int RIGHT_MOTOR = 1;
+
     const int MOVEMENT_FORWARD = 0;
     const int MOVEMENT_RIGHT = 1;
     const int MOVEMENT_LEFT = 2;
@@ -20,11 +19,11 @@ namespace movement{
     const int pMotorLSpeedCtrl = 5;  // These two pins has PWM capability.  Also
     const int pMotorRSpeedCtrl = 6;  // on the Arduino reference, pin 5 and 6 has
                             // similar PWM clock.
-    // Global variables                           
-    static int nSpeed;
 
-    void movement_setup();
-    void movement_handler(char* data, char &packet_length, char &task);
+    void motor_setup();
+    void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p);
+    void move_motor(bool &comm_state, uint8_t &task_state, comms::packet &p);
+    
     void adjustSpeed(int motor, int speed);
 
     void spinBack(int motor);

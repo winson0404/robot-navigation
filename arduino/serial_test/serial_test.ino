@@ -59,7 +59,8 @@ void send_response(char response){
 }
 
 void postprocess(char *data, packet *p)
-{
+{c
+
     // protocol for data: <task|packet_length|data_length|data>
     // task: 1 byte
     // packet_length: 1 byte
@@ -160,10 +161,12 @@ void send(packet send_packet)
     char *cdata = reinterpret_cast<char *>(&send_packet.data[0]);
     ser.write(cdata[0]);
     ser.write(cdata[1]);
+
     ser.write(send_packet.data_length[1]);
     cdata = reinterpret_cast<char *>(&send_packet.data[1]);
     ser.write(cdata[0]);
     ser.write(cdata[1]);
+    
     ser.write(send_packet.checksum); 
     ser.write(endMarker);
 
