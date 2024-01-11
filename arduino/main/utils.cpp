@@ -10,7 +10,7 @@ unsigned short convert_ushort(char* data, char data_length){
 
 namespace comms{
 
-      packet construct_packet(uint8_t task, uint8_t num_data, uint8_t *data_length, uint16_t *data)
+      packet construct_packet(uint8_t task, uint8_t num_data, uint8_t *data_length, d_int *data)
     {
       packet p;
       p.task = task;
@@ -65,7 +65,7 @@ namespace comms{
           temp[j] = data[counter++];
         }
 
-        p.data[i] = *(reinterpret_cast<uint16_t *>(temp));
+        p.data[i] = *(reinterpret_cast<d_int *>(temp));
         free(temp);
       }
 

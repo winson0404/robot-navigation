@@ -24,9 +24,9 @@ if __name__ == "__main__":
         if mode == "w":
             # time.sleep(0.5)
             print("Sending data to Arduino")
-            task = 20
-            data_size = []
-            data = []
+            task = 30
+            data_size = [2, 2]
+            data = [100, 1000]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
             get_response(serial_port)
                 
             mode = "r"
-            #     start_time = time.time()
+            start_time = time.time()
                 
         if mode == "r":
             if serial_port.in_waiting > 0:
@@ -55,13 +55,14 @@ if __name__ == "__main__":
                 
                 send_response(serial_port, start_marker, end_marker, 0)
                 print("Message received (0):", float(results[0])/100)
-                # print("Message received (1):", results[1])
+                print("Message received (1):", float(results[1])/100)
+                # breakpoint()
                 mode = "w"
                 
-            #     # # set timeout to 1 second
-            #     if time.time() - start_time > 5:
-            #         print("Timeout")
-            #         mode = "w"
+                # # set timeout to 1 second
+            if time.time() - start_time > 5:
+                print("Timeout")
+                mode = "w"
                     
                     
                         

@@ -30,7 +30,7 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
         # data
         _data = data[counter]
         temp_byte = []
-        _temp_data = int.to_bytes(_data, _data_size, byteorder="little")
+        _temp_data = int.to_bytes(_data, _data_size, byteorder="little", signed=True)
         # breakpoint()
         for i in range(_data_size):
             output.append(_temp_data[i:i+1])
@@ -101,7 +101,7 @@ def postprocess(data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
 
 
 def bytearray_to_int(bytelist:bytearray)->int:
-    return int.from_bytes(bytelist, byteorder="little")
+    return int.from_bytes(bytelist, byteorder="little", signed=True)
 
 def list_to_bytearray(bytelist:List[bytes])->bytearray:
     return bytearray(b"".join(bytelist))
@@ -118,7 +118,7 @@ def recvFromArduino(ser: Serial, startMarker:int, endMarker:int)->List[bytes]:
         x = ser.read()
 
         if ser.in_waiting == 0:
-            # breakpoint()
+            breakpoint()
             return data, byteCount
     
     print("Start marker found: ", ord(x))

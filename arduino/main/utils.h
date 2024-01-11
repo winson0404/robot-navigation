@@ -1,5 +1,8 @@
 #ifndef UTILS_FUNCTIONS_H
 #define UTILS_FUNCTIONS_H
+
+#define d_int int16_t
+
 #include <Arduino.h>
 #include <string.h>
 
@@ -31,14 +34,15 @@ namespace constants
 
     // sensor_tasks
     const uint8_t SENSOR_MODE = 2;
-    const uint8_t SENSOR_ULTRASONIC_REQ = 20;
-    const uint8_t SENSOR_IR_REQ = 21;
+    const uint8_t SENSOR_DATA_REQ = 20;
+    // const uint8_t SENSOR_IR_REQ = 21;
 
     // motor tasks
     const uint8_t MOTOR = 3;
-    const uint8_t MOTOR_VELOCITY_REQUEST = 30; // computer request speed of velocity
+    const uint8_t MOTOR_MOVE = 30;                // computer ask the robot to move
+    const uint8_t MOTOR_TURN = 31;                // computer ask the robot to move
+    const uint8_t MOTOR_VELOCITY_REQ = 32;    // computer request speed of velocity
     // const uint8_t MOTOR_VELOCITY_SEND = 31;    // send computer speed of velocity
-    const uint8_t MOTOR_MOVE = 31;             // computer ask the robot to move
 
 }
 
@@ -57,11 +61,11 @@ namespace comms
         uint8_t task;                                 // 1 byte
         uint8_t num_data;                             // 1 byte
         uint8_t data_length[constants::MAX_NUM_DATA]; // 1 byte
-        uint16_t data[constants::MAX_NUM_DATA];       // 2 bytes
+        d_int data[constants::MAX_NUM_DATA];       // 2 bytes
     };
 
     packet construct_packet_from_data_buffer(uint8_t *data);
-    packet construct_packet(uint8_t task, uint8_t num_data, uint8_t *data_length, uint16_t *data);
+    packet construct_packet(uint8_t task, uint8_t num_data, uint8_t *data_length, d_int *data);
 
 
 }

@@ -23,6 +23,9 @@ namespace motor{
     void motor_setup();
     void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p);
     void move_motor(bool &comm_state, uint8_t &task_state, comms::packet &p);
+    void turn_motor(bool &comm_state, uint8_t &task_state, comms::packet &p);
+
+    void move_motor_with_speed(float velocity);
     
     void adjustSpeed(int motor, int speed);
 

@@ -25,11 +25,12 @@ namespace motor
 
     switch (p.task)
     {
-    case constants::MOTOR_VELOCITY_REQUEST:
-      // do sth
-      break;
     case constants::MOTOR_MOVE:
       move_motor(comm_state, task_state, p);
+      break;
+
+    case constants::MOTOR_TURN:
+      turn_motor(comm_state, task_state, p);
       break;
 
     default:
@@ -45,39 +46,104 @@ namespace motor
 
     data protocol:
     Sequence    Content
-     1         direction (0: forward, 1: left, 2: right, 3: back)
-     2         speed (0-255)
-     3         duration (0-255)
+     1         speed (0-255) (+32767)
+     2         duration (0-255)
     */
 
-    uint16_t direction = p.data[0];
-    uint16_t speed = p.data[1];
-    uint16_t duration = p.data[2];
+    d_int speed = p.data[0];
+    d_int duration = p.data[1];
 
+    Serial.print("speed: ");
 
-    switch (direction)
-    {
-    case MOVEMENT_FORWARD:
-      moveFront();
-      break;
-    case MOVEMENT_LEFT:
-      moveLeft();
-      break;
-    case MOVEMENT_RIGHT:
-      moveRight();
-      break;
-    default:
-      moveStop();
-    }
+    move_motor_with_speed(speed);
 
-    adjustSpeed(LEFT_MOTOR, speed);
-    adjustSpeed(RIGHT_MOTOR, speed);
+    // switch (direction)
+    // {
+    // case MOVEMENT_FORWARD:
+    //   moveFront();
+    //   break;
+    // case MOVEMENT_LEFT:
+    //   moveLeft();
+    //   break;
+    // case MOVEMENT_RIGHT:
+    //   moveRight();
+    //   break;
+    // default:
+    //   moveStop();
+    // }
+
+    // adjustSpeed(LEFT_MOTOR, speed);
+    // adjustSpeed(RIGHT_MOTOR, speed);
 
     delay(duration);
 
     moveStop();
     task_state = constants::COMMS;
 
+  }
+
+  void turn_motor(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  {
+    /*
+    Controls the movement of the robot based on the data received from the comms module.
+
+    data protocol:
+    Sequence    Content
+     1         rotation angle (0-255) (+32767)
+    */
+    float rotation_angle = p.data[0] / 100;
+
+    Serial.print("rotation_angle: ");
+
+    Serial.println(rotation_angle);
+
+    if (rotation_angle > 0)
+    {
+      moveRight();
+    }
+    else if (rotation_angle < 0)
+    {
+      moveLeft();
+    }
+    else
+    {
+      moveStop();
+    }
+
+    delay(2000);
+    moveStop();
+
+  }
+
+
+
+  void move_motor_with_speed(float velocity)
+  {
+
+    //make sure velocity is in range -255 to 255
+    if (velocity > 255)
+      velocity = 255;
+    else if (velocity < -255)
+      velocity = -255;
+
+    if (velocity > 0)
+    {
+      adjustSpeed(LEFT_MOTOR, velocity);
+      adjustSpeed(RIGHT_MOTOR, velocity);
+      moveFront(); //place holder cause motor dont accept speed to move wheel
+    }
+    else if (velocity < 0)
+    {
+      adjustSpeed(LEFT_MOTOR, velocity);
+      adjustSpeed(RIGHT_MOTOR, velocity);
+      moveBack(); //place holder cause motor dont accept speed to move wheel
+    }
+    else
+    {
+      adjustSpeed(LEFT_MOTOR, velocity);
+      adjustSpeed(RIGHT_MOTOR, velocity);
+      moveStop(); //place holder cause motor dont accept speed to move wheel
+    }
   }
 
   void adjustSpeed(int motor, int speed)
