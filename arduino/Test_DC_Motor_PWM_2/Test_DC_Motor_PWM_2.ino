@@ -5,48 +5,47 @@
 // Pins declarations
 // Control pins for the DC Motor Driver
 
-#include "movement.h"
+const int LEFT_MOTOR = 0;
+const int RIGHT_MOTOR = 1;
+const int MOVEMENT_FORWARD = 0;
+const int MOVEMENT_RIGHT = 1;
+const int MOVEMENT_LEFT = 2;
 
-
+const int pMotorL1 = 2;
+const int pMotorL2 = 4;
+const int pMotorR1 = 7;
+const int pMotorR2 = 8;
+const int pMotorLSpeedCtrl = 5;  // These two pins has PWM capability.  Also
+const int pMotorRSpeedCtrl = 6;  // on the Arduino reference, pin 5 and 6 has
+                           // similar PWM clock.
+// Global variables                           
+static int nSpeed;
 
 void setup()
 {
-  init_setup();
+  pinMode(pMotorL1, OUTPUT);
+  pinMode(pMotorL2, OUTPUT);
+  pinMode(pMotorR1, OUTPUT);
+  pinMode(pMotorR1, OUTPUT);
+  pinMode(pMotorLSpeedCtrl, OUTPUT);
+  pinMode(pMotorRSpeedCtrl, OUTPUT);
+
+  // Set motor direction, CW.
+
+  nSpeed = 0;
 }
 
 // Turn on Left and Right motors at different speeds.
 void loop()
 {
-  char* movement;
-  Serial.readBytes(movement,1);
-
-  // switch((int)movement){
-  //   case MOVEMENT_FORWARD:
-  //     moveFront();break;
-  //   case MOVEMENT_LEFT:
-  //     moveLeft();break;
-  //   case MOVEMENT_RIGHT:
-  //     moveRight();break;
-  //   default:
-  //     break;
+  // nSpeed = nSpeed + 10;
+  // analogWrite(pMotorLSpeedCtrl,nSpeed);
+  // analogWrite(pMotorRSpeedCtrl,nSpeed);
+  // delay(250);        // Delay 400 msec.
+  // if (nSpeed > 250)  // Max value for nSpeed is 255.
+  // {
+    // nSpeed = 0;    
   // }
-
-  moveFront();
-  delay(2000);
-  moveStop();
-  delay(2000);
-  moveBack();
-  delay(2000);
-  /*
-  nSpeed = nSpeed + 10;
-  analogWrite(pMotorLSpeedCtrl,nSpeed);
-  analogWrite(pMotorRSpeedCtrl,nSpeed);
-  delay(250);        // Delay 400 msec.
-  if (nSpeed > 250)  // Max value for nSpeed is 255.
-  {
-    nSpeed = 0;    
-  }
- */
   
   // Set motor A and B directions, CW, speed 150.
   
@@ -60,12 +59,12 @@ void loop()
   // spinStop(LEFT_MOTOR);
   // delay(2000);
   // spinBack(LEFT_MOTOR);
+  analogWrite(pMotorLSpeedCtrl,50);
+  analogWrite(pMotorRSpeedCtrl,50);  
 
-  // digitalWrite(pMotorL1, HIGH);
-  // digitalWrite(pMotorL2, LOW);
-  // analogWrite(pMotorLSpeedCtrl,50);
-  // digitalWrite(pMotorR1, HIGH);
-  // digitalWrite(pMotorR2, LOW);
-  // analogWrite(pMotorRSpeedCtrl,50);  
-  // delay(2000);   
+  digitalWrite(pMotorL1, HIGH);
+  digitalWrite(pMotorL2, LOW);
+  digitalWrite(pMotorR1, HIGH);
+  digitalWrite(pMotorR2, LOW);
+  delay(2000);
 }
