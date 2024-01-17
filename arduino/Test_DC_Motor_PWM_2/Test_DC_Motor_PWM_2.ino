@@ -29,6 +29,8 @@ void setup()
   pinMode(pMotorR1, OUTPUT);
   pinMode(pMotorLSpeedCtrl, OUTPUT);
   pinMode(pMotorRSpeedCtrl, OUTPUT);
+  analogWrite(pMotorLSpeedCtrl,255);
+  analogWrite(pMotorRSpeedCtrl,255);  
 
   // Set motor direction, CW.
 
@@ -69,14 +71,14 @@ void loop()
   digitalWrite(pMotorR1, HIGH);
   digitalWrite(pMotorR2, LOW);
 
-  analogWrite(pMotorLSpeedCtrl,200);
-  analogWrite(pMotorRSpeedCtrl,200);  
+  analogWrite(pMotorLSpeedCtrl,50);
+  analogWrite(pMotorRSpeedCtrl,50);  
 
   
   delay(2000);
 
-  analogWrite(pMotorLSpeedCtrl,150);
-  analogWrite(pMotorRSpeedCtrl,150);  
+  analogWrite(pMotorLSpeedCtrl,100);
+  analogWrite(pMotorRSpeedCtrl,100);  
 
 
   delay(2000);

@@ -2,8 +2,10 @@
 namespace sensor
 {
   void sensor_setup()
-  {
-    int b = 1;
+  {	
+    pinMode(trigPin, OUTPUT);  
+	  pinMode(echoPin, INPUT);  
+
   }
 
   void sensor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
@@ -32,7 +34,7 @@ namespace sensor
 
 
 
-    float sensor_data_1 = 312.41;
+    float sensor_data_1 = get_ultra_sonic_data();
     d_int output_1 = sensor_data_1*100;
 
 
@@ -59,6 +61,25 @@ namespace sensor
     free(data);
       
     // return output;
+
+  }
+
+  float get_ultra_sonic_data(){
+    float duration, distance;  
+
+    digitalWrite(trigPin, LOW);  
+    delayMicroseconds(2);  
+    digitalWrite(trigPin, HIGH);  
+    delayMicroseconds(10);  
+    digitalWrite(trigPin, LOW);  
+
+    duration = pulseIn(echoPin, HIGH);
+
+    //distance in cm
+    distance = (duration*.0343)/2;  
+
+
+    return distance;
 
   }
 }

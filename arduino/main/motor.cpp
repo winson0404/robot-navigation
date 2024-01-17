@@ -26,11 +26,11 @@ namespace motor
     switch (p.task)
     {
     case constants::MOTOR_MOVE:
-      move_motor(comm_state, task_state, p);
+      move_motor_task(comm_state, task_state, p);
       break;
 
     case constants::MOTOR_TURN:
-      turn_motor(comm_state, task_state, p);
+      turn_motor_task(comm_state, task_state, p);
       break;
 
     default:
@@ -38,7 +38,7 @@ namespace motor
     }
   }
 
-  void move_motor(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  void move_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p)
   {
     /*
     Controls the movement of the robot based on the data received from the comms module.
@@ -82,7 +82,7 @@ namespace motor
 
   }
 
-  void turn_motor(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  void turn_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p)
   {
     /*
     Controls the movement of the robot based on the data received from the comms module.
@@ -110,14 +110,15 @@ namespace motor
       moveStop();
     }
 
-    delay(2000);
+    delay(500);
     moveStop();
 
+    task_state = constants::COMMS;
   }
 
 
 
-  void move_motor_with_speed(float velocity)
+  void move_motor_with_speed(int velocity)
   {
 
     //make sure velocity is in range -255 to 255
@@ -128,21 +129,23 @@ namespace motor
 
     if (velocity > 0)
     {
+      moveFront(); //place holder cause motor dont accept speed to move wheel
       adjustSpeed(LEFT_MOTOR, velocity);
       adjustSpeed(RIGHT_MOTOR, velocity);
-      moveFront(); //place holder cause motor dont accept speed to move wheel
     }
     else if (velocity < 0)
     {
+      moveBack(); //place holder cause motor dont accept speed to move wheel
+
+      velocity = -velocity;
       adjustSpeed(LEFT_MOTOR, velocity);
       adjustSpeed(RIGHT_MOTOR, velocity);
-      moveBack(); //place holder cause motor dont accept speed to move wheel
     }
     else
     {
+      moveStop(); //place holder cause motor dont accept speed to move wheel
       adjustSpeed(LEFT_MOTOR, velocity);
       adjustSpeed(RIGHT_MOTOR, velocity);
-      moveStop(); //place holder cause motor dont accept speed to move wheel
     }
   }
 
@@ -173,13 +176,13 @@ namespace motor
 
   void moveLeft()
   {
-    spinStop(LEFT_MOTOR);
+    spinBack(LEFT_MOTOR);
     spinFront(RIGHT_MOTOR);
   }
 
   void moveRight()
   {
-    spinStop(RIGHT_MOTOR);
+    spinBack(RIGHT_MOTOR);
     spinFront(LEFT_MOTOR);
   }
 
