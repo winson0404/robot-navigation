@@ -59,12 +59,25 @@ void loop()
   // spinStop(LEFT_MOTOR);
   // delay(2000);
   // spinBack(LEFT_MOTOR);
-  analogWrite(pMotorLSpeedCtrl,50);
-  analogWrite(pMotorRSpeedCtrl,50);  
 
+  
+  // turn front
   digitalWrite(pMotorL1, HIGH);
   digitalWrite(pMotorL2, LOW);
+
+  // turn front
   digitalWrite(pMotorR1, HIGH);
   digitalWrite(pMotorR2, LOW);
+
+  analogWrite(pMotorLSpeedCtrl,200);
+  analogWrite(pMotorRSpeedCtrl,200);  
+
+  
+  delay(2000);
+
+  analogWrite(pMotorLSpeedCtrl,150);
+  analogWrite(pMotorRSpeedCtrl,150);  
+
+
   delay(2000);
 }
