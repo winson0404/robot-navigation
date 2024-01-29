@@ -1,0 +1,8 @@
+[project]
+name = "robot_system_pkg"
+version = "0.1.0"
+description = "My roboy system project"
+
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.2,<4"]

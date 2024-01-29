@@ -12,7 +12,7 @@ namespace constants
     constexpr uint8_t RECEIVE_BUFFER_SIZE = 64;
 
     // serial setting
-    const int BAUD_RATE = 9600;
+    const int BAUD_RATE = 19200;
     const uint8_t START_MARKER = 0x3c; //'<'
     const uint8_t END_MARKER = 0x3e;   //'>'
 

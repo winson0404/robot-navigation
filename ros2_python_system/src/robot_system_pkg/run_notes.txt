@@ -1,0 +1,4 @@
+1. add to setup.py
+2. chmod +x node.py
+3. colcon build / colcon build --packages-select robot_system_pkg --symlink-install
+3. ros2 run robot_system_pkg node

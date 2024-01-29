@@ -5,8 +5,6 @@ struct test_packet {
     int num_data;
 };
 
-
-
 test_packet test()
 {
     test_packet p2;
