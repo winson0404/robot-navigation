@@ -1,2 +1,6 @@
 msg/SensorStatus.idl
 msg/SensorStatus.msg
+srv/ControlMovement.idl
+srv/ControlMovement.srv
+srv/ControlMovement_Request.msg
+srv/ControlMovement_Response.msg

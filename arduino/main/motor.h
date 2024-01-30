@@ -23,21 +23,25 @@ namespace motor{
     void motor_setup();
     void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p);
     void move_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
-    void turn_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
+    void velocity_req_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
 
-    void move_motor_with_speed(int velocity);
+    // void move_motor_with_speed(int velocity);
+    void handle_rotate_with_radian(float radian);
+    void handle_displacement_with_velocity(float velocity);
+
+
     
-    void adjustSpeed(int motor, int speed);
+    void adjust_speed(int motor, int speed);
 
-    void spinBack(int motor);
-    void spinFront(int motor);
-    void spinStop(int motor);
+    void spin_back(int motor);
+    void spin_front(int motor);
+    void spin_stop(int motor);
 
-    void moveFront();
-    void moveBack();
-    void moveLeft();
-    void moveRight();
-    void moveStop();
+    void move_front();
+    void move_back();
+    void abs_rotate_clockwise();
+    void abs_rotate_counter_clockwise();
+    void move_stop();
 
 }
 

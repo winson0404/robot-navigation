@@ -18,9 +18,6 @@ const int pMotorR2 = 8;
 const int pMotorLSpeedCtrl = 5;  // These two pins has PWM capability.  Also
 const int pMotorRSpeedCtrl = 6;  // on the Arduino reference, pin 5 and 6 has
                            // similar PWM clock.
-// Global variables                           
-static int nSpeed;
-
 void setup()
 {
   pinMode(pMotorL1, OUTPUT);
@@ -29,12 +26,6 @@ void setup()
   pinMode(pMotorR1, OUTPUT);
   pinMode(pMotorLSpeedCtrl, OUTPUT);
   pinMode(pMotorRSpeedCtrl, OUTPUT);
-  analogWrite(pMotorLSpeedCtrl,255);
-  analogWrite(pMotorRSpeedCtrl,255);  
-
-  // Set motor direction, CW.
-
-  nSpeed = 0;
 }
 
 // Turn on Left and Right motors at different speeds.
@@ -63,23 +54,46 @@ void loop()
   // spinBack(LEFT_MOTOR);
 
   
-  // turn front
+  // // turn front
+  // digitalWrite(pMotorL1, HIGH);
+  // digitalWrite(pMotorL2, LOW);
+
+  // // turn front
+  // digitalWrite(pMotorR1, HIGH);
+  // digitalWrite(pMotorR2, LOW);
+
+  // analogWrite(pMotorLSpeedCtrl,50);
+  // analogWrite(pMotorRSpeedCtrl,50);  
+
+  
+  // delay(2000);
+
+  // analogWrite(pMotorLSpeedCtrl,100);
+  // analogWrite(pMotorRSpeedCtrl,100);  
+
+  // right_motor_rotate back
+  digitalWrite(pMotorR1, LOW);
+  digitalWrite(pMotorR2, HIGH);
+
+  // left_motor_rotate front
   digitalWrite(pMotorL1, HIGH);
   digitalWrite(pMotorL2, LOW);
 
-  // turn front
-  digitalWrite(pMotorR1, HIGH);
-  digitalWrite(pMotorR2, LOW);
 
-  analogWrite(pMotorLSpeedCtrl,50);
-  analogWrite(pMotorRSpeedCtrl,50);  
+  // analogWrite(pMotorLSpeedCtrl,100);
+  // analogWrite(pMotorRSpeedCtrl,100);  
+
+  // delay(1700);
+  // delay(880);
 
   
-  delay(2000);
+  // // right_motor_rotate back
+  // digitalWrite(pMotorR1, LOW);
+  // digitalWrite(pMotorR2, LOW);
 
-  analogWrite(pMotorLSpeedCtrl,100);
-  analogWrite(pMotorRSpeedCtrl,100);  
+  // // left_motor_rotate front
+  // digitalWrite(pMotorL1, LOW);
+  // digitalWrite(pMotorL2, LOW);
 
-
-  delay(2000);
+  // delay(1000);
 }

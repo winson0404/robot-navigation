@@ -1,0 +1,17 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from custom_interfaces/srv/ControlMovement.srv
+// generated code does not contain a copyright notice
+
+
+module custom_interfaces {
+  module srv {
+    struct ControlMovement_Request {
+      float velocity;
+
+      float radian;
+    };
+    struct ControlMovement_Response {
+      boolean status;
+    };
+  };
+};

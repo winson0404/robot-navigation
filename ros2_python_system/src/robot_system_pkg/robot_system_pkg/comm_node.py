@@ -6,9 +6,9 @@ from robot_system_pkg.utils import _constants as constant
 from robot_system_pkg.utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
 from robot_system_pkg.utils.helper_comm import structure_data
 from custom_interfaces.msg import SensorStatus
+from custom_interfaces.srv import ControlMovement
 from typing import List, Tuple
 import time
-
 
 class CommNode(Node):
     def __init__(self, ser: UART_Serial):
@@ -20,6 +20,7 @@ class CommNode(Node):
         self.get_logger().info(f'CommNode has been initialized on {constant.SERIAL_PORT} with baud rate {constant.BAUD_RATE}')
         
         self.create_timer(0.05, self.fetch_sensor_callback)
+        self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         
         if self.gotTask:
             pass
@@ -35,6 +36,7 @@ class CommNode(Node):
                 2            4         right infared ray data (float*100 => int16_t)
         """
         
+        self.get_logger().info(f"Got task: {self.gotTask}")
         if self.isReceivingComm == False and self.gotTask == False:
             start_time = time.time()
             self.isReceivingComm = True
@@ -60,6 +62,23 @@ class CommNode(Node):
                 data, byteCount, status = self.ser.receive_data(constant.STARTMARKER, constant.ENDMARKER)
                 task, results = self.ser.postprocess(data, byteCount)
                 return task, results, status
+    
+    def move_robot_callback(self, request, response):
+        self.get_logger().info(f"Received request to move robot {request.direction}")
+        if request.direction == "forward":
+            self.move_robot_forward()
+        elif request.direction == "backward":
+            self.move_robot_backward()
+        elif request.direction == "left":
+            self.move_robot_left()
+        elif request.direction == "right":
+            self.move_robot_right()
+        elif request.direction == "stop":
+            self.move_robot_stop()
+        else:
+            self.get_logger().info(f"Invalid request to move robot {request.direction}")
+        return response
+        
     
     def publish_sensor_data(self):
         msg = SensorStatus()

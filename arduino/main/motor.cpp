@@ -12,12 +12,14 @@ namespace motor
     pinMode(pMotorR1, OUTPUT);
     pinMode(pMotorLSpeedCtrl, OUTPUT);
     pinMode(pMotorRSpeedCtrl, OUTPUT);
-
     // Set motor direction, CW.a
     // spinFront(LEFT_MOTOR);
     // moveFront();
-    spinStop(LEFT_MOTOR);
-    spinStop(RIGHT_MOTOR);
+    spin_stop(LEFT_MOTOR);
+    spin_stop(RIGHT_MOTOR);
+
+    adjust_speed(LEFT_MOTOR, 255);
+    adjust_speed(RIGHT_MOTOR, 255);
   }
 
   void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
@@ -29,8 +31,8 @@ namespace motor
       move_motor_task(comm_state, task_state, p);
       break;
 
-    case constants::MOTOR_TURN:
-      turn_motor_task(comm_state, task_state, p);
+    case constants::MOTOR_VELOCITY_REQ:
+      velocity_req_task(comm_state, task_state, p);
       break;
 
     default:
@@ -41,115 +43,86 @@ namespace motor
   void move_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p)
   {
     /*
-    Controls the movement of the robot based on the data received from the comms module.
-
-
-    data protocol:
-    Sequence    Content
-     1         speed (0-255) (+32767)
-     2         duration (0-255)
+    Controls the rotation and displacement of robot based on the velocity and radian received from the processor.
+            Byte_Size     Sequence                 Content
+                2            1         velocity (float*100 => d_int)
+                2            2         radian (float*100 => d_int)
     */
 
-    d_int speed = p.data[0];
-    d_int duration = p.data[1];
+    float velocity = ((float)p.data[0] )/ 100;
+    float radian = ((float)p.data[1] )/ 100;
+    Serial.println("Motor Task Received..");
 
-    Serial.print("speed: ");
-
-    move_motor_with_speed(speed);
-
-    // switch (direction)
-    // {
-    // case MOVEMENT_FORWARD:
-    //   moveFront();
-    //   break;
-    // case MOVEMENT_LEFT:
-    //   moveLeft();
-    //   break;
-    // case MOVEMENT_RIGHT:
-    //   moveRight();
-    //   break;
-    // default:
-    //   moveStop();
-    // }
-
-    // adjustSpeed(LEFT_MOTOR, speed);
-    // adjustSpeed(RIGHT_MOTOR, speed);
-
-    delay(duration);
-
-    moveStop();
-    task_state = constants::COMMS;
-
-  }
-
-  void turn_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p)
-  {
-    /*
-    Controls the movement of the robot based on the data received from the comms module.
-
-    data protocol:
-    Sequence    Content
-     1         rotation angle (0-255) (+32767)
-    */
-    float rotation_angle = p.data[0] / 100;
-
-    Serial.print("rotation_angle: ");
-
-    Serial.println(rotation_angle);
-
-    if (rotation_angle > 0)
-    {
-      moveRight();
-    }
-    else if (rotation_angle < 0)
-    {
-      moveLeft();
-    }
-    else
-    {
-      moveStop();
-    }
-
-    delay(500);
-    moveStop();
+    // move_motor_with_speed(speed);
+    handle_rotate_with_radian(radian);
+    delay(1000);
+    handle_displacement_with_velocity(velocity);
 
     task_state = constants::COMMS;
   }
 
-
-
-  void move_motor_with_speed(int velocity)
+  void handle_rotate_with_radian(float radian)
   {
+    Serial.print("Rotating with radian: ");
+    Serial.println(radian);
+    int degree = (radian * 180) / 3.14159;
 
-    //make sure velocity is in range -255 to 255
-    if (velocity > 255)
-      velocity = 255;
-    else if (velocity < -255)
-      velocity = -255;
+    bool is_clockwise = degree > 0;
 
-    if (velocity > 0)
+    int time_needed = (48.88 * (degree)) / 10;
+
+    adjust_speed(LEFT_MOTOR, 90);
+    adjust_speed(RIGHT_MOTOR, 90);
+
+    if (is_clockwise)
+      abs_rotate_clockwise();
+    else
+      abs_rotate_counter_clockwise();
+
+    delay(time_needed);
+
+    move_stop();
+  }
+
+  void handle_displacement_with_velocity(float velocity)
+  {
+    int speed = (int)velocity; // TODO: do some conversion to map velocity to -255 to 255
+    Serial.print("moving with speed: ");
+    Serial.println(speed);
+    // make sure velocity is in range -255 to 255
+    if (speed > 255)
+      speed = 255;
+    else if (speed < -255)
+      speed = -255;
+
+    if (speed > 0)
     {
-      moveFront(); //place holder cause motor dont accept speed to move wheel
-      adjustSpeed(LEFT_MOTOR, velocity);
-      adjustSpeed(RIGHT_MOTOR, velocity);
+      move_front(); // place holder cause motor dont accept speed to move wheel
+      adjust_speed(LEFT_MOTOR, speed);
+      adjust_speed(RIGHT_MOTOR, speed);
     }
-    else if (velocity < 0)
+    else if (speed < 0)
     {
-      moveBack(); //place holder cause motor dont accept speed to move wheel
+      move_back(); // place holder cause motor dont accept speed to move wheel
 
-      velocity = -velocity;
-      adjustSpeed(LEFT_MOTOR, velocity);
-      adjustSpeed(RIGHT_MOTOR, velocity);
+      speed = -speed;
+      adjust_speed(LEFT_MOTOR, speed);
+      adjust_speed(RIGHT_MOTOR, speed);
     }
     else
     {
-      moveStop(); //place holder cause motor dont accept speed to move wheel
-      adjustSpeed(LEFT_MOTOR, velocity);
-      adjustSpeed(RIGHT_MOTOR, velocity);
+      move_stop(); // place holder cause motor dont accept speed to move wheel
+      adjust_speed(LEFT_MOTOR, speed);
+      adjust_speed(RIGHT_MOTOR, speed);
     }
   }
 
-  void adjustSpeed(int motor, int speed)
+  void velocity_req_task(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  {
+    return;
+  }
+
+  void adjust_speed(int motor, int speed)
   {
 
     if (motor == LEFT_MOTOR)
@@ -158,41 +131,40 @@ namespace motor
       analogWrite(pMotorRSpeedCtrl, speed);
   }
 
-  void moveFront()
-  {     
-     Serial.println("moveFront");
-      // Serial.print("Task: ");
-      // Serial.println(direction);
-
-    spinFront(LEFT_MOTOR);
-    spinFront(RIGHT_MOTOR);
-  }
-
-  void moveBack()
+  void abs_rotate_clockwise()
   {
-    spinBack(LEFT_MOTOR);
-    spinBack(RIGHT_MOTOR);
+    spin_back(LEFT_MOTOR);
+    spin_front(RIGHT_MOTOR);
   }
 
-  void moveLeft()
+  void abs_rotate_counter_clockwise()
   {
-    spinBack(LEFT_MOTOR);
-    spinFront(RIGHT_MOTOR);
+    spin_front(LEFT_MOTOR);
+    spin_back(RIGHT_MOTOR);
   }
 
-  void moveRight()
+  void move_front()
   {
-    spinBack(RIGHT_MOTOR);
-    spinFront(LEFT_MOTOR);
+    // Serial.print("Task: ");
+    // Serial.println(direction);
+
+    spin_front(LEFT_MOTOR);
+    spin_front(RIGHT_MOTOR);
   }
 
-  void moveStop()
+  void move_back()
   {
-    spinStop(LEFT_MOTOR);
-    spinStop(RIGHT_MOTOR);
+    spin_back(LEFT_MOTOR);
+    spin_back(RIGHT_MOTOR);
   }
 
-  void spinFront(int motor)
+  void move_stop()
+  {
+    spin_stop(LEFT_MOTOR);
+    spin_stop(RIGHT_MOTOR);
+  }
+
+  void spin_front(int motor)
   {
     if (motor == LEFT_MOTOR)
     {
@@ -207,7 +179,7 @@ namespace motor
     }
   }
 
-  void spinBack(int motor)
+  void spin_back(int motor)
   {
     if (motor == LEFT_MOTOR)
     {
@@ -222,7 +194,7 @@ namespace motor
     }
   }
 
-  void spinStop(int motor)
+  void spin_stop(int motor)
   {
     if (motor == LEFT_MOTOR)
     {

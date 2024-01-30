@@ -40,8 +40,7 @@ namespace constants
     // motor tasks
     const uint8_t MOTOR = 3;
     const uint8_t MOTOR_MOVE = 30;                // computer ask the robot to move
-    const uint8_t MOTOR_TURN = 31;                // computer ask the robot to move
-    const uint8_t MOTOR_VELOCITY_REQ = 32;    // computer request speed of velocity
+    const uint8_t MOTOR_VELOCITY_REQ = 31;    // computer request speed of velocity
     // const uint8_t MOTOR_VELOCITY_SEND = 31;    // send computer speed of velocity
 
 }

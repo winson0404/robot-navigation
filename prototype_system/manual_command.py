@@ -3,7 +3,7 @@ import time
 from utils import *
 if __name__ == "__main__":
     port_name = "/dev/ttyUSB0"
-    baud_rate = 9600
+    baud_rate = 19200
     serial_port = serial.Serial(port_name, baud_rate)
     print(f"Serial port opened {port_name} with baud rate {baud_rate}")
 
@@ -22,38 +22,28 @@ if __name__ == "__main__":
     start_time = time.time()
     while True:
         
-        print("1. Move with velocity")
-        print("2. Turn with angle")
-        print("3. Retrieve sensor data")
+        print("1. Move with velocity and radian")
+        print("2. Retrieve sensor data")
         
         move = int(input("Enter your choice: "))
         
         if move == 1:
-            velocity = int(input("Enter velocity: "))
+            velocity = int(float(input("Enter velocity: "))*100)
+            radian = int(float(input("Enter angle (in radian): "))*100)
+            
+            print(f"Sending data of velocity: {velocity} and radian: {radian}")
             task = 30
             data_size = [2, 2]
-            data = [velocity, 3000]
+            data = [velocity, radian]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)
             print("Data sent")
             # delay for 200 milliseconds
             get_response(serial_port)
-        
+            
+            
         elif move == 2:
-            angle = float(input("Enter angle: "))
-            task = 31
-            data_size = [2]
-            data = [int(angle*100)]
-            send_data = structure_data(start_marker, end_marker, task, data_size, data)
-            # breakpoint()
-            sendToArduino(serial_port, send_data)
-            print("Data sent")
-            # delay for 200 milliseconds
-            get_response(serial_port)
-            
-            
-        elif move == 3:
             task = 20
             data_size = []
             data = []
