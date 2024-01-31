@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "comm_node = robot_system_pkg.comm_node:main",
+            "brain_node = robot_system_pkg.brain_node:main",
             "test_node = robot_system_pkg.test_node:main"
         ],
     },

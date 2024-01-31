@@ -1,3 +1,4 @@
+#include "HardwareSerial.h"
 #include "_uart.h"
 
 namespace serial
@@ -8,6 +9,7 @@ namespace serial
         while (ser.available() > 0)
         {
             ser.read();
+            Serial.println(ser.available());
         }
     }
 
@@ -56,6 +58,9 @@ namespace serial
         // send end marker
         ser.write(endMarker);
 
+        receive_acknowledge(ser, 0,  startMarker, endMarker);
+        Serial.println("Sent");
+
 
     }
 
@@ -69,10 +74,10 @@ namespace serial
         {
             rc = ser.read();
 
+            int data_count = 0;
+            uint8_t packet_length = 0;
             if (recvInProgress == true)
             {
-                int data_count = 0;
-                int packet_length = 0;
                 char checksum = 0;
                 if (rc != endMarker)
                 {
@@ -97,9 +102,15 @@ namespace serial
 
                     if (ser.overflow())
                     {
+                        Serial.println("Failed in ser overflow");
+                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW, startMarker, endMarker);
                         clear_buffer(ser);
-                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL, startMarker, endMarker);
-                        break;
+                        delay(1000);
+                        newData = false;
+                        recvInProgress = false;
+                        while(true){
+                          
+                        }
                     }
                 }
                 else // if reached end marker
@@ -107,16 +118,19 @@ namespace serial
                     recvInProgress = false;
                     ndx = 0;
                     newData = true;
+                    // Serial.print("Received Packet length: ");
+                    // Serial.println(data_count);
                     if (data_count != packet_length)
                     {
 
                         clear_buffer(ser);
                         newData = false;
-                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL, startMarker, endMarker);
+                        Serial.println("Failed in missmatched packet length");
+                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_LENGTH_MISMATCH, startMarker, endMarker);
+
                         break;
                     }
 
-                    serial::send_acknowledge(ser, constants::ACKNOWLEDGE_SUCCESS, startMarker, endMarker);
                 }
             }
 
@@ -140,7 +154,7 @@ namespace serial
         uint8_t data_buffer[constants::RECEIVE_BUFFER_SIZE];
         bool new_data_available = false;
         unsigned long StartTime = millis();
-        unsigned short time_out = 1000;
+        unsigned short time_out = 200;
         while (true)
         {
             serial::recv_with_start_end_markers(ser, data_buffer, new_data_available, start_marker, end_marker);
@@ -149,18 +163,22 @@ namespace serial
             {
                 if (data_buffer[0] == constants::ACKNOWLEDGE_SUCCESS)
                 {
-                    // free(data);
+                    // free(data);`
+                    // Serial.println("Received Acknowledgement");
                     return true;
                 }
-                else if (data_buffer[0] == constants::ACKNOWLEDGE_FAIL)
+                else if (data_buffer[0] == constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW)
                 {
-                    // free(data);
-                    return false;
+                  // free(data);
+                  Serial.print("Received Failed Acknowledgement: ");
+                  Serial.println(data_buffer[0]);
+                  return false;
                 }
             }
             else if (millis() - StartTime > time_out)
             {
                 // free(data);
+                Serial.println("Receive Acknowledgement Time out");
                 return false;
             }
         }

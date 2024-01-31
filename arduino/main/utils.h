@@ -22,7 +22,8 @@ namespace constants
 
     // _UART
     const uint8_t ACKNOWLEDGE_SUCCESS = 0;
-    const uint8_t ACKNOWLEDGE_FAIL = 1;
+    const uint8_t ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW = 1;
+    const uint8_t ACKNOWLEDGE_FAIL_LENGTH_MISMATCH = 2;
 
     // serial mode
     const bool RECEIVE = 1;

@@ -1,8 +1,8 @@
 from typing import List, Tuple
-from robot_system_pkg.utils._packet import Packet
+from ..utils._packet import Packet
 import serial
-from robot_system_pkg.utils import _constants as constants
-from robot_system_pkg.utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
+from ..utils import _constants as constants
+from ..utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
 
 import time
 
@@ -69,6 +69,7 @@ class UART_Serial:
     
     def send_bytearray(self, sendbytes:bytearray)->None:
         # breakpoint()
+        # print(sendbytes)
         self.ser.write(sendbytes)
             #wait until send finishes
         while self.ser.out_waiting > 0:
@@ -91,25 +92,30 @@ class UART_Serial:
         output = [int.to_bytes(startMarker, 1, byteorder="little")]
         output.append(int.to_bytes(response, 1, byteorder="little"))
         output.append(int.to_bytes(endMarker, 1, byteorder="little"))
-        self.send_bytearray(list_to_bytearray(output))
+        self.ser.write(list_to_bytearray(output))
+        while self.ser.out_waiting > 0:
+            pass
         
     def receive_acknowledgement(self)->int:
         start_time = time.time()
         while True:
             if self.ser.in_waiting >= 3:
                 response, _, status = self.receive_data(constants.STARTMARKER, constants.ENDMARKER)
+                if response == []:
+                    return -1
                 response = bytearray_to_int(response[0])
                 if response == constants.ACKNOWLEDGEMENT_SUCCESS:
-                    # print("Response received: Success")
+                    print("Response received: Success")
                     return response
                 elif response == constants.ACKNOWLEDGEMENT_FAIL:
                     print("Response received: Fail")
                     return response
                 else:
-                    print("Response received: Unknown")
+                    print(f"Response received: Unknown ({response})")
                     return response
             elif time.time() - start_time > constants.TIMEOUT:
                 print("Timeout")
+                # breakpoint()
                 return -1
 
     def postprocess(self, data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
@@ -119,21 +125,31 @@ class UART_Serial:
         # breakpoint()
         checksum = 0
         # counter += 1
-        packet_length = bytearray_to_int(data[counter])
-        counter += 1
-        task = bytearray_to_int(data[counter])
-        counter += 1
-        num_data = bytearray_to_int(data[counter])
-        counter += 1
-        data_length = []
-        results = []
-        for i in range(num_data):
-            _data_length = bytearray_to_int(data[counter])
-            data_length.append(_data_length)
+        try:
+            
+            packet_length = bytearray_to_int(data[counter])
+            if packet_length != len(data):
+                # breakpoint()
+                return -1, []
+            print(f"packet_length: {packet_length}")
+            if packet_length < 1:
+                return -1, []
             counter += 1
-            _data = bytearray_to_int(list_to_bytearray(data[counter:counter+_data_length]))
-            results.append(_data)
-            counter += _data_length
-        
-        checksum = bytearray_to_int(data[counter])
+            task = bytearray_to_int(data[counter])
+            counter += 1
+            num_data = bytearray_to_int(data[counter])
+            counter += 1
+            data_length = []
+            results = []
+            for i in range(num_data):
+                _data_length = bytearray_to_int(data[counter])
+                data_length.append(_data_length)
+                counter += 1
+                _data = bytearray_to_int(list_to_bytearray(data[counter:counter+_data_length]))
+                results.append(_data)
+                counter += _data_length
+            
+            checksum = bytearray_to_int(data[counter])
+        except:
+            breakpoint()
         return task, results

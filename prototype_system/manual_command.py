@@ -2,7 +2,7 @@ import serial
 import time
 from utils import *
 if __name__ == "__main__":
-    port_name = "/dev/ttyUSB0"
+    port_name = "/dev/ttyUSB1"
     baud_rate = 19200
     serial_port = serial.Serial(port_name, baud_rate)
     print(f"Serial port opened {port_name} with baud rate {baud_rate}")
@@ -64,9 +64,9 @@ if __name__ == "__main__":
                     
                     send_response(serial_port, start_marker, end_marker, 0)
                     print("Message received (0):", float(results[0])/100)
-                    print("Message received (1):", float(results[1])/100)
-                    print("Message received (2):", float(results[2])/100)
-                    print("Message received (3):", float(results[3])/100)
+                    print("Message received (1):", results[1])
+                    print("Message received (2):", results[2])
+                    print("Message received (3):", results[3])
                     # breakpoint()
                     break
                     

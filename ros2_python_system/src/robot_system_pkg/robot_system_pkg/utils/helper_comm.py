@@ -1,4 +1,4 @@
-from robot_system_pkg.utils._packet import Packet
+from ._packet import Packet
 from typing import List, Tuple
 
 
@@ -11,13 +11,13 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     checksum = 0
     packet_length = 0
     
-    output.append(int.to_bytes(packet_length, 1, byteorder="little"))
+    output.append(int.to_bytes(packet_length, 1, byteorder="little")) # packet length
     packet_length += 1
 
-    output.append(int.to_bytes(task, 1, byteorder="little"))
+    output.append(int.to_bytes(task, 1, byteorder="little")) # task
     packet_length += 1
     
-    output.append(int.to_bytes(len(data_size), 1, byteorder="little"))
+    output.append(int.to_bytes(len(data_size), 1, byteorder="little")) # num data
     packet_length += 1
     
     counter = 0
@@ -51,7 +51,8 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     
     output.append(int.to_bytes(endMarker, 1, byteorder="little"))
     # output.append(int.to_bytes(checksum, 1, byteorder="little"))
-    
+    print(f"output: {output}")
+    print(f"bytearray(b''.join(output)): {bytearray(b''.join(output))}")
     return bytearray(b"".join(output))
 
 def packet_to_bytearray(packet:Packet)->bytearray:

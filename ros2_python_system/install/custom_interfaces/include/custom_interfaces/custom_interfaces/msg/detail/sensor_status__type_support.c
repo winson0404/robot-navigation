@@ -34,7 +34,7 @@ void custom_interfaces__msg__SensorStatus__rosidl_typesupport_introspection_c__S
 static rosidl_typesupport_introspection_c__MessageMember custom_interfaces__msg__SensorStatus__rosidl_typesupport_introspection_c__SensorStatus_message_member_array[4] = {
   {
     "left_ir",  // name
-    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    rosidl_typesupport_introspection_c__ROS_TYPE_INT8,  // type
     0,  // upper bound of string
     NULL,  // members of sub message
     false,  // is array
@@ -51,7 +51,7 @@ static rosidl_typesupport_introspection_c__MessageMember custom_interfaces__msg_
   },
   {
     "right_ir",  // name
-    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    rosidl_typesupport_introspection_c__ROS_TYPE_INT8,  // type
     0,  // upper bound of string
     NULL,  // members of sub message
     false,  // is array
@@ -68,7 +68,7 @@ static rosidl_typesupport_introspection_c__MessageMember custom_interfaces__msg_
   },
   {
     "front_ir",  // name
-    rosidl_typesupport_introspection_c__ROS_TYPE_FLOAT,  // type
+    rosidl_typesupport_introspection_c__ROS_TYPE_INT8,  // type
     0,  // upper bound of string
     NULL,  // members of sub message
     false,  // is array

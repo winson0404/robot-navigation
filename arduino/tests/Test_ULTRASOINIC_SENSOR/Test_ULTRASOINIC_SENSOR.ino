@@ -1,5 +1,5 @@
 const int trigPin = 10;  
-const int echoPin = 9; 
+const int echoPin = 3; 
 
 void setup() {
   // put your setup code here, to run once:

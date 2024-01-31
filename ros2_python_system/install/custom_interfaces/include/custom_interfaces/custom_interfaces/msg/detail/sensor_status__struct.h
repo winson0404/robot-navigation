@@ -20,9 +20,9 @@ extern "C"
 /// Struct defined in msg/SensorStatus in the package custom_interfaces.
 typedef struct custom_interfaces__msg__SensorStatus
 {
-  float left_ir;
-  float right_ir;
-  float front_ir;
+  int8_t left_ir;
+  int8_t right_ir;
+  int8_t front_ir;
   float front_us;
 } custom_interfaces__msg__SensorStatus;
 

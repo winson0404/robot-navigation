@@ -6,11 +6,11 @@
 module custom_interfaces {
   module msg {
     struct SensorStatus {
-      float left_ir;
+      int8 left_ir;
 
-      float right_ir;
+      int8 right_ir;
 
-      float front_ir;
+      int8 front_ir;
 
       float front_us;
     };

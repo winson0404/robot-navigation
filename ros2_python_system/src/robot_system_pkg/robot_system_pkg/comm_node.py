@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from robot_system_pkg.comms.uart import UART_Serial
-from robot_system_pkg.utils import _constants as constant
-from robot_system_pkg.utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
-from robot_system_pkg.utils.helper_comm import structure_data
+# import serial
+from .comms.uart import UART_Serial
+from .utils import _constants as constant
+from .utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
+from .utils.helper_comm import structure_data
 from custom_interfaces.msg import SensorStatus
 from custom_interfaces.srv import ControlMovement
 from typing import List, Tuple
@@ -19,12 +20,10 @@ class CommNode(Node):
         self.sensor_data_publisher = self.create_publisher(SensorStatus, 'sensor_status', 10)
         self.get_logger().info(f'CommNode has been initialized on {constant.SERIAL_PORT} with baud rate {constant.BAUD_RATE}')
         
-        self.create_timer(0.05, self.fetch_sensor_callback)
+        self.create_timer(0.1, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         
-        if self.gotTask:
-            pass
-        
+
     def fetch_sensor_callback(self)->None:
         """Request for sensor data from Arduino every 200 milliseconds if no task:
         
@@ -36,48 +35,94 @@ class CommNode(Node):
                 2            4         right infared ray data (float*100 => int16_t)
         """
         
-        self.get_logger().info(f"Got task: {self.gotTask}")
+        self.get_logger().info(f"isReceivingComm: {self.isReceivingComm}")
         if self.isReceivingComm == False and self.gotTask == False:
             start_time = time.time()
             self.isReceivingComm = True
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, constant.SENSOR_DATA_REQ, [], [])
             self.ser.send_bytearray(send_data)
-            self.ser.receive_acknowledgement()
+            if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
+                self.isReceivingComm = False
+                msg = SensorStatus()
+                msg.front_us = -100.0
+                msg.front_ir = -100
+                msg.left_ir = -100
+                msg.right_ir = -100
+                self.sensor_data_publisher.publish(msg)
+                print("Failed to request for sensor data")
+                # stop node for 500 ms
+                # time.sleep(0.5)
+                return
             task, results, status = self.receive_sensor_data_handler()
             self.ser.send_acknowledgement(constant.STARTMARKER, constant.ENDMARKER, status)
             
-            msg = SensorStatus()
-            msg.front_us = float(results[0])/100
-            msg.front_ir = float(results[1])/100
-            msg.left_ir = float(results[2])/100
-            msg.right_ir = float(results[3])/100
+            if status != constant.ACKNOWLEDGEMENT_SUCCESS:
+                self.isReceivingComm = False
+                msg = SensorStatus()
+                msg.front_us = -100.0
+                msg.front_ir = -100
+                msg.left_ir = -100
+                msg.right_ir = -100
+                self.sensor_data_publisher.publish(msg)
+                print("Failed to receive sensor data")
+                # stop node for 500 ms
+                # time.sleep(0.5)
+                
+                
+            else:
+                try:
+                    msg = SensorStatus()
+                    msg.front_us = float(results[0])/100
+                    msg.front_ir = results[1]
+                    msg.left_ir = results[2]
+                    msg.right_ir = results[3]
 
-            self.sensor_data_publisher.publish(msg)
-            self.isReceivingComm = False
-            self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
+                    self.sensor_data_publisher.publish(msg)
+                    self.isReceivingComm = False
+                    self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
+                except:
+                    self.isReceivingComm = False
+                    msg = SensorStatus()
+                    msg.front_us = -100.0
+                    msg.front_ir = -100
+                    msg.left_ir = -100
+                    msg.right_ir = -100
+                    self.sensor_data_publisher.publish(msg)
+                    print("Failed to publish sensor data")
+                    # stop node for 500 ms
+                    # time.sleep(0.5)
+
+    def move_robot_callback(self, request, response):
+        self.gotTask = True
+        self.get_logger().info(f"Got task: {self.gotTask}")
+        self.get_logger().info(f"Received request: {request}")
+        velocity = int(request.velocity*100)
+        radian = int(request.radian*100)
+        
+        task = constant.MOTOR_MOVE
+        data_size = [2, 2]
+        data = [velocity, radian]
+        send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, task, data_size, data)
+        
+        self.ser.send_bytearray(send_data)
+        
+        response.status = self.ser.receive_acknowledgement() == 0
+        self.gotTask = False
+        
+        return response
 
     def receive_sensor_data_handler(self)->Tuple[int, List[int], int]:
         while True:
-            if self.ser.ser.in_waiting >= constant.SENSOR_PACKET_LENGTH:
+            if self.ser.ser.in_waiting > 0:
                 data, byteCount, status = self.ser.receive_data(constant.STARTMARKER, constant.ENDMARKER)
+                if status == constant.ACKNOWLEDGEMENT_FAIL:
+                    return None, None, status
+                print(f"status: {status}")
                 task, results = self.ser.postprocess(data, byteCount)
+                if len(results) == 0:
+                    print("length results == 0")
+                    return None, None, constant.ACKNOWLEDGEMENT_FAIL
                 return task, results, status
-    
-    def move_robot_callback(self, request, response):
-        self.get_logger().info(f"Received request to move robot {request.direction}")
-        if request.direction == "forward":
-            self.move_robot_forward()
-        elif request.direction == "backward":
-            self.move_robot_backward()
-        elif request.direction == "left":
-            self.move_robot_left()
-        elif request.direction == "right":
-            self.move_robot_right()
-        elif request.direction == "stop":
-            self.move_robot_stop()
-        else:
-            self.get_logger().info(f"Invalid request to move robot {request.direction}")
-        return response
         
     
     def publish_sensor_data(self):

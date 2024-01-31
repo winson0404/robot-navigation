@@ -140,6 +140,8 @@ def sendToArduino(ser: Serial, send_bytes:bytearray)->None:
     #wait until send finishes
     while ser.out_waiting > 0:
         pass
+    print("send finished")   
+    
 def get_response(ser: Serial)->int:
     start_time = time.time()
     while True:

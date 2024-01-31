@@ -38,9 +38,9 @@ struct SensorStatus_
     if (rosidl_runtime_cpp::MessageInitialization::ALL == _init ||
       rosidl_runtime_cpp::MessageInitialization::ZERO == _init)
     {
-      this->left_ir = 0.0f;
-      this->right_ir = 0.0f;
-      this->front_ir = 0.0f;
+      this->left_ir = 0;
+      this->right_ir = 0;
+      this->front_ir = 0;
       this->front_us = 0.0f;
     }
   }
@@ -51,22 +51,22 @@ struct SensorStatus_
     if (rosidl_runtime_cpp::MessageInitialization::ALL == _init ||
       rosidl_runtime_cpp::MessageInitialization::ZERO == _init)
     {
-      this->left_ir = 0.0f;
-      this->right_ir = 0.0f;
-      this->front_ir = 0.0f;
+      this->left_ir = 0;
+      this->right_ir = 0;
+      this->front_ir = 0;
       this->front_us = 0.0f;
     }
   }
 
   // field types and members
   using _left_ir_type =
-    float;
+    int8_t;
   _left_ir_type left_ir;
   using _right_ir_type =
-    float;
+    int8_t;
   _right_ir_type right_ir;
   using _front_ir_type =
-    float;
+    int8_t;
   _front_ir_type front_ir;
   using _front_us_type =
     float;
@@ -74,19 +74,19 @@ struct SensorStatus_
 
   // setters for named parameter idiom
   Type & set__left_ir(
-    const float & _arg)
+    const int8_t & _arg)
   {
     this->left_ir = _arg;
     return *this;
   }
   Type & set__right_ir(
-    const float & _arg)
+    const int8_t & _arg)
   {
     this->right_ir = _arg;
     return *this;
   }
   Type & set__front_ir(
-    const float & _arg)
+    const int8_t & _arg)
   {
     this->front_ir = _arg;
     return *this;

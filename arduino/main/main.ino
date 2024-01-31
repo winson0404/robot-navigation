@@ -6,7 +6,6 @@
 comms::packet p;
 uint8_t task_state = constants::COMMS;
 bool comms_state = constants::RECEIVE;
-uint8_t packet_length = 0;
 SoftwareSerial ser(constants::RX_PIN, constants::TX_PIN);
 
 void setup()
@@ -33,5 +32,9 @@ void loop()
   else if (task_state == constants::SENSOR_MODE)
   {
     sensor::sensor_handler(comms_state, task_state, p);
+  }
+  else{
+    task_state = constants::COMMS;
+    comms_state = constants::RECEIVE;
   }
 }

@@ -55,7 +55,6 @@ namespace motor
 
     // move_motor_with_speed(speed);
     handle_rotate_with_radian(radian);
-    delay(1000);
     handle_displacement_with_velocity(velocity);
 
     task_state = constants::COMMS;
