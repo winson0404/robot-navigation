@@ -21,7 +21,7 @@ namespace motor{
                             // similar PWM clock.
 
     void motor_setup();
-    void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p);
+    uint8_t motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p);
     void move_motor_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
     void velocity_req_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
 

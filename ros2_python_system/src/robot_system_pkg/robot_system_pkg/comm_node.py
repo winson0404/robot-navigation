@@ -20,7 +20,7 @@ class CommNode(Node):
         self.sensor_data_publisher = self.create_publisher(SensorStatus, 'sensor_status', 10)
         self.get_logger().info(f'CommNode has been initialized on {constant.SERIAL_PORT} with baud rate {constant.BAUD_RATE}')
         
-        self.create_timer(0.1, self.fetch_sensor_callback)
+        self.create_timer(0.01, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         
 
@@ -35,7 +35,7 @@ class CommNode(Node):
                 2            4         right infared ray data (float*100 => int16_t)
         """
         
-        self.get_logger().info(f"isReceivingComm: {self.isReceivingComm}")
+        self.get_logger().info(f"trying to fetching sensor data==========================")
         if self.isReceivingComm == False and self.gotTask == False:
             start_time = time.time()
             self.isReceivingComm = True
@@ -64,7 +64,7 @@ class CommNode(Node):
                 msg.left_ir = -100
                 msg.right_ir = -100
                 self.sensor_data_publisher.publish(msg)
-                print("Failed to receive sensor data")
+                print(f"Failed to receive sensor data: status: {status}")
                 # stop node for 500 ms
                 # time.sleep(0.5)
                 
@@ -91,10 +91,18 @@ class CommNode(Node):
                     print("Failed to publish sensor data")
                     # stop node for 500 ms
                     # time.sleep(0.5)
+        else:
+            print(f"Doing motor task: {self.gotTask}")
+            # check queue for subscribers
+            
+        # sleep for 2 seconds
+        # time.sleep(2)
+        self.get_logger().info(f"Done fetching sensor data ==========================")
 
     def move_robot_callback(self, request, response):
+        self.get_logger().info(f"Initiate motor task+++++++++++++++++++++")
         self.gotTask = True
-        self.get_logger().info(f"Got task: {self.gotTask}")
+        self.get_logger().info(f"Got Receiving Task: {self.isReceivingComm}")
         self.get_logger().info(f"Received request: {request}")
         velocity = int(request.velocity*100)
         radian = int(request.radian*100)
@@ -109,6 +117,8 @@ class CommNode(Node):
         response.status = self.ser.receive_acknowledgement() == 0
         self.gotTask = False
         
+        self.get_logger().info(f"Done task, response: {response.status}++++++++++++++")
+        
         return response
 
     def receive_sensor_data_handler(self)->Tuple[int, List[int], int]:
@@ -117,7 +127,7 @@ class CommNode(Node):
                 data, byteCount, status = self.ser.receive_data(constant.STARTMARKER, constant.ENDMARKER)
                 if status == constant.ACKNOWLEDGEMENT_FAIL:
                     return None, None, status
-                print(f"status: {status}")
+                # print(f"status: {status}")
                 task, results = self.ser.postprocess(data, byteCount)
                 if len(results) == 0:
                     print("length results == 0")

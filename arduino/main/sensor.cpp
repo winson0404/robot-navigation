@@ -11,15 +11,15 @@ namespace sensor
 
   }
 
-  void sensor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  uint8_t sensor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
   {    
     switch (p.task)
     {
     case constants::SENSOR_DATA_REQ:
       get_sensor_data(comm_state, task_state, p);
-      break;
+      return constants::TASK_SUCCESS;
     default:
-      break;
+      return constants::TASK_FAIL;
     }
   }
 
@@ -53,32 +53,32 @@ namespace sensor
     // float right_ir = 123.67;
     d_int output_4 = (int)(irValue_right == LOW);
 
-    // if (irValue_right == LOW)
-    // {
-    //     Serial.println("Right 1"); // 1 means detecting something
-    // }
-    // else
-    // {
-    //     Serial.println("Right 0"); // 0 means not detecting anything
-    // }
+    if (irValue_right == LOW)
+    {
+        Serial.println("Right 1"); // 1 means detecting something
+    }
+    else
+    {
+        Serial.println("Right 0"); // 0 means not detecting anything
+    }
 
-    // if (irValue_left == LOW)
-    // {
-    //     Serial.println("Left 1");
-    // }
-    // else
-    // {
-    //     Serial.println("Left 0");
-    // }
+    if (irValue_left == LOW)
+    {
+        Serial.println("Left 1");
+    }
+    else
+    {
+        Serial.println("Left 0");
+    }
 
-    // if (irValue_mid == LOW)
-    // {
-    //     Serial.println("Mid 1");
-    // }
-    // else
-    // {
-    //     Serial.println("Mid 0");
-    // }
+    if (irValue_mid == LOW)
+    {
+        Serial.println("Mid 1");
+    }
+    else
+    {
+        Serial.println("Mid 0");
+    }
 
     uint8_t num_data = 4;
     

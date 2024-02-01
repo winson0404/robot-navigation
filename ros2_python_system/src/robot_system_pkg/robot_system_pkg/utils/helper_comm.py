@@ -51,8 +51,8 @@ def structure_data(startMarker:int, endMarker:int, task:int, data_size:List[int]
     
     output.append(int.to_bytes(endMarker, 1, byteorder="little"))
     # output.append(int.to_bytes(checksum, 1, byteorder="little"))
-    print(f"output: {output}")
-    print(f"bytearray(b''.join(output)): {bytearray(b''.join(output))}")
+    # print(f"output: {output}")
+    # print(f"bytearray(b''.join(output)): {bytearray(b''.join(output))}")
     return bytearray(b"".join(output))
 
 def packet_to_bytearray(packet:Packet)->bytearray:

@@ -8,6 +8,10 @@
 
 namespace constants
 {
+    constexpr uint8_t TASK_EMPTY = 0;
+    constexpr uint8_t TASK_SUCCESS = 1;
+    constexpr uint8_t TASK_FAIL = 2;
+
     constexpr uint8_t MAX_NUM_DATA = 32;
     constexpr uint8_t RECEIVE_BUFFER_SIZE = 64;
 
@@ -21,6 +25,7 @@ namespace constants
     const int RX_PIN = 13;
 
     // _UART
+    constexpr uint8_t ACKNOWLEDGE_PACKET_LENGTH = 3;
     const uint8_t ACKNOWLEDGE_SUCCESS = 0;
     const uint8_t ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW = 1;
     const uint8_t ACKNOWLEDGE_FAIL_LENGTH_MISMATCH = 2;
@@ -34,11 +39,13 @@ namespace constants
     const uint8_t COMMS_TASK1 = 10;
 
     // sensor_tasks
+    constexpr uint8_t SENSOR_PACKAGE_LENGTH = 16;
     const uint8_t SENSOR_MODE = 2;
     const uint8_t SENSOR_DATA_REQ = 20;
     // const uint8_t SENSOR_IR_REQ = 21;
 
     // motor tasks
+    constexpr uint8_t MOTOR_PACKAGE_LENGTH = 10;
     const uint8_t MOTOR = 3;
     const uint8_t MOTOR_MOVE = 30;                // computer ask the robot to move
     const uint8_t MOTOR_VELOCITY_REQ = 31;    // computer request speed of velocity

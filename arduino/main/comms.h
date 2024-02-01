@@ -14,7 +14,7 @@ namespace comms
 
     void comms_setup(SoftwareSerial &ser);
 
-    void comms_listener(SoftwareSerial &ser, bool &comm_state, uint8_t &task_state, packet &p);
+    void comms_listener(SoftwareSerial &ser, bool &comm_state, uint8_t &task_state, packet &p, uint8_t &task_status);
 
     bool handle_receive(SoftwareSerial &ser, packet &p, uint8_t data[]);
     bool handle_send(SoftwareSerial &ser, packet &p);

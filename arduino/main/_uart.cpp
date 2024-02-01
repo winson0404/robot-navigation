@@ -58,9 +58,6 @@ namespace serial
         // send end marker
         ser.write(endMarker);
 
-        receive_acknowledge(ser, 0,  startMarker, endMarker);
-        Serial.println("Sent");
-
 
     }
 
@@ -69,29 +66,24 @@ namespace serial
         static bool recvInProgress = false;
         static uint8_t ndx = 0;
         uint8_t rc;
+        static int data_count = 0;
+        static uint8_t packet_length = 0;
 
         while (ser.available() > 0 && newData == false)
         {
             rc = ser.read();
 
-            int data_count = 0;
-            uint8_t packet_length = 0;
             if (recvInProgress == true)
             {
                 char checksum = 0;
                 if (rc != endMarker)
                 {
-                    // digitalWrite(TEST1, HIGH);
-                    // delay(500);
-                    // digitalWrite(TEST1, LOW);
-                    // delay(500);
-                    // digitalWrite(ERROR1, HIGH);
                     data_buffer[ndx] = rc;
-                    ndx++;
                     if (ndx == 0)
                     {
                         packet_length = data_buffer[ndx];
                     }
+                    ndx++;
 
                     data_count++;
                     if (ndx >= constants::RECEIVE_BUFFER_SIZE)
@@ -107,10 +99,8 @@ namespace serial
                         clear_buffer(ser);
                         delay(1000);
                         newData = false;
+                        ndx = 0;
                         recvInProgress = false;
-                        while(true){
-                          
-                        }
                     }
                 }
                 else // if reached end marker
@@ -118,18 +108,26 @@ namespace serial
                     recvInProgress = false;
                     ndx = 0;
                     newData = true;
-                    // Serial.print("Received Packet length: ");
+                    // Serial.print("Data count: ");
                     // Serial.println(data_count);
-                    if (data_count != packet_length)
+                    // Serial.print("packet_length: ");
+                    // Serial.println(packet_length);
+                    if (data_count != 1 && data_count != packet_length)
                     {
 
                         clear_buffer(ser);
                         newData = false;
                         Serial.println("Failed in missmatched packet length");
+                        Serial.print("Data count: ");
+                        Serial.println(data_count);
+                        Serial.print("packet_length: ");
+                        Serial.println(packet_length);
                         serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_LENGTH_MISMATCH, startMarker, endMarker);
-
+                        data_count = 0;
                         break;
                     }
+
+                    data_count = 0;
 
                 }
             }
@@ -157,6 +155,7 @@ namespace serial
         unsigned short time_out = 200;
         while (true)
         {
+            // Serial.println("Receiving ACk");
             serial::recv_with_start_end_markers(ser, data_buffer, new_data_available, start_marker, end_marker);
             // set time out for 1 seconds to receive acknowledge
             if (new_data_available)
@@ -174,6 +173,8 @@ namespace serial
                   Serial.println(data_buffer[0]);
                   return false;
                 }
+                else
+                  return false;
             }
             else if (millis() - StartTime > time_out)
             {

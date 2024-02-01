@@ -22,21 +22,21 @@ namespace motor
     adjust_speed(RIGHT_MOTOR, 255);
   }
 
-  void motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
+  uint8_t motor_handler(bool &comm_state, uint8_t &task_state, comms::packet &p)
   {
 
     switch (p.task)
     {
     case constants::MOTOR_MOVE:
       move_motor_task(comm_state, task_state, p);
-      break;
+      return constants::TASK_SUCCESS;
 
     case constants::MOTOR_VELOCITY_REQ:
       velocity_req_task(comm_state, task_state, p);
-      break;
+      return constants::TASK_SUCCESS;
 
     default:
-      break;
+      return constants::TASK_FAIL;
     }
   }
 
@@ -67,6 +67,7 @@ namespace motor
     int degree = (radian * 180) / 3.14159;
 
     bool is_clockwise = degree > 0;
+    
 
     int time_needed = (48.88 * (degree)) / 10;
 
@@ -75,8 +76,10 @@ namespace motor
 
     if (is_clockwise)
       abs_rotate_clockwise();
-    else
+    else{
+      time_needed = -time_needed;
       abs_rotate_counter_clockwise();
+    }
 
     delay(time_needed);
 

@@ -105,7 +105,7 @@ class UART_Serial:
                     return -1
                 response = bytearray_to_int(response[0])
                 if response == constants.ACKNOWLEDGEMENT_SUCCESS:
-                    print("Response received: Success")
+                    # print("Response received: Success")
                     return response
                 elif response == constants.ACKNOWLEDGEMENT_FAIL:
                     print("Response received: Fail")
@@ -114,7 +114,7 @@ class UART_Serial:
                     print(f"Response received: Unknown ({response})")
                     return response
             elif time.time() - start_time > constants.TIMEOUT:
-                print("Timeout")
+                print("Receive Ack Timeout")
                 # breakpoint()
                 return -1
 
@@ -131,7 +131,7 @@ class UART_Serial:
             if packet_length != len(data):
                 # breakpoint()
                 return -1, []
-            print(f"packet_length: {packet_length}")
+            # print(f"packet_length: {packet_length}")
             if packet_length < 1:
                 return -1, []
             counter += 1

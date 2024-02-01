@@ -63,6 +63,7 @@ def postprocess(data:List[bytes], byte_received:int)->Tuple[int, List[int]]:
     # protocol checksum|packet_length|task|num_data|[data_length|data]
     counter = 0
     # breakpoint()
+    # breakpoint()
     checksum = 0
     # counter += 1
     packet_length = bytearray_to_int(data[counter])

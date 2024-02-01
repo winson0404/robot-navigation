@@ -10,19 +10,31 @@ namespace comms
     // ser.listen();
   }
 
-  void comms_listener(SoftwareSerial &ser, bool &comm_state, uint8_t &task_state, packet &p)
+  void comms_listener(SoftwareSerial &ser, bool &comm_state, uint8_t &task_state, packet &p, uint8_t &task_status)
   {
+    // if (task_status == constants::TASK_SUCCESS)
+    // {
+    //   // send ack
+    //   serial::send_acknowledge(ser, 0, constants::START_MARKER, constants::END_MARKER);
+    //   task_status = constants::TASK_EMPTY;
+    // }
+    // else if(task_status == constants::TASK_FAIL)
+    // {
+    //   serial::send_acknowledge(ser, 1, constants::START_MARKER, constants::END_MARKER);
+    //   task_status = constants::TASK_EMPTY;
+    // }
+
     if (comm_state == constants::RECEIVE)
     {
       // Serial.print("Comm state: ");
       // Serial.println(comm_state);
 
-      uint8_t data_buffer[constants::RECEIVE_BUFFER_SIZE]; 
-      if (handle_receive(ser, p, data_buffer)){
+      uint8_t data_buffer[constants::RECEIVE_BUFFER_SIZE];
+      if (handle_receive(ser, p, data_buffer))
+      {
         // Serial.print("Task: ");
         // Serial.println(p.task);
-        task_state = p.task/10;
-
+        task_state = p.task / 10;
       }
     }
     else // comm_state == SEND
@@ -56,6 +68,5 @@ namespace comms
   {
     serial::send_with_start_end_markers(ser, p, constants::START_MARKER, constants::END_MARKER);
   }
-
 
 }
