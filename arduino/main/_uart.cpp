@@ -95,9 +95,8 @@ namespace serial
                     if (ser.overflow())
                     {
                         Serial.println("Failed in ser overflow");
-                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW, startMarker, endMarker);
                         clear_buffer(ser);
-                        delay(1000);
+                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW, startMarker, endMarker);
                         newData = false;
                         ndx = 0;
                         recvInProgress = false;

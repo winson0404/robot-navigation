@@ -26,6 +26,7 @@ class UART_Serial:
         byteCount = 0  # to allow for the fact that the last increment will be one too many
         # wait for the start character
         # breakpoint()
+        ndx = 0
         status = constants.ACKNOWLEDGEMENT_FAIL
         while ord(x) != startMarker:
             # print(ser.in_waiting)
@@ -40,33 +41,19 @@ class UART_Serial:
             if ord(x) != startMarker:
                 data.append(x)
                 byteCount += 1
+                if ndx == 0:
+                    packet_length = ord(x)
+                ndx+=1;
             x = self.ser.read()
-    
+            
         status = constants.ACKNOWLEDGEMENT_SUCCESS
         
+        if packet_length<=2 or byteCount != packet_length:
+            status = constants.ACKNOWLEDGEMENT_FAIL
         
         return data, byteCount, status
     
-    # def receive_with_start_end_marker(self)->Tuple[bytearray, int]:
-    #     data = []
-    #     x = "z"
-    #     byteCount = 0
-    #     while ord(x) != constants.STARTMARKER:
-    #         x = self.ser.read()
-    #         if self.ser.in_waiting == 0:
-    #             self.send_acknowledgement(constants.ACKNOWLEDGEMENT_FAIL)
-    #             return data, byteCount
-            
-            
-    #     while ord(x) != constants.ENDMARKER:
-    #         if ord(x) != constants.STARTMARKER:
-    #             data.append(x)
-    #             byteCount += 1
-    #         x = self.ser.read()
-            
-    #     self.send_acknowledgement(constants.ACKNOWLEDGEMENT_SUCCESS)
-    #     return data, byteCount
-    
+
     def send_bytearray(self, sendbytes:bytearray)->None:
         # breakpoint()
         # print(sendbytes)

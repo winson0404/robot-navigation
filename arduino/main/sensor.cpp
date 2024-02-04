@@ -35,9 +35,12 @@ namespace sensor
 
     // float front_us = get_ultra_sonic_data();
     float front_us = get_ultra_sonic_data();
+    Serial.print("Ultrasonic data: ");
+    Serial.println(front_us);
+    if (front_us > 300){
+      front_us = 300;
+    }
     d_int output_1 = front_us*100;
-    // Serial.print("Ultrasonic data: ");
-    // Serial.println(front_us);
 
 
     bool irValue_right = digitalRead(right_IR_Pin);
