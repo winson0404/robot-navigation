@@ -7,7 +7,7 @@ category = ["no_objects", "left", "middle", "right", "all" ,"left_mid", "right_m
 if __name__ == "__main__":
     dataset_root = "dataset"
     output_root = "output"
-    test_name = "pine_wood"
+    test_name = "white_floor"
     
     for table in os.listdir(dataset_root):
         table_path = os.path.join(dataset_root, table)
@@ -27,8 +27,8 @@ if __name__ == "__main__":
         else: # create as test set
             for category_name in category:
                 category_path = os.path.join(table_path, category_name)
-                new_name = image_name.split(".")[0] + "_" + table + ".png"
                 for image_name in os.listdir(category_path):
+                    new_name = image_name.split(".")[0] + "_" + table + ".png"
                     image_path = os.path.join(category_path, image_name)
                     output_path = os.path.join(output_root, "test", category_name)
                     os.makedirs(output_path, exist_ok=True)

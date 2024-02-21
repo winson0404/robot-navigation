@@ -2,11 +2,7 @@ import os
 import shutil
 import torch
 import cv2
-from torch.utils.data import DataLoader
-from dataset.dataset import BluePadDataset
 from omegaconf import OmegaConf
-from utils.transform import Compose
-from utils.constants import DATASET_OPERATION
 from utils.logger import Logger
 
 from tqdm import tqdm
@@ -22,6 +18,7 @@ if __name__ == "__main__":
     #initial config
     project = "CustomNetV2"
     selection = "default.yaml"
+    selection = None
     # selection = "nine_adam_20.yaml"
     conf_root = os.path.join("configs/CustomNetV2", project)
     for config in os.listdir(conf_root):
