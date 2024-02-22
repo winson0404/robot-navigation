@@ -43,9 +43,9 @@ void loop()
   // Set motor A and B directions, CW, speed 150.
   
   // spinFront(LEFT_MOTOR);
-  // analogWrite(pMotorLSpeedCtrl,200);
+  analogWrite(pMotorLSpeedCtrl,200);
   // spinFront(RIGHT_MOTOR);
-  // analogWrite(pMotorRSpeedCtrl,200);  
+  analogWrite(pMotorRSpeedCtrl,200);  
 
   // delay(2000);   
   // Set motor A and B directions, CW, speed 70.

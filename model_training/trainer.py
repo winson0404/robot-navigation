@@ -256,6 +256,6 @@ class ClassificationTrainer:
             torch.save(self.model.state_dict(), os.path.join(path, name+".pth"))
         elif mode == "onnx":
             # breakpoint()
-            save_onnx(self.model, path, name, input_shape=(3, self.conf.dataset.image_size[0],self.conf.dataset.image_size[1]))
+            save_onnx(self.model, path, name, input_shape=(3, self.conf.dataset.image_size[1],self.conf.dataset.image_size[0]))
             
         logging.info(f"Model saved to {os.path.join(path, name)}")

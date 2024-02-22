@@ -15,7 +15,7 @@ dataset:
   - 96
   subset: -1
 random_seed: 42
-device: cuda
+device: cpu
 model:
   name: CustomNetV2
   pretrained: false

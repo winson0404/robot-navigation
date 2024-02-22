@@ -17,8 +17,8 @@ if __name__ == "__main__":
     
     #initial config
     project = "CustomNetV2_2"
-    selection = "default.yaml"
-    selection = None
+    selection = "one_adam_0.0005_0.2.yaml"
+    # selection = None
     # selection = "nine_sgd_0.0001_0.2.yaml"
     conf_root = os.path.join("configs/CustomNetV2", project)
     for config in os.listdir(conf_root):

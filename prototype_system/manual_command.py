@@ -2,7 +2,7 @@ import serial
 import time
 from utils import *
 if __name__ == "__main__":
-    port_name = "/dev/ttyUSB1"
+    port_name = "/dev/ttyUSB0"
     baud_rate = 19200
     serial_port = serial.Serial(port_name, baud_rate)
     print(f"Serial port opened {port_name} with baud rate {baud_rate}")

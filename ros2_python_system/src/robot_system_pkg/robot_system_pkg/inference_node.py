@@ -12,15 +12,16 @@ import time
 
 import rclpy
 from rclpy.node import Node
+from custom_interfaces.msg import InferenceResult
 
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"output/CustomNetV2/two_adam_80_default/best_model.onnx"
+model_path = r"/home/weixiong0404/Documents/workspace/table-navigation/model_training/output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
 threshold = 0.5
-fps = 15
+fps = 20
 
 provider = ['CPUExecutionProvider']
-conf_path = "output/CustomNetV2/two_adam_80_default/default.yaml"
+conf_path = "/home/weixiong0404/Documents/workspace/table-navigation/model_training/configs/CustomNetV2/CustomNetV2_2/one_adam_0.0005_0.2.yaml"
 camera_name = "/dev/video2"
 
 def draw_rectangle(frame, x, y, w, h):
@@ -67,10 +68,10 @@ class InferenceNode(Node):
         
         
         self.inference_output_publisher = self.create_publisher(InferenceResult, 'inference_result', 10)
-        self.create_time(1/fps, self.inference_callback)
-        
-        
-        
+        self.create_timer(1/fps, self.inference_callback)
+
+
+
     def inference_callback(self):
         if self.cap.isOpened():
             ret, frame = self.cap.read()
@@ -84,11 +85,10 @@ class InferenceNode(Node):
                     frame = cv2.resize(frame, (640, 480))
                     # cv2.imshow(camera_name, frame)
                     msg = InferenceResult()
-                    msg.result = out.argmax()
+                    msg.model_result = int(out.argmax())
                     self.inference_output_publisher.publish(msg)
             except Exception as e:
                 print(e)
-                exit()
         
 def main(args=None):
     rclpy.init(args=args)

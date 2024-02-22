@@ -11,11 +11,11 @@ import socket
 import time
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"output/CustomNetV2/two_adam_80_default/best_model.onnx"
+model_path = r"output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
 provider = ['CPUExecutionProvider']
 threshold = 0.5
-conf = OmegaConf.load("output/CustomNetV2/two_adam_80_default/default.yaml")
-input_shape=(3, conf.dataset.image_size[0], conf.dataset.image_size[1])
+conf = OmegaConf.load("configs/CustomNetV2/CustomNetV2_2/one_adam_0.0005_0.2.yaml")
+input_shape=(3, conf.dataset.image_size[1], conf.dataset.image_size[0])
 target_dict = {i: label for i, label in enumerate(conf.dataset.targets)}
 
 def draw_rectangle(frame, x, y, w, h):
@@ -44,37 +44,6 @@ def post_process(frame, prediction):
         frame = draw_rectangle(frame, 10, 240*0.6+5, 300, 240*0.4-10)
         
     return frame
-
-class TCP_Client():
-    def __init__(self, host, port:int) -> None:
-        try:
-            # Create a TCP/IP socket
-            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            # Connect to the server
-            self.client_socket.connect((host, port))
-        except Exception as e:
-            print("Error:", e)
-
-        # finally:
-        #     # Close the socket
-        #     self.client_socket.close()
-            
-    def Send(self, tag:str, prediction:int):
-        tag = (0).to_bytes(1, byteorder='big')
-        items = 1
-        item_length = 1
-        item = int(prediction)
-        message =  items.to_bytes(1, byteorder='big') + item_length.to_bytes(1, byteorder='big') + item.to_bytes(1, byteorder='big')
-        message_length = len(message)
-        data = tag + message_length.to_bytes(1, byteorder='big') + message
-        
-        self.client_socket.send(data)
-        
-    
-    def Close(self,):
-        self.client_socket.close()
-
             
 if __name__ == "__main__":
     
@@ -83,7 +52,6 @@ if __name__ == "__main__":
     inf_session = ort.InferenceSession(model_path, providers=provider)
     model_out_name = [i.name for i in inf_session.get_outputs()]
     transform = Compose(input_shape[1:])
-    client = TCP_Client('127.0.0.1', 12345)
     processor = DataProcessor()
         
     while cap.isOpened():
@@ -106,7 +74,6 @@ if __name__ == "__main__":
                 #     out = model_path.run(gesture_out_name, {'images': cropped_image/255})[0]
                 #     gesture = target_dict[out.argmax()]
                 #     draw_image(frame, bbox, score, gesture)
-                client.Send('0', out.argmax())
                 direction = target_dict[out.argmax()]
                 print(direction)
                 # print(direction)
