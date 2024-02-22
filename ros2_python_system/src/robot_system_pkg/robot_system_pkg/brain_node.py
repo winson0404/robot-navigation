@@ -65,25 +65,7 @@ class BrainNode(Node):
             self.get_logger().info(f'Service call failed {e}')
         else:
             self.get_logger().info(f'Service call stauts: {response.status}')
-    
-    def run_predefined_path(self)->None:
-        predefined_path = self.predefined_path()
-        for movement_set in predefined_path:
-            velocity, radian, time = movement_set
-            client = self.create_client(ControlMovement, 'control_movement')
-            while not client.wait_for_service(timeout_sec=None):
-                self.get_logger().info('Waiting for ControlMovement service...')
-                
-            if velocity == 0.0:
-                # delay for time
-                time.sleep(time)
-                
-            request = ControlMovement.Request()
-            request.velocity, request.radian = movement_set
-            
-            future = client.call_async(request)
-            
-            time.sleep(0.3)
+
         
     
     def make_movement_decisions(self)->Tuple[float, float]:
@@ -311,26 +293,54 @@ class BrainNode(Node):
             self.get_logger().info(f"Void decision, stoping robot")
             return 0.0, 0.0
 
-    def predefined_path(self)->List[Tuple[float, float]]:
+    def run_predefined_path(self)->None:
+        predefined_path = self.predefined_path()
+        for movement_set in predefined_path:
+            velocity, radian, time = movement_set
+            client = self.create_client(ControlMovement, 'control_movement')
+            while not client.wait_for_service(timeout_sec=None):
+                self.get_logger().info('Waiting for ControlMovement service...')
+                
+            if velocity == 0.0:
+                # delay for time
+                time.sleep(time/1000.0)
+                
+            request = ControlMovement.Request()
+            request.velocity, request.radian = movement_set
+            
+            future = client.call_async(request)
+            
+            time.sleep(0.3)
+            
+    def predefined_path(self)->List[Tuple[float, float, int]]:
         # if map is 1, destination is 1, go to predefined path 1
         # if map is 1, destination is 2, go to predefined path 2
-        if self.get_parameter('map').get_parameter_value() == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value() == constant.DESTIONATION1:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+        
+        velocity = 150.0
+        small_clockwise_radian = -0.5
+        small_counter_clockwise_radian = 0.5
+        medium_clockwise_radian = -1.5
+        medium_counter_clockwise_radian = 1.5
+        big_clockwise_radian = -3
+        big_counter_clockwise_radian = 3
+        # return (velocity, radian, time in ms)
+        if self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+                return [(velocity, 0, 500), (0, medium_clockwise_radian, 0), (velocity, 0, 860), (0, medium_counter_clockwise_radian, 0), (velocity, 200), (0, small_counter_clockwise_radian, 0), (velocity, 400)]
             else:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+                return [(velocity, 0, 500), (velocity, 0, 1000)]
             
-        elif self.get_parameter('map').get_parameter_value() == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value() == constant.DESTIONATION1:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+                return [(velocity, 0, 700), (0, small_counter_clockwise_radian, 0), (velocity, 0, 300)]
             else:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+                return [(0, small_clockwise_radian, 0), (velocity, 0, 1000), (0, small_counter_clockwise_radian, 0)]
             
-        elif self.get_parameter('map').get_parameter_value() == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value() == constant.DESTIONATION1:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+                return [(0, medium_counter_clockwise_radian, 0), (velocity, 0, 400), (0, medium_clockwise_radian, 0), (velocity, 0, 400)]
             else:
-                return [(100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90), (100, 0), (0, 90)]
+                return [(velocity, 0, 1750), (0, medium_clockwise_radian, 0), (velocity, 0, 300)]
             
         else:
             return [];
