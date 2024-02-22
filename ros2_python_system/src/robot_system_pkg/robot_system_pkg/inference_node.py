@@ -16,13 +16,13 @@ from custom_interfaces.msg import InferenceResult
 
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"/home/weixiong0404/Documents/workspace/table-navigation/model_training/output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
+model_path = r"output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
 threshold = 0.5
 fps = 20
 
 provider = ['CPUExecutionProvider']
-conf_path = "/home/weixiong0404/Documents/workspace/table-navigation/model_training/configs/CustomNetV2/CustomNetV2_2/one_adam_0.0005_0.2.yaml"
-camera_name = "/dev/video2"
+conf_path = "output/CustomNetV2_2/one_adam_0.0005_0.2/one_adam_0.0005_0.2.yaml"
+camera_name = "/dev/video0"
 
 def draw_rectangle(frame, x, y, w, h):
     x = int(x)
