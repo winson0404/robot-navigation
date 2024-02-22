@@ -68,7 +68,7 @@ class ClassificationTrainer:
         criterion = torch.nn.CrossEntropyLoss()
         
         # run based on batch
-        log_loss = 0
+        train_loss = 0
         with tqdm(train_loader, unit="batch") as batch_loader:
             for i, (images, labels) in enumerate(batch_loader):
                 
@@ -90,7 +90,7 @@ class ClassificationTrainer:
                 loss = criterion(output, labels)
             
                 loss_value = loss.item()
-                log_loss = loss_value
+                train_loss = loss_value
                 
 
 
@@ -106,7 +106,10 @@ class ClassificationTrainer:
                 if lr_scheduler_warmup is not None:
                     lr_scheduler_warmup.step()
         if self.logger is not None:
-            self.logger.log("train", {"loss": loss_value, "epoch": current_epoch})
+            self.logger.log("train", {"loss": train_loss/len(train_loader), "epoch": current_epoch+1})
+        print(f"Epoch {current_epoch+1} - Loss: {train_loss/len(train_loader)}")
+        
+        return train_loss/len(train_loader)
 
     def _run_eval(self, device:str, current_epoch:int, validation_loader:MixedSurfaceDataset, mode:str="valid")->None:
         f1_score = None
@@ -164,6 +167,8 @@ class ClassificationTrainer:
         
         best_metric = -1
         conf_dictionary = OmegaConf.to_container(self.conf)
+        early_stop_count = 0
+        previous_loss = 100
         for i in range(self.epochs):
             logging.info(f"Epoch {i+1}/{self.epochs}")
             
@@ -171,12 +176,24 @@ class ClassificationTrainer:
             lr_scheduler_warmup = torch.optim.lr_scheduler.LinearLR(
                 self.optimizer, start_factor=self.conf.scheduler.start_factor, total_iters=warmup_iters
             )
-            self._run_epoch(device=self.conf.device, current_epoch=i, train_loader=train_loader, lr_scheduler_warmup=lr_scheduler_warmup)
+            train_loss = self._run_epoch(device=self.conf.device, current_epoch=i, train_loader=train_loader, lr_scheduler_warmup=lr_scheduler_warmup)
             metric_value = self._run_eval(device=self.conf.device, current_epoch=i, validation_loader=validation_loader)
+            
             
             # early stopping
             if metric_value - best_metric > self.conf.train_params.early_stopping:
+                print("Early stopping based on metric")
+                breakpoint()
                 break
+            
+            if abs(previous_loss - train_loss) < 0.00005:
+                early_stop_count += 1
+                
+            if early_stop_count > 10:
+                print("Early stopping based on loss")
+                break
+            
+            previous_loss = train_loss
             
             # get checkpoint based on f1 score
             if metric_value > best_metric:

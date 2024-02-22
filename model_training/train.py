@@ -16,10 +16,10 @@ logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(m
 if __name__ == "__main__":
     
     #initial config
-    project = "CustomNetV2"
+    project = "CustomNetV2_2"
     selection = "default.yaml"
     selection = None
-    # selection = "nine_adam_20.yaml"
+    # selection = "nine_sgd_0.0001_0.2.yaml"
     conf_root = os.path.join("configs/CustomNetV2", project)
     for config in os.listdir(conf_root):
         if selection is not None:

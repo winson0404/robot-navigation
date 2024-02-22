@@ -1,12 +1,13 @@
 import random
 from omegaconf import OmegaConf
 import os
+import shutil
 
 setting = {
-    "lr": [0.001, 0.0001],
+    "lr": [0.0005, 0.0001],
     "momentum": [0.9],
-    "weight_decay": [0.0005],
-    "batch_size": [16],
+    "weight_decay": [0.0001],
+    "batch_size": [32],
     "optimizer": ["sgd", "adam"],
     "epochs": [200],
     "dropout": [0.1, 0.2],
@@ -22,9 +23,14 @@ variation_numbers = 10
 config_root = "configs/CustomNetV2"
 
 conf = OmegaConf.load("configs/CustomNetV2/default.yaml")
-project_name = "CustomNetV2"
+project_name = "CustomNetV2_2"
+model_name = "CustomNetV2"
 image_width = 320
 image_height = 96
+# check and remove project directory
+if os.path.exists(os.path.join(config_root, project_name)):
+    shutil.rmtree(os.path.join(config_root, project_name), ignore_errors=False, onerror=None)
+
 os.makedirs(os.path.join(config_root, project_name), exist_ok=True)
 #grid search
 
@@ -32,7 +38,7 @@ for lr in setting["lr"]:
     for optimizer in setting["optimizer"]:
         for dropout in setting["dropout"]:
             conf.project_name = project_name
-            conf.model.name = project_name
+            conf.model.name = model_name
             conf.dataset.image_size = [image_width, image_height]
             conf.optimizer.optimizer = optimizer
             conf.optimizer.lr = lr
