@@ -20,7 +20,7 @@ class CommNode(Node):
         self.sensor_data_publisher = self.create_publisher(SensorStatus, 'sensor_status', 10)
         self.get_logger().info(f'CommNode has been initialized on {constant.SERIAL_PORT} with baud rate {constant.BAUD_RATE}')
         
-        self.create_timer(0.1, self.fetch_sensor_callback)
+        self.create_timer(0.05, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         
 
@@ -41,7 +41,8 @@ class CommNode(Node):
             self.isReceivingComm = True
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, constant.SENSOR_DATA_REQ, [], [])
             self.ser.send_bytearray(send_data)
-            if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
+            # if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
+            if False:
                 self.isReceivingComm = False
                 msg = SensorStatus()
                 msg.front_us = -100.0
@@ -54,9 +55,10 @@ class CommNode(Node):
                 # time.sleep(0.5)
                 return
             task, results, status = self.receive_sensor_data_handler()
-            self.ser.send_acknowledgement(constant.STARTMARKER, constant.ENDMARKER, status)
+            # self.ser.send_acknowledgement(constant.STARTMARKER, constant.ENDMARKER, status)
             
-            if status != constant.ACKNOWLEDGEMENT_SUCCESS:
+            if False:
+            # if status != constant.ACKNOWLEDGEMENT_SUCCESS:
                 self.isReceivingComm = False
                 msg = SensorStatus()
                 msg.front_us = -100.0
@@ -114,7 +116,8 @@ class CommNode(Node):
         
         self.ser.send_bytearray(send_data)
         
-        response.status = self.ser.receive_acknowledgement() == 0
+        # response.status = self.ser.receive_acknowledgement() == 0
+        response.status = True
         self.gotTask = False
         
         self.get_logger().info(f"Done task, response: {response.status}++++++++++++++")

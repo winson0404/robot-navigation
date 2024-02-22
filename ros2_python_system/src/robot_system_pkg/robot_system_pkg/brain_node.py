@@ -38,7 +38,7 @@ class BrainNode(Node):
         # print(self, self.get_parameter('mode').get_parameter_value())
         if self.get_parameter('mode').get_parameter_value().integer_value == constant.NAVIGATION_MODE_ROAMING:
             # print("Roaming mode")
-            self.create_timer(0.1, self.control_robot)
+            self.create_timer(0.2, self.control_robot)
             
         elif self.get_parameter('mode').get_parameter_value().integer_value == constant.NAVIGATION_MODE_PREDEFINED_PATH:
             # print("Predefined path")

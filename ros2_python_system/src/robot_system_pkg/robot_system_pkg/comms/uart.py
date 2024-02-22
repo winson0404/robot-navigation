@@ -72,7 +72,7 @@ class UART_Serial:
         while self.ser.out_waiting > 0:
             pass
         
-        ack = self.receive_acknowledgement()
+        # ack = self.receive_acknowledgement()
         return ack
     
     def send_acknowledgement(self, startMarker:int, endMarker:int,response:int):

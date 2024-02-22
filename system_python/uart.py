@@ -23,7 +23,7 @@ class UART_Serial:
         while ord(x) != constants.startMarker:
             x = self.ser.read()
             if self.ser.in_waiting == 0:
-                self.send_acknowledgement(constants.ACKNOWLEDGEMENT_FAIL)
+                # self.send_acknowledgement(constants.ACKNOWLEDGEMENT_FAIL)
                 return data, byteCount
             
             
@@ -33,7 +33,7 @@ class UART_Serial:
                 byteCount += 1
             x = self.ser.read()
             
-        self.send_acknowledgement(constants.ACKNOWLEDGEMENT_SUCCESS)
+        # self.send_acknowledgement(constants.ACKNOWLEDGEMENT_SUCCESS)
         return data, byteCount
     
     def send_with_start_end_marker(self, sendbytes:bytearray)->int:
@@ -45,8 +45,8 @@ class UART_Serial:
         while self.ser.out_waiting > 0:
             pass
         
-        ack = self.receive_acknowledgement()
-        return ack
+        # ack = self.receive_acknowledgement()
+        return constants.ACKNOWLEDGEMENT_SUCCESS
     
     def send_acknowledgement(self, response:int):
         output = [int.to_bytes(response, 1, byteorder="little")]

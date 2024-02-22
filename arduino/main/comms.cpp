@@ -15,7 +15,7 @@ namespace comms
     if (task_status == constants::TASK_SUCCESS)
     {
       // send ack
-      serial::send_acknowledge(ser, 0, constants::START_MARKER, constants::END_MARKER);
+      // serial::send_acknowledge(ser, 0, constants::START_MARKER, constants::END_MARKER);
       task_status = constants::TASK_EMPTY;
     }
 
@@ -62,7 +62,7 @@ namespace comms
   bool handle_send(SoftwareSerial &ser, packet &p)
   {
     serial::send_with_start_end_markers(ser, p, constants::START_MARKER, constants::END_MARKER);
-    serial::receive_acknowledge(ser, p.task, constants::START_MARKER, constants::END_MARKER);
+    // serial::receive_acknowledge(ser, p.task, constants::START_MARKER, constants::END_MARKER);
   }
 
 }
