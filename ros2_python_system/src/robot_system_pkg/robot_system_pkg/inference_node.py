@@ -56,6 +56,7 @@ def post_process(frame, prediction):
 class InferenceNode(Node):
     def __init__(self):
         super().__init__('comm_node')
+        self.get_logger.info("InferenceNode has been initialized")
         self.conf = OmegaConf.load(conf_path)
         self.input_shape = (3, self.conf.dataset.image_size[0], self.conf.dataset.image_size[1])
         self.target_dict = {i: label for i, label in enumerate(self.conf.dataset.targets)}
@@ -81,10 +82,11 @@ class InferenceNode(Node):
                     roi = self.processor.crop_roi(frame, 0, 240*0.6, 320, 240*0.4)
                     out = self.inf_session.run(self.model_out_name, {'images': self.transform(roi).unsqueeze(0).numpy()})[0]
                     direction = self.target_dict[out.argmax()]
-                    frame = post_process(frame, direction)
-                    frame = cv2.resize(frame, (640, 480))
+                    # frame = post_process(frame, direction)
+                    # frame = cv2.resize(frame, (640, 480))
                     # cv2.imshow(camera_name, frame)
                     msg = InferenceResult()
+                    self.get_logger.info(direction)
                     msg.model_result = int(out.argmax())
                     self.inference_output_publisher.publish(msg)
             except Exception as e:
