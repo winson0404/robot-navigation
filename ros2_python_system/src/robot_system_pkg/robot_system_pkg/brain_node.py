@@ -90,7 +90,7 @@ class BrainNode(Node):
         
         # if no obstacle, move front
         us_threshold = 20 # in cm
-        velocity = 100
+        velocity = 100.0
         small_clockwise_radian = -0.5
         small_counter_clockwise_radian = 0.5
         medium_clockwise_radian = -1.5
@@ -141,19 +141,19 @@ class BrainNode(Node):
         ######################################################################################################
         elif us_reading == 1 and front_ir_reading == 0 and self.left_ir == 0 and self.right_ir == 0:
             sensor_conclusion = constant.SMALL_MIDDLE
-            sensor_decision = constant.DECISION_MOVE_FRONT
+            sensor_decision = constant.DECISION_SMALL_ROTATE_CLOCKWISE
             
         elif us_reading == 1 and front_ir_reading == 0 and self.left_ir == 0 and self.right_ir == 1:
             sensor_conclusion = constant.MEDIUM_RIGHT
-            sensor_decision = constant.DECISION_MOVE_FRONT
+            sensor_decision = constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE
             
         elif us_reading == 1 and front_ir_reading == 0 and self.left_ir == 1 and self.right_ir == 0:
             sensor_conclusion = constant.MEDIUM_LEFT
-            sensor_decision = constant.DECISION_MOVE_FRONT
+            sensor_decision = constant.DECISION_MEDIUM_ROTATE_CLOCKWISE
             
         elif us_reading == 1 and front_ir_reading == 0 and self.left_ir == 1 and self.right_ir == 1:
             sensor_conclusion = constant.FULL_OBSTACLE
-            sensor_decision = constant.DECISION_MOVE_FRONT
+            sensor_decision = constant.DECISION_BIG_ROTATE_BOTH_DIRECTION
         ######################################################################################################
         elif us_reading == 1 and front_ir_reading == 1 and self.left_ir == 0 and self.right_ir == 0:
             sensor_conclusion = constant.EDGE
@@ -267,6 +267,8 @@ class BrainNode(Node):
         else:
             decision = model_decision
         
+        
+        decision = model_decision
         if decision == constant.DECISION_MOVE_FRONT:
             print(f"Decision: velocity: {velocity}, radian: {0.0}")
             return velocity, 0.0
