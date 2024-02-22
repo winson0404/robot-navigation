@@ -90,7 +90,7 @@ class BrainNode(Node):
         
         # if no obstacle, move front
         us_threshold = 20 # in cm
-        velocity = 100.0
+        velocity = 150.0
         small_clockwise_radian = -0.5
         small_counter_clockwise_radian = 0.5
         medium_clockwise_radian = -1.5
@@ -268,7 +268,7 @@ class BrainNode(Node):
             decision = model_decision
         
         
-        decision = model_decision
+        # decision = model_decision
         if decision == constant.DECISION_MOVE_FRONT:
             print(f"Decision: velocity: {velocity}, radian: {0.0}")
             return velocity, 0.0
