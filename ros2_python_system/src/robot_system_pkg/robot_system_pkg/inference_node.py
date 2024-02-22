@@ -16,12 +16,12 @@ from custom_interfaces.msg import InferenceResult
 
 
 # hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
+model_path = r"/home/weixiong0404/Documents/workspace/output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
 threshold = 0.5
 fps = 20
 
 provider = ['CPUExecutionProvider']
-conf_path = "output/CustomNetV2_2/one_adam_0.0005_0.2/one_adam_0.0005_0.2.yaml"
+conf_path = "/home/weixiong0404/Documents/workspace/output/CustomNetV2_2/one_adam_0.0005_0.2/one_adam_0.0005_0.2.yaml"
 camera_name = "/dev/video0"
 
 def draw_rectangle(frame, x, y, w, h):
@@ -56,7 +56,7 @@ def post_process(frame, prediction):
 class InferenceNode(Node):
     def __init__(self):
         super().__init__('comm_node')
-        self.get_logger.info("InferenceNode has been initialized")
+        self.get_logger().info("InferenceNode has been initialized")
         self.conf = OmegaConf.load(conf_path)
         self.input_shape = (3, self.conf.dataset.image_size[0], self.conf.dataset.image_size[1])
         self.target_dict = {i: label for i, label in enumerate(self.conf.dataset.targets)}
@@ -86,7 +86,7 @@ class InferenceNode(Node):
                     # frame = cv2.resize(frame, (640, 480))
                     # cv2.imshow(camera_name, frame)
                     msg = InferenceResult()
-                    self.get_logger.info(direction)
+                    self.get_logger().info(direction)
                     msg.model_result = int(out.argmax())
                     self.inference_output_publisher.publish(msg)
             except Exception as e:
