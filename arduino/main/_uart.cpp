@@ -92,15 +92,15 @@ namespace serial
                         ndx = constants::RECEIVE_BUFFER_SIZE - 1;
                     }
 
-                    // if (ser.overflow())
-                    // {
-                    //     Serial.println("Failed in ser overflow");
-                    //     clear_buffer(ser);
-                    //     serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW, startMarker, endMarker);
-                    //     newData = false;
-                    //     ndx = 0;
-                    //     recvInProgress = false;
-                    // }
+                    if (ser.overflow())
+                    {
+                        Serial.println("Failed in ser overflow");
+                        // clear_buffer(ser);
+                        // serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_BUFFER_OVERFLOW, startMarker, endMarker);
+                        // newData = false;
+                        // ndx = 0;
+                        // recvInProgress = false;
+                    }
                 }
                 else // if reached end marker
                 {

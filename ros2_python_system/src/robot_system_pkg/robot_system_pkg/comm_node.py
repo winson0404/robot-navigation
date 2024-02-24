@@ -20,7 +20,7 @@ class CommNode(Node):
         self.sensor_data_publisher = self.create_publisher(SensorStatus, 'sensor_status', 10)
         self.get_logger().info(f'CommNode has been initialized on {constant.SERIAL_PORT} with baud rate {constant.BAUD_RATE}')
         
-        self.create_timer(0.1, self.fetch_sensor_callback)
+        self.create_timer(0.15, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         
 
@@ -141,7 +141,7 @@ class CommNode(Node):
                     return None, None, constant.ACKNOWLEDGEMENT_FAIL
                 return task, results, status
             
-            
+            # time out 400 ms
             if time.time() - start_time > constant.TIMEOUT:
                 print("Receive Sensor Data Timeout")
                 return None, None, constant.ACKNOWLEDGEMENT_FAIL
