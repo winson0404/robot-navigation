@@ -118,7 +118,7 @@ namespace motor
       adjust_speed(RIGHT_MOTOR, speed);
     }
 
-    delay(50);
+    delay(75);
     move_stop();
   }
 
@@ -133,7 +133,7 @@ namespace motor
     if (motor == LEFT_MOTOR)
       analogWrite(pMotorLSpeedCtrl, speed);
     if (motor == RIGHT_MOTOR)
-      analogWrite(pMotorRSpeedCtrl, speed);
+      analogWrite(pMotorRSpeedCtrl, speed+10);
   }
 
   void abs_rotate_clockwise()
