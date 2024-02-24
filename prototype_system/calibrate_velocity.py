@@ -25,7 +25,7 @@ def calibrate_velocity():
             print(f"Sending data of velocity: {velocity} and radian: {0.0}")
             task = 30
             data_size = [2, 2]
-            data = [0, radian]
+            data = [velocity, 0]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)
