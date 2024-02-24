@@ -106,6 +106,7 @@ class CommNode(Node):
             time.sleep(0.5)
             
             self.control_robot()
+            self.ser.receive_acknowledgement()
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers

@@ -49,7 +49,7 @@ namespace comms
     {
       // packet pack_packet;
       p = construct_packet_from_data_buffer(data);
-      // serial::send_acknowledge(ser, constants::ACKNOWLEDGE_SUCCESS, constants::START_MARKER, constants::END_MARKER);
+      serial::send_acknowledge(ser, constants::ACKNOWLEDGE_SUCCESS, constants::START_MARKER, constants::END_MARKER);
       return true;
     }
     else
