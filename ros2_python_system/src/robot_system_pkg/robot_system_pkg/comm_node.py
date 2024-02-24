@@ -23,7 +23,7 @@ class CommNode(Node):
         self.velocity = 0.0
         self.radian = 0.0
         self.delay = 0
-        self.create_timer(0.15, self.fetch_sensor_callback)
+        self.create_timer(0.3, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
     
     def sensor_data_callback(self, msg: MovementCommand)->None:
@@ -103,7 +103,7 @@ class CommNode(Node):
                 # stop node for 500 ms
                 # time.sleep(0.5)
             # stop node for 500 ms
-            time.sleep(0.05)
+            time.sleep(0.5)
             
             self.control_robot()
         else:
