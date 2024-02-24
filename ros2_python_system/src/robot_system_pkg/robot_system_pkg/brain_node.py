@@ -7,7 +7,7 @@ from .comms.uart import UART_Serial
 from .utils import _constants as constant
 from .utils.helper_type_conversion import list_to_bytearray, bytearray_to_int
 from .utils.helper_comm import structure_data
-from custom_interfaces.msg import SensorStatus, InferenceResult
+from custom_interfaces.msg import SensorStatus, InferenceResult, MovementCommand
 from custom_interfaces.srv import ControlMovement
 from typing import List, Tuple
 import time
@@ -30,15 +30,19 @@ class BrainNode(Node):
         self.model_result = -1
         self.camera_data = 0
         
+        self.movement_command_publisher = self.create_publisher(MovementCommand, 'movement_command_status', 10)
         self.sensor_data_subscriber = self.create_subscription(SensorStatus, 'sensor_status', self.sensor_data_callback, 10)
         self.model_result_subscriber = self.create_subscription(InferenceResult, 'inference_result', self.model_result_callback, 10)
         self.move_robot_client = self.create_client(ControlMovement, 'control_movement')
         
         # read from sensor every 0.2 seconds
         # print(self, self.get_parameter('mode').get_parameter_value())
+        self.create_timer(0.1, self.movement_decision_callback)
+        
         if self.get_parameter('mode').get_parameter_value().integer_value == constant.NAVIGATION_MODE_ROAMING:
             # print("Roaming mode")
-            self.create_timer(0.25, self.control_robot)
+            # self.create_timer(0.25, self.control_robot)
+            pass
             
         elif self.get_parameter('mode').get_parameter_value().integer_value == constant.NAVIGATION_MODE_PREDEFINED_PATH:
             # print("Predefined path")
@@ -56,6 +60,15 @@ class BrainNode(Node):
         request.velocity, request.radian, request.delay = self.make_movement_decisions()
         future = client.call_async(request)
         future.add_done_callback(self.control_robot_callback)
+        
+    def movement_decision_callback(self)->None:
+        velocity, radian, delay = self.make_movement_decisions()
+        msg = MovementCommand()
+        msg.velocity = velocity
+        msg.radian = radian
+        msg.delay = delay
+        
+        self.movement_command_publisher.publish(msg)
         
     def control_robot_callback(self, future: any)->None:
         try:
@@ -78,8 +91,10 @@ class BrainNode(Node):
         medium_counter_clockwise_radian = 1.5
         big_clockwise_radian = -3.0
         big_counter_clockwise_radian = 3.0
-        us_reading = us_threshold > self.front_us # 0 means obstacle, 1 means no obstacle
-        front_ir_reading = not self.front_ir # converts to 0 means obstacle, 1 means no obstacle
+        us_reading = us_threshold > self.front_us # 0 means obstacle, 1 means no obstacle\
+        front_ir_reading = not self.front_ir if self.front_ir  != -100 else -100
+        if self.front_ir  != -100:
+            front_ir_reading = not self.front_ir # converts to 0 means obstacle, 1 means no obstacle
         sensor_conclusion = -1
         model_conclusion = -1
         sensor_decision = -1
@@ -295,8 +310,11 @@ class BrainNode(Node):
             choice = random.choice([big_counter_clockwise_radian, big_clockwise_radian])
             print(f"(Big Random Rotate) Decision: velocity: {0.0}, radian: {choice}")
         
-        
         velocity, radian = decision_map[decision]
+        if self.front_ir==-100:
+            velocity = 0.0
+            radian = 0.0
+            
         delay = 0
         if velocity != 0.0:
             return velocity, radian, constant.VELOCITY_PERIOD
