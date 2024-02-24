@@ -16,6 +16,10 @@ def calibrate_velocity():
     while True:
         
         velocity = int(float(input("Enter velocity): "))*100)
+        user_input = input("Enter velocity")
+        velocity, delay = user_input.split(" ")
+        velocity = int(float(velocity))*100
+        delay(int(delay))
         # print("2. Retrieve sensor data")
         
         move = 1
@@ -24,8 +28,8 @@ def calibrate_velocity():
             
             print(f"Sending data of velocity: {velocity} and radian: {0.0}")
             task = 30
-            data_size = [2, 2]
-            data = [velocity, 0]
+            data_size = [2, 2, 2]
+            data = [velocity, 0, delay]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)

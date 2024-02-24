@@ -14,8 +14,11 @@ def calibrate_rotation_angle():
     start_marker = 60
     end_marker = 62
     while True:
+        user_input = input("Enter angle in radian: ")
         
-        radian = int(float(input("Enter angle (in radian): "))*100)
+        radian, delay = user_input.split(" ")
+        radian = int(float(radian)*100)
+        delay = int(delay)
         # print("2. Retrieve sensor data")
         
         move = 1
@@ -24,8 +27,8 @@ def calibrate_rotation_angle():
             
             print(f"Sending data of velocity: {0} and radian: {radian}")
             task = 30
-            data_size = [2, 2]
-            data = [0, radian]
+            data_size = [2, 2, 2]
+            data = [0, radian, delay]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)
