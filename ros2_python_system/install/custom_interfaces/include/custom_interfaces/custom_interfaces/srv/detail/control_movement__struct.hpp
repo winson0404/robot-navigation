@@ -40,6 +40,7 @@ struct ControlMovement_Request_
     {
       this->velocity = 0.0f;
       this->radian = 0.0f;
+      this->delay = 0l;
     }
   }
 
@@ -51,6 +52,7 @@ struct ControlMovement_Request_
     {
       this->velocity = 0.0f;
       this->radian = 0.0f;
+      this->delay = 0l;
     }
   }
 
@@ -61,6 +63,9 @@ struct ControlMovement_Request_
   using _radian_type =
     float;
   _radian_type radian;
+  using _delay_type =
+    int32_t;
+  _delay_type delay;
 
   // setters for named parameter idiom
   Type & set__velocity(
@@ -73,6 +78,12 @@ struct ControlMovement_Request_
     const float & _arg)
   {
     this->radian = _arg;
+    return *this;
+  }
+  Type & set__delay(
+    const int32_t & _arg)
+  {
+    this->delay = _arg;
     return *this;
   }
 
@@ -122,6 +133,9 @@ struct ControlMovement_Request_
       return false;
     }
     if (this->radian != other.radian) {
+      return false;
+    }
+    if (this->delay != other.delay) {
       return false;
     }
     return true;

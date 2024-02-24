@@ -9,6 +9,8 @@ module custom_interfaces {
       float velocity;
 
       float radian;
+
+      int32 delay;
     };
     struct ControlMovement_Response {
       boolean status;

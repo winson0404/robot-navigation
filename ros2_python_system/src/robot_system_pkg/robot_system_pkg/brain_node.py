@@ -268,7 +268,6 @@ class BrainNode(Node):
         }
         if decision == constant.DECISION_MOVE_FRONT:
             print(f"(Moving front) Decision: velocity: {velocity}, radian: {0.0}")
-            return velocity, 0.0
         
         elif decision == constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE:
             print(f"(Small Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {small_counter_clockwise_radian}")
@@ -303,8 +302,11 @@ class BrainNode(Node):
             return velocity, radian, constant.VELOCITY_PERIOD
         
         else:
-            self.get_logger().info(f"Void decision, stoping robot")
-            return 0.0, 0.0, 0
+            return velocity, radian, 0
+        
+        # else if :
+        #     self.get_logger().info(f"Void decision, stoping robot")
+        #     return 0.0, 0.0, 0
 
     def run_predefined_path(self)->None:
         predefined_path = self.predefined_path()

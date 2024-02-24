@@ -22,6 +22,7 @@ typedef struct custom_interfaces__srv__ControlMovement_Request
 {
   float velocity;
   float radian;
+  int32_t delay;
 } custom_interfaces__srv__ControlMovement_Request;
 
 // Struct for a sequence of custom_interfaces__srv__ControlMovement_Request.

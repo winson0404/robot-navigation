@@ -21,16 +21,32 @@ namespace srv
 namespace builder
 {
 
+class Init_ControlMovement_Request_delay
+{
+public:
+  explicit Init_ControlMovement_Request_delay(::custom_interfaces::srv::ControlMovement_Request & msg)
+  : msg_(msg)
+  {}
+  ::custom_interfaces::srv::ControlMovement_Request delay(::custom_interfaces::srv::ControlMovement_Request::_delay_type arg)
+  {
+    msg_.delay = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::custom_interfaces::srv::ControlMovement_Request msg_;
+};
+
 class Init_ControlMovement_Request_radian
 {
 public:
   explicit Init_ControlMovement_Request_radian(::custom_interfaces::srv::ControlMovement_Request & msg)
   : msg_(msg)
   {}
-  ::custom_interfaces::srv::ControlMovement_Request radian(::custom_interfaces::srv::ControlMovement_Request::_radian_type arg)
+  Init_ControlMovement_Request_delay radian(::custom_interfaces::srv::ControlMovement_Request::_radian_type arg)
   {
     msg_.radian = std::move(arg);
-    return std::move(msg_);
+    return Init_ControlMovement_Request_delay(msg_);
   }
 
 private:

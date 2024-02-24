@@ -37,7 +37,7 @@ void ControlMovement_Request_fini_function(void * message_memory)
   typed_message->~ControlMovement_Request();
 }
 
-static const ::rosidl_typesupport_introspection_cpp::MessageMember ControlMovement_Request_message_member_array[2] = {
+static const ::rosidl_typesupport_introspection_cpp::MessageMember ControlMovement_Request_message_member_array[3] = {
   {
     "velocity",  // name
     ::rosidl_typesupport_introspection_cpp::ROS_TYPE_FLOAT,  // type
@@ -71,13 +71,30 @@ static const ::rosidl_typesupport_introspection_cpp::MessageMember ControlMoveme
     nullptr,  // fetch(index, &value) function pointer
     nullptr,  // assign(index, value) function pointer
     nullptr  // resize(index) function pointer
+  },
+  {
+    "delay",  // name
+    ::rosidl_typesupport_introspection_cpp::ROS_TYPE_INT32,  // type
+    0,  // upper bound of string
+    nullptr,  // members of sub message
+    false,  // is array
+    0,  // array size
+    false,  // is upper bound
+    offsetof(custom_interfaces::srv::ControlMovement_Request, delay),  // bytes offset in struct
+    nullptr,  // default value
+    nullptr,  // size() function pointer
+    nullptr,  // get_const(index) function pointer
+    nullptr,  // get(index) function pointer
+    nullptr,  // fetch(index, &value) function pointer
+    nullptr,  // assign(index, value) function pointer
+    nullptr  // resize(index) function pointer
   }
 };
 
 static const ::rosidl_typesupport_introspection_cpp::MessageMembers ControlMovement_Request_message_members = {
   "custom_interfaces::srv",  // message namespace
   "ControlMovement_Request",  // message name
-  2,  // number of fields
+  3,  // number of fields
   sizeof(custom_interfaces::srv::ControlMovement_Request),
   ControlMovement_Request_message_member_array,  // message members
   ControlMovement_Request_init_function,  // function to initialize message memory (memory has to be allocated)

@@ -18,6 +18,7 @@ custom_interfaces__srv__ControlMovement_Request__init(custom_interfaces__srv__Co
   }
   // velocity
   // radian
+  // delay
   return true;
 }
 
@@ -29,6 +30,7 @@ custom_interfaces__srv__ControlMovement_Request__fini(custom_interfaces__srv__Co
   }
   // velocity
   // radian
+  // delay
 }
 
 bool
@@ -43,6 +45,10 @@ custom_interfaces__srv__ControlMovement_Request__are_equal(const custom_interfac
   }
   // radian
   if (lhs->radian != rhs->radian) {
+    return false;
+  }
+  // delay
+  if (lhs->delay != rhs->delay) {
     return false;
   }
   return true;
@@ -60,6 +66,8 @@ custom_interfaces__srv__ControlMovement_Request__copy(
   output->velocity = input->velocity;
   // radian
   output->radian = input->radian;
+  // delay
+  output->delay = input->delay;
   return true;
 }
 
