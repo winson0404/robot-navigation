@@ -21,7 +21,6 @@ def calibrate_rotation_angle():
         move = 1
         
         if move == 1:
-            radian = int(float(input("Enter angle (in radian): "))*100)
             
             print(f"Sending data of velocity: {0} and radian: {radian}")
             task = 30
@@ -32,7 +31,6 @@ def calibrate_rotation_angle():
             sendToArduino(serial_port, send_data)
             print("Data sent")
             # delay for 200 milliseconds
-            get_response(serial_port)
 
 
 if __name__ == "__main__":
