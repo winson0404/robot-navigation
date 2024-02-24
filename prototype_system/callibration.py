@@ -15,16 +15,15 @@ def calibrate_rotation_angle():
     end_marker = 62
     while True:
         
-        print("Enter radian")
+        radian = int(float(input("Enter angle (in radian): "))*100)
         # print("2. Retrieve sensor data")
         
         move = 1
         
         if move == 1:
-            velocity = int(float(input("Enter velocity: "))*100)
             radian = int(float(input("Enter angle (in radian): "))*100)
             
-            print(f"Sending data of velocity: {velocity} and radian: {radian}")
+            print(f"Sending data of velocity: {0} and radian: {radian}")
             task = 30
             data_size = [2, 2]
             data = [0, radian]
