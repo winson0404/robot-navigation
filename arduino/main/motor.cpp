@@ -118,7 +118,7 @@ namespace motor
       adjust_speed(RIGHT_MOTOR, speed);
     }
 
-    delay(75);
+    delay(500);
     move_stop();
   }
 
