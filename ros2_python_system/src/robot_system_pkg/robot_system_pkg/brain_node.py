@@ -64,15 +64,15 @@ class BrainNode(Node):
         except Exception as e:
             self.get_logger().info(f'Service call failed {e}')
         else:
-            self.get_logger().info(f'Service call stauts: {response.status}')
+            self.get_logger().info(f'Service call status: {response.status}')
 
-        
+    
     
     def make_movement_decisions(self)->Tuple[float, float]:
         
         # if no obstacle, move front
         us_threshold = 20 # in cm
-        velocity = 150.0
+        velocity = 250.0
         small_clockwise_radian = -0.5
         small_counter_clockwise_radian = 0.5
         medium_clockwise_radian = -1.5
