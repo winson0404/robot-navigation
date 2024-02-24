@@ -160,11 +160,11 @@ class BrainNode(Node):
             
         # obtain model conclusion
         
-        if self.model_result == -1:
-            model_conclusion = constant.FULL_OBSTACLE
-            model_decision = constant.DECISION_BIG_ROTATE_BOTH_DIRECTION
+        # if self.model_result == -1:
+        #     model_conclusion = constant.FULL_OBSTACLE
+        #     model_decision = constant.DECISION_BIG_ROTATE_BOTH_DIRECTION
             
-        elif self.model_result == 0:
+        if self.model_result == 0:
             model_conclusion = constant.NO_OBSTACLE
             model_decision = constant.DECISION_MOVE_FRONT
             
@@ -248,45 +248,52 @@ class BrainNode(Node):
             decision = sensor_decision
         else:
             decision = model_decision
-        
-        
+            
+        if self.model_result == -1:
+            print("No model detected, using sensor data for decision making")
+            decision = sensor_decision
+        if self.right_ir == -100 and self.left_ir == -100:
+            print("No sensor data, using model data for decision making")
+            decision = model_decision
+        else:
+            print(f"us_reading: {us_reading},front_ir_reading: {front_ir_reading}, left_ir: {self.left_ir}, right_ir: {self.right_ir}")
         # decision = model_decision
         if decision == constant.DECISION_MOVE_FRONT:
-            print(f"Decision: velocity: {velocity}, radian: {0.0}")
+            print(f"(Moving front) Decision: velocity: {velocity}, radian: {0.0}")
             return velocity, 0.0
         
         elif decision == constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {small_counter_clockwise_radian}")
+            print(f"(Small Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {small_counter_clockwise_radian}")
             return 0.0, small_counter_clockwise_radian
         
         elif decision == constant.DECISION_SMALL_ROTATE_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {small_clockwise_radian}")
+            print(f"(Small Rotate Clockwise) Decision: velocity: {0.0}, radian: {small_clockwise_radian}")
             return 0.0, small_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {medium_counter_clockwise_radian}")
+            print(f"(Medium Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {medium_counter_clockwise_radian}")
             return 0.0, medium_counter_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {medium_clockwise_radian}")
+            print(f"(Medium Rotate Clockwise) Decision: velocity: {0.0}, radian: {medium_clockwise_radian}")
             return 0.0, medium_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_BOTH_DIRECTION:
             choice = random.choice([medium_counter_clockwise_radian, medium_clockwise_radian])
-            print(f"Decision random: velocity: {0.0}, radian: {choice}")
+            print(f"(Medium Random Rotate) Decision random: velocity: {0.0}, radian: {choice}")
             return 0.0, choice
         
         elif decision == constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {big_counter_clockwise_radian}")
+            print(f"(Big Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {big_counter_clockwise_radian}")
             return 0.0, big_counter_clockwise_radian
         
         elif decision == constant.DECISION_BIG_ROTATE_CLOCKWISE:
-            print(f"Decision: velocity: {0.0}, radian: {big_clockwise_radian}")
+            print(f"(Big Rotate Clockwise) Decision: velocity: {0.0}, radian: {big_clockwise_radian}")
             return 0.0, big_clockwise_radian
         
         elif decision == constant.DECISION_BIG_ROTATE_BOTH_DIRECTION:
             choice = random.choice([big_counter_clockwise_radian, big_clockwise_radian])
-            print(f"Decision: velocity: {0.0}, radian: {choice}")
+            print(f"(Big Random Rotate) Decision: velocity: {0.0}, radian: {choice}")
             return 0.0, choice
         
         else:
