@@ -10,6 +10,7 @@ from custom_interfaces.msg import SensorStatus, MovementCommand
 from custom_interfaces.srv import ControlMovement
 from typing import List, Tuple
 import time
+import os
 
 class CommNode(Node):
     def __init__(self, ser: UART_Serial):
@@ -25,6 +26,7 @@ class CommNode(Node):
         self.delay = 0
         self.create_timer(0.3, self.fetch_sensor_callback)
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
+        print("Environment variable: ", os.environ['NAVIGATION_MODE'])
     
     def sensor_data_callback(self, msg: MovementCommand)->None:
         self.velocity = msg.velocity

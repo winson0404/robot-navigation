@@ -73,8 +73,8 @@ namespace motor
 
     int time_needed = (48.88 * (degree)) / 10;
 
-    adjust_speed(LEFT_MOTOR, 90);
-    adjust_speed(RIGHT_MOTOR, 90);
+    adjust_speed(LEFT_MOTOR, 120);
+    adjust_speed(RIGHT_MOTOR, 120);
 
     if (is_clockwise)
       abs_rotate_clockwise();
