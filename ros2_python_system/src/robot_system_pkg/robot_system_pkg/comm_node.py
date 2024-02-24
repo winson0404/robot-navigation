@@ -82,7 +82,9 @@ class CommNode(Node):
                     self.sensor_data_publisher.publish(msg)
                     self.isReceivingComm = False
                     self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
-                except:
+                except Exception as e:
+                    print(e)
+                    
                     self.isReceivingComm = False
                     msg = SensorStatus()
                     msg.front_us = -100.0
