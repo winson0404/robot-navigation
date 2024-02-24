@@ -125,6 +125,7 @@ class CommNode(Node):
         return response
 
     def receive_sensor_data_handler(self)->Tuple[int, List[int], int]:
+        start_time = time.time()
         while True:
             if self.ser.ser.in_waiting > 0:
                 data, byteCount, status = self.ser.receive_data(constant.STARTMARKER, constant.ENDMARKER)
@@ -136,6 +137,11 @@ class CommNode(Node):
                     print("length results == 0")
                     return None, None, constant.ACKNOWLEDGEMENT_FAIL
                 return task, results, status
+            
+            
+            if time.time() - start_time > constant.TIMEOUT:
+                print("Receive Sensor Data Timeout")
+                return None, None, constant.ACKNOWLEDGEMENT_FAIL
         
     
     def publish_sensor_data(self):

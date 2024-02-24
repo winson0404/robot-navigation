@@ -73,7 +73,7 @@ class UART_Serial:
             pass
         
         # ack = self.receive_acknowledgement()
-        return ack
+        # return ack
     
     def send_acknowledgement(self, startMarker:int, endMarker:int,response:int):
         output = [int.to_bytes(startMarker, 1, byteorder="little")]
