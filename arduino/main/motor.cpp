@@ -117,6 +117,9 @@ namespace motor
       adjust_speed(LEFT_MOTOR, speed);
       adjust_speed(RIGHT_MOTOR, speed);
     }
+
+    delay(50);
+    move_stop();
   }
 
   void velocity_req_task(bool &comm_state, uint8_t &task_state, comms::packet &p)

@@ -243,9 +243,9 @@ class BrainNode(Node):
         # make decision based on hierachy
         decision = constant.DECISION_BIG_ROTATE_BOTH_DIRECTION
         if model_hierachy < sensor_hierachy:
-            decision = model_decision
-        elif model_hierachy > sensor_hierachy:
             decision = sensor_decision
+        elif model_hierachy > sensor_hierachy:
+            decision = model_decision
         else:
             decision = model_decision
         print("\n")
