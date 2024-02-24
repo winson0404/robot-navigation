@@ -248,7 +248,7 @@ class BrainNode(Node):
             decision = sensor_decision
         else:
             decision = model_decision
-            
+        print("\n")
         if self.model_result == -1:
             print("No model detected, using sensor data for decision making")
             decision = sensor_decision
@@ -257,6 +257,7 @@ class BrainNode(Node):
             decision = model_decision
         else:
             print(f"us_reading: {us_reading},front_ir_reading: {front_ir_reading}, left_ir: {self.left_ir}, right_ir: {self.right_ir}")
+            print(f"Model conclusion: {model_decision}")
         # decision = model_decision
         if decision == constant.DECISION_MOVE_FRONT:
             print(f"(Moving front) Decision: velocity: {velocity}, radian: {0.0}")
