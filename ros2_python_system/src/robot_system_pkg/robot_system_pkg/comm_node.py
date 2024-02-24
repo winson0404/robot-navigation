@@ -78,32 +78,34 @@ class CommNode(Node):
                 # time.sleep(0.5)
                 
                 
-            else:
-                try:
-                    msg = SensorStatus()
-                    msg.front_us = float(results[0])/100
-                    msg.front_ir = results[1]
-                    msg.left_ir = results[2]
-                    msg.right_ir = results[3]
+            # else:
+            try:
+                msg = SensorStatus()
+                msg.front_us = float(results[0])/100
+                msg.front_ir = results[1]
+                msg.left_ir = results[2]
+                msg.right_ir = results[3]
 
-                    self.sensor_data_publisher.publish(msg)
-                    self.isReceivingComm = False
-                    self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
-                except Exception as e:
-                    print(e)
-                    
-                    self.isReceivingComm = False
-                    msg = SensorStatus()
-                    msg.front_us = -100.0
-                    msg.front_ir = -100
-                    msg.left_ir = -100
-                    msg.right_ir = -100
-                    self.sensor_data_publisher.publish(msg)
-                    print("Failed to publish sensor data")
-                    # stop node for 500 ms
-                    # time.sleep(0.5)
-                    
-                self.control_robot()
+                self.sensor_data_publisher.publish(msg)
+                self.isReceivingComm = False
+                self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
+            except Exception as e:
+                print(e)
+                
+                self.isReceivingComm = False
+                msg = SensorStatus()
+                msg.front_us = -100.0
+                msg.front_ir = -100
+                msg.left_ir = -100
+                msg.right_ir = -100
+                self.sensor_data_publisher.publish(msg)
+                print("Failed to publish sensor data")
+                # stop node for 500 ms
+                # time.sleep(0.5)
+            # stop node for 500 ms
+            time.sleep(0.05)
+            
+            self.control_robot()
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers

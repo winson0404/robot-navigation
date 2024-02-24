@@ -92,9 +92,7 @@ class BrainNode(Node):
         big_clockwise_radian = -3.0
         big_counter_clockwise_radian = 3.0
         us_reading = us_threshold > self.front_us # 0 means obstacle, 1 means no obstacle\
-        front_ir_reading = not self.front_ir if self.front_ir  != -100 else -100
-        if self.front_ir  != -100:
-            front_ir_reading = not self.front_ir # converts to 0 means obstacle, 1 means no obstacle
+        front_ir_reading = (not self.front_ir) if self.front_ir != -100 else -100
         sensor_conclusion = -1
         model_conclusion = -1
         sensor_decision = -1
@@ -312,11 +310,11 @@ class BrainNode(Node):
         
         velocity, radian = decision_map[decision]
         if self.front_ir==-100:
-            velocity = 0.0
-            radian = 0.0
+            return 0.0, 0.0, 0
             
         delay = 0
         if velocity != 0.0:
+            self.get_logger().info(f"Invalid sensor data")
             return velocity, radian, constant.VELOCITY_PERIOD
         
         else:
