@@ -77,7 +77,7 @@ class BrainNode(Node):
         medium_clockwise_radian = -1.5
         medium_counter_clockwise_radian = 1.5
         big_clockwise_radian = -3
-        big_counter_clockwise_radian = 3
+        big_counter_clockwise_radian = 3.0
         us_reading = us_threshold > self.front_us # 0 means obstacle, 1 means no obstacle
         front_ir_reading = not self.front_ir # converts to 0 means obstacle, 1 means no obstacle
         sensor_conclusion = -1
