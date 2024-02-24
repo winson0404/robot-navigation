@@ -121,7 +121,7 @@ namespace serial
                         Serial.println(data_count);
                         Serial.print("packet_length: ");
                         Serial.println(packet_length);
-                        // serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_LENGTH_MISMATCH, startMarker, endMarker);
+                        serial::send_acknowledge(ser, constants::ACKNOWLEDGE_FAIL_LENGTH_MISMATCH, startMarker, endMarker);
                         data_count = 0;
                         break;
                     }

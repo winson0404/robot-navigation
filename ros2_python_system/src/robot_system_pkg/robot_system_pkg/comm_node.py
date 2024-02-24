@@ -48,8 +48,8 @@ class CommNode(Node):
             self.isReceivingComm = True
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, constant.SENSOR_DATA_REQ, [], [])
             self.ser.send_bytearray(send_data)
-            # if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
-            if False:
+            if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
+            # if False:
                 self.isReceivingComm = False
                 msg = SensorStatus()
                 msg.front_us = -100.0
