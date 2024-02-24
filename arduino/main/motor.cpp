@@ -47,20 +47,22 @@ namespace motor
             Byte_Size     Sequence                 Content
                 2            1         velocity (float*100 => d_int)
                 2            2         radian (float*100 => d_int)
+                2            3         delay (d_int)
     */
 
     float velocity = ((float)p.data[0] )/ 100;
     float radian = ((float)p.data[1] )/ 100;
+    int _delay = p.data[2];
     Serial.println("Motor Task Received..");
 
     // move_motor_with_speed(speed);
-    handle_rotate_with_radian(radian);
-    handle_displacement_with_velocity(velocity);
+    handle_rotate_with_radian(radian, _delay);
+    handle_displacement_with_velocity(velocity, _delay);
 
     task_state = constants::COMMS;
   }
 
-  void handle_rotate_with_radian(float radian)
+  void handle_rotate_with_radian(float radian, d_int _delay)
   {
     Serial.print("Rotating with radian: ");
     Serial.println(radian);
@@ -81,12 +83,16 @@ namespace motor
       abs_rotate_counter_clockwise();
     }
 
-    delay(time_needed);
+
+    if (_delay == 0)
+      delay(time_needed);
+    else
+      delay(_delay);
 
     move_stop();
   }
 
-  void handle_displacement_with_velocity(float velocity)
+  void handle_displacement_with_velocity(float velocity, d_int _delay)
   {
     int speed = (int)velocity; // TODO: do some conversion to map velocity to -255 to 255
     Serial.print("moving with speed: ");
@@ -118,7 +124,7 @@ namespace motor
       adjust_speed(RIGHT_MOTOR, speed);
     }
 
-    delay(500);
+    delay(_delay);
     move_stop();
   }
 
@@ -132,8 +138,12 @@ namespace motor
 
     if (motor == LEFT_MOTOR)
       analogWrite(pMotorLSpeedCtrl, speed);
-    if (motor == RIGHT_MOTOR)
-      analogWrite(pMotorRSpeedCtrl, speed+10);
+    if (motor == RIGHT_MOTOR){
+      speed += 0;
+      // if (speed > 250)
+        // speed = 250;
+      analogWrite(pMotorRSpeedCtrl, speed);
+    }
   }
 
   void abs_rotate_clockwise()
@@ -165,8 +175,8 @@ namespace motor
 
   void move_stop()
   {
-    spin_stop(LEFT_MOTOR);
     spin_stop(RIGHT_MOTOR);
+    spin_stop(LEFT_MOTOR);
   }
 
   void spin_front(int motor)

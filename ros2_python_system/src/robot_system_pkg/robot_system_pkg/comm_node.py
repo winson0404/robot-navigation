@@ -108,10 +108,11 @@ class CommNode(Node):
         self.get_logger().info(f"Received request: {request}")
         velocity = int(request.velocity*100)
         radian = int(request.radian*100)
+        delay = request.delay
         
         task = constant.MOTOR_MOVE
-        data_size = [2, 2]
-        data = [velocity, radian]
+        data_size = [2, 2, 2]
+        data = [velocity, radian, delay]
         send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, task, data_size, data)
         
         self.ser.send_bytearray(send_data)

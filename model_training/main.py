@@ -10,11 +10,11 @@ from utils.data_processor import DataProcessor
 import socket
 import time
 
-# hand_model_path = "../data/models/YoloV7_Tiny.onnx"
-model_path = r"output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
+
+model_path = r"/home/weixiong0404/Documents/workspace/output/CustomNetV2_2/one_adam_0.0005_0.2/best_model.onnx"
 provider = ['CPUExecutionProvider']
 threshold = 0.5
-conf = OmegaConf.load("configs/CustomNetV2/CustomNetV2_2/one_adam_0.0005_0.2.yaml")
+conf = OmegaConf.load("/home/weixiong0404/Documents/workspace/output/CustomNetV2_2/one_adam_0.0005_0.2/one_adam_0.0005_0.2.yaml")
 input_shape=(3, conf.dataset.image_size[1], conf.dataset.image_size[0])
 target_dict = {i: label for i, label in enumerate(conf.dataset.targets)}
 

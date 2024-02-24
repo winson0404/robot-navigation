@@ -26,8 +26,8 @@ namespace motor{
     void velocity_req_task(bool &comm_state, uint8_t &task_state, comms::packet &p);
 
     // void move_motor_with_speed(int velocity);
-    void handle_rotate_with_radian(float radian);
-    void handle_displacement_with_velocity(float velocity);
+    void handle_rotate_with_radian(float radian, , d_int _delay);
+    void handle_displacement_with_velocity(float velocity, d_int _delay);
 
 
     

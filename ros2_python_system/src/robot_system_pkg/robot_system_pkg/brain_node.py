@@ -53,8 +53,7 @@ class BrainNode(Node):
             self.get_logger().info('Waiting for ControlMovement service...')
             
         request = ControlMovement.Request()
-        request.velocity, request.radian = self.make_movement_decisions()
-        
+        request.velocity, request.radian, request.delay = self.make_movement_decisions()
         future = client.call_async(request)
         future.add_done_callback(self.control_robot_callback)
         
@@ -68,7 +67,7 @@ class BrainNode(Node):
 
     
     
-    def make_movement_decisions(self)->Tuple[float, float]:
+    def make_movement_decisions(self)->Tuple[float, float, int]:
         
         # if no obstacle, move front
         us_threshold = 20 # in cm
@@ -249,57 +248,63 @@ class BrainNode(Node):
         else:
             decision = model_decision
         print("\n")
+        print(f"us_reading: {us_reading},front_ir_reading: {front_ir_reading}, left_ir: {self.left_ir}, right_ir: {self.right_ir}")
         if self.model_result == -1:
             print("No model detected, using sensor data for decision making")
             decision = sensor_decision
-        if self.right_ir == -100 and self.left_ir == -100:
-            print("No sensor data, using model data for decision making")
-            decision = model_decision
         else:
-            print(f"us_reading: {us_reading},front_ir_reading: {front_ir_reading}, left_ir: {self.left_ir}, right_ir: {self.right_ir}")
             print(f"Model conclusion: {model_decision}")
         # decision = model_decision
+        decision_map = {
+            constant.DECISION_MOVE_FRONT: (velocity, 0.0),
+            constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE: (0.0, small_counter_clockwise_radian),
+            constant.DECISION_SMALL_ROTATE_CLOCKWISE: (0.0, small_clockwise_radian),
+            constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE: (0.0, medium_counter_clockwise_radian),
+            constant.DECISION_MEDIUM_ROTATE_CLOCKWISE: (0.0, medium_clockwise_radian),
+            constant.DECISION_MEDIUM_ROTATE_BOTH_DIRECTION: (0.0, random.choice([medium_counter_clockwise_radian, medium_clockwise_radian])),
+            constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE: (0.0, big_counter_clockwise_radian),
+            constant.DECISION_BIG_ROTATE_CLOCKWISE: (0.0, big_clockwise_radian),
+            constant.DECISION_BIG_ROTATE_BOTH_DIRECTION: (0.0, random.choice([big_counter_clockwise_radian, big_clockwise_radian]))
+        }
         if decision == constant.DECISION_MOVE_FRONT:
             print(f"(Moving front) Decision: velocity: {velocity}, radian: {0.0}")
             return velocity, 0.0
         
         elif decision == constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE:
             print(f"(Small Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {small_counter_clockwise_radian}")
-            return 0.0, small_counter_clockwise_radian
         
         elif decision == constant.DECISION_SMALL_ROTATE_CLOCKWISE:
             print(f"(Small Rotate Clockwise) Decision: velocity: {0.0}, radian: {small_clockwise_radian}")
-            return 0.0, small_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE:
             print(f"(Medium Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {medium_counter_clockwise_radian}")
-            return 0.0, medium_counter_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_CLOCKWISE:
             print(f"(Medium Rotate Clockwise) Decision: velocity: {0.0}, radian: {medium_clockwise_radian}")
-            return 0.0, medium_clockwise_radian
         
         elif decision == constant.DECISION_MEDIUM_ROTATE_BOTH_DIRECTION:
             choice = random.choice([medium_counter_clockwise_radian, medium_clockwise_radian])
             print(f"(Medium Random Rotate) Decision random: velocity: {0.0}, radian: {choice}")
-            return 0.0, choice
         
         elif decision == constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE:
             print(f"(Big Rotate Counter Clockwise) Decision: velocity: {0.0}, radian: {big_counter_clockwise_radian}")
-            return 0.0, big_counter_clockwise_radian
-        
+            
         elif decision == constant.DECISION_BIG_ROTATE_CLOCKWISE:
             print(f"(Big Rotate Clockwise) Decision: velocity: {0.0}, radian: {big_clockwise_radian}")
-            return 0.0, big_clockwise_radian
         
         elif decision == constant.DECISION_BIG_ROTATE_BOTH_DIRECTION:
             choice = random.choice([big_counter_clockwise_radian, big_clockwise_radian])
             print(f"(Big Random Rotate) Decision: velocity: {0.0}, radian: {choice}")
-            return 0.0, choice
+        
+        
+        velocity, radian = decision_map[decision]
+        delay = 0
+        if velocity != 0.0:
+            return velocity, radian, constant.VELOCITY_PERIOD
         
         else:
             self.get_logger().info(f"Void decision, stoping robot")
-            return 0.0, 0.0
+            return 0.0, 0.0, 0
 
     def run_predefined_path(self)->None:
         predefined_path = self.predefined_path()
