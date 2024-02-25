@@ -179,9 +179,9 @@ class CommNode(Node):
                 # time.sleep(0.05) #
             
                 self.control_robot()
-                print("Receiving motor ack")
-                self.ser.receive_acknowledgement()
-                print("Done receiving motor ack")
+                # print("Receiving motor ack")
+                # self.ser.receive_acknowledgement()
+                # print("Done receiving motor ack")
                 time.sleep(((self.delay) / 1000) + 0.05)
             except Exception as e:
                 print(e)
