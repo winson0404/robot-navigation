@@ -46,10 +46,10 @@ class CommNode(Node):
         predefined_path = self.predefined_path()
         print(f"Running predefined path with MAP: {self.map}, DESTINATION: {self.destination}")
         for movement_set in predefined_path:
-            print(f"Moveset: {movement_set}")
             velocity, radian, delay = movement_set
             velocity = int(self.velocity*100)
             radian = int(self.radian*100)
+            print(f"Moveset: velocity: {velocity}, radian: {radian}, delay: {delay}")
             
             task = constant.MOTOR_MOVE
             data_size = [2, 2, 2]
@@ -59,6 +59,7 @@ class CommNode(Node):
             self.ser.send_bytearray(send_data)
             self.ser.receive_acknowledgement()
             time.sleep((delay) / 1000)
+            print("Done move")
             
     def predefined_path(self)->List[Tuple[float, float, int]]:
         # if map is 1, destination is 1, go to predefined path 1

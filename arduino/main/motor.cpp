@@ -56,8 +56,10 @@ namespace motor
     Serial.println("Motor Task Received..");
 
     // move_motor_with_speed(speed);
-    handle_rotate_with_radian(radian, _delay);
-    handle_displacement_with_velocity(velocity, _delay);
+    if (p.data[0] == 0)
+      handle_rotate_with_radian(radian, _delay);
+    else
+      handle_displacement_with_velocity(velocity, _delay);
 
     task_state = constants::COMMS;
   }
