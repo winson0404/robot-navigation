@@ -45,6 +45,7 @@ class CommNode(Node):
     def run_predefined_path(self)->None:
         predefined_path = self.predefined_path()
         for movement_set in predefined_path:
+            print(f"Running predefined path: {movement_set}")
             velocity, radian, delay = movement_set
             velocity = int(self.velocity*100)
             radian = int(self.radian*100)
@@ -120,7 +121,7 @@ class CommNode(Node):
                 2            4         right infared ray data (float*100 => int16_t)
         """
         
-        self.get_logger().info(f"trying to fetching sensor data==========================")
+        self.get_logger().info(f"\ntrying to fetching sensor data==========================")
         if self.isReceivingComm == False and self.gotTask == False:
             start_time = time.time()
             self.isReceivingComm = True
@@ -142,18 +143,18 @@ class CommNode(Node):
             task, results, status = self.receive_sensor_data_handler()
             # self.ser.send_acknowledgement(constant.STARTMARKER, constant.ENDMARKER, status)
             
-            if False:
+            # if False:
             # if status != constant.ACKNOWLEDGEMENT_SUCCESS:
-                self.isReceivingComm = False
-                msg = SensorStatus()
-                msg.front_us = -100.0
-                msg.front_ir = -100
-                msg.left_ir = -100
-                msg.right_ir = -100
-                self.sensor_data_publisher.publish(msg)
-                print(f"Failed to receive sensor data: status: {status}")
-                # stop node for 500 ms
-                # time.sleep(0.5)
+                # self.isReceivingComm = False
+                # msg = SensorStatus()
+                # msg.front_us = -100.0
+                # msg.front_ir = -100
+                # msg.left_ir = -100
+                # msg.right_ir = -100
+                # self.sensor_data_publisher.publish(msg)
+                # print(f"Failed to receive sensor data: status: {status}")
+                # # stop node for 500 ms
+                # # time.sleep(0.5)
                 
                 
             # else:
@@ -180,12 +181,12 @@ class CommNode(Node):
                 print("Failed to publish sensor data")
                 # stop node for 500 ms
                 # time.sleep(0.5)
-            # stop node for 50 ms to wait for response
-            time.sleep(0.05) #
+            # stop node for 200 ms to wait for response
+            time.sleep(0.2) #
             
             self.control_robot()
             self.ser.receive_acknowledgement()
-            time.sleep((self.delay+5) / 1000)
+            time.sleep((self.delay) / 1000)
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers
