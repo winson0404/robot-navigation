@@ -273,6 +273,7 @@ class BrainNode(Node):
             print("No model detected, using sensor data for decision making")
             decision = sensor_decision
         else:
+            print(f"Sensor Conclusion: {sensor_conclusion}")
             print(f"Model conclusion: {model_decision}")
         # decision = model_decision
         decision_map = {
