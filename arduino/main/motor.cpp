@@ -78,9 +78,9 @@ namespace motor
     adjust_speed(LEFT_MOTOR, 120);
     adjust_speed(RIGHT_MOTOR, 120);
 
-    if (_delay == 500){
+    if (_delay == 350){
       move_back();
-      delay(100);
+      delay(500);
       move_stop();
     }
 
