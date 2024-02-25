@@ -132,6 +132,7 @@ class CommNode(Node):
             self.isReceivingComm = True
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, constant.SENSOR_DATA_REQ, [], [])
             self.ser.send_bytearray(send_data)
+            print("Receiving sensor ack")
             if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
             # if False:
                 self.isReceivingComm = False
@@ -176,6 +177,7 @@ class CommNode(Node):
                 time.sleep(0.05) #
             
                 self.control_robot()
+                print("Receiving motor ack")
                 self.ser.receive_acknowledgement()
                 time.sleep((self.delay) / 1000)
             except Exception as e:

@@ -49,6 +49,7 @@ class UART_Serial:
         status = constants.ACKNOWLEDGEMENT_SUCCESS
         
         if packet_length<=2 or byteCount != packet_length:
+            print(f"Packet length miss match: packet_length: {packet_length} vs byte_count: {byteCount}")
             status = constants.ACKNOWLEDGEMENT_FAIL
         
         return data, byteCount, status
