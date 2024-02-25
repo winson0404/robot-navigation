@@ -84,13 +84,13 @@ class BrainNode(Node):
         
         # if no obstacle, move front
         us_threshold = 20 # in cm
-        velocity = 250.0
-        small_clockwise_radian = -0.5
-        small_counter_clockwise_radian = 0.5
-        medium_clockwise_radian = -1.5
-        medium_counter_clockwise_radian = 1.5
-        big_clockwise_radian = -3.0
-        big_counter_clockwise_radian = 3.0
+        velocity = 150.0
+        small_clockwise_radian = -0.52
+        small_counter_clockwise_radian = 0.52
+        medium_clockwise_radian = -1.04
+        medium_counter_clockwise_radian = 1.04
+        big_clockwise_radian = -1.57
+        big_counter_clockwise_radian = 1.57
         
         
         if self.front_ir == -100:

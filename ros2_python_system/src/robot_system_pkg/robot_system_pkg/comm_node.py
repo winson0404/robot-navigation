@@ -12,6 +12,8 @@ from typing import List, Tuple
 import time
 import os
 
+import random
+
 class CommNode(Node):
     def __init__(self, ser: UART_Serial):
         super().__init__('comm_node')
@@ -24,10 +26,86 @@ class CommNode(Node):
         self.velocity = 0.0
         self.radian = 0.0
         self.delay = 0
-        self.create_timer(0.3, self.fetch_sensor_callback)
+        
+        self.mode = os.environ['NAVIGATION_MODE']
+        self.map = os.environ['MAP']
+        self.destination = os.environ['DESTINATION']
+        
+        breakpoint()
+        
+        if self.mode == constant.NAVIGATION_MODE_ROAMING:
+            
+            self.create_timer(0.3, self.fetch_sensor_callback)
+            
+        else:
+            self.run_predefined_path()
+            
         self.srv = self.create_service(ControlMovement, 'control_movement', self.move_robot_callback)
         print("Environment variable: ", os.environ['NAVIGATION_MODE'])
-    
+        
+        
+    def run_predefined_path(self)->None:
+        predefined_path = self.predefined_path()
+        for movement_set in predefined_path:
+            velocity, radian, delay = movement_set
+            velocity = int(self.velocity*100)
+            radian = int(self.radian*100)
+            
+            task = constant.MOTOR_MOVE
+            data_size = [2, 2, 2]
+            data = [velocity, radian, delay]
+            send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, task, data_size, data)
+            
+            self.ser.send_bytearray(send_data)
+            self.ser.receive_acknowledgement()
+            time.sleep((delay+5) / 1000)
+            
+    def predefined_path(self)->List[Tuple[float, float, int]]:
+        # if map is 1, destination is 1, go to predefined path 1
+        # if map is 1, destination is 2, go to predefined path 2
+        
+        velocity = 150.0
+        small_clockwise_radian = -0.52
+        small_counter_clockwise_radian = 0.52
+        medium_clockwise_radian = -1.04
+        medium_counter_clockwise_radian = 1.04
+        big_clockwise_radian = -1.57
+        big_counter_clockwise_radian = 1.57
+        # return (velocity, radian, time in ms)
+        
+        decision_map = {
+            constant.DECISION_MOVE_FRONT: (velocity, 0.0, 500),
+            constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE: (0.0, small_counter_clockwise_radian, 190),
+            constant.DECISION_SMALL_ROTATE_CLOCKWISE: (0.0, small_clockwise_radian, 190),
+            constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE: (0.0, medium_counter_clockwise_radian, 280),
+            constant.DECISION_MEDIUM_ROTATE_CLOCKWISE: (0.0, medium_clockwise_radian, 280),
+            constant.DECISION_MEDIUM_ROTATE_BOTH_DIRECTION: (0.0, random.choice([medium_counter_clockwise_radian, medium_clockwise_radian]), 280),
+            constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE: (0.0, big_counter_clockwise_radian, 190),
+            constant.DECISION_BIG_ROTATE_CLOCKWISE: (0.0, big_clockwise_radian, 500),
+            constant.DECISION_BIG_ROTATE_BOTH_DIRECTION: (0.0, random.choice([big_counter_clockwise_radian, big_clockwise_radian]), 500)
+        }
+        
+        if self.map == constant.MAP1:
+            if self.destination == constant.DESTIONATION1:
+                return [
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT]
+                    ]
+            else:
+                return [
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNDECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISETER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE]
+                    ]
+
+            
+        else:
+            return [];
     def sensor_data_callback(self, msg: MovementCommand)->None:
         self.velocity = msg.velocity
         self.radian = msg.radian
@@ -104,11 +182,12 @@ class CommNode(Node):
                 print("Failed to publish sensor data")
                 # stop node for 500 ms
                 # time.sleep(0.5)
-            # stop node for 500 ms
-            time.sleep(0.5)
+            # stop node for 50 ms to wait for response
+            time.sleep(0.05) #
             
             self.control_robot()
             self.ser.receive_acknowledgement()
+            time.sleep((self.delay+5) / 1000)
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers
@@ -129,7 +208,7 @@ class CommNode(Node):
         send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, task, data_size, data)
         
         self.ser.send_bytearray(send_data)
-
+        
     def move_robot_callback(self, request, response):
         self.get_logger().info(f"Initiate motor task+++++++++++++++++++++")
         self.gotTask = True
