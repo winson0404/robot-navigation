@@ -194,6 +194,9 @@ class CommNode(Node):
                 msg.right_ir = -100
                 self.sensor_data_publisher.publish(msg)
                 print("Failed to publish sensor data")
+                self.ser.reset_input_buffer()
+                self.ser.reset_output_buffer()
+                time.sleep(0.200)
                 # stop node for 500 ms
                 # time.sleep(0.5)
             # stop node for 200 ms to wait for response

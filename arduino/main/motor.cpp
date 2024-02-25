@@ -112,13 +112,13 @@ namespace motor
       adjust_speed(RIGHT_MOTOR, speed);
     }
     else if (speed < 0)
-    {
-      move_back(); // place holder cause motor dont accept speed to move wheel
+    // {
+    //   move_back(); // place holder cause motor dont accept speed to move wheel
 
-      speed = -speed;
-      adjust_speed(LEFT_MOTOR, speed);
-      adjust_speed(RIGHT_MOTOR, speed);
-    }
+    //   speed = -speed;
+    //   adjust_speed(LEFT_MOTOR, speed);
+    //   adjust_speed(RIGHT_MOTOR, speed);
+    // }
     else
     {
       move_stop(); // place holder cause motor dont accept speed to move wheel
