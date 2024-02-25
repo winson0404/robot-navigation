@@ -86,7 +86,7 @@ class CommNode(Node):
         }
         
         if self.map == constant.MAP1:
-            if self.destination == constant.DESTIONATION1:
+            if self.destination == constant.DESTINATION1:
                 return [
                         decision_map[constant.DECISION_MOVE_FRONT], 
                         decision_map[constant.DECISION_MOVE_FRONT], 

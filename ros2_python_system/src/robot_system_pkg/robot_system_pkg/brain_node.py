@@ -19,7 +19,7 @@ class BrainNode(Node):
         
         self.declare_parameter('mode', constant.NAVIGATION_MODE_ROAMING)
         self.declare_parameter('map', constant.MAP1)
-        self.declare_parameter('destination', constant.DESTIONATION1)
+        self.declare_parameter('destination', constant.DESTINATION1)
         
 
         self.front_us = -100.0
@@ -363,19 +363,19 @@ class BrainNode(Node):
         big_counter_clockwise_radian = 3
         # return (velocity, radian, time in ms)
         if self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTINATION1:
                 return [(velocity, 0, 500), (0, medium_clockwise_radian, 0), (velocity, 0, 860), (0, medium_counter_clockwise_radian, 0), (velocity, 200), (0, small_counter_clockwise_radian, 0), (velocity, 400)]
             else:
                 return [(velocity, 0, 500), (velocity, 0, 1000)]
             
-        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP2:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTINATION1:
                 return [(velocity, 0, 700), (0, small_counter_clockwise_radian, 0), (velocity, 0, 300)]
             else:
                 return [(0, small_clockwise_radian, 0), (velocity, 0, 1000), (0, small_counter_clockwise_radian, 0)]
             
-        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP1:
-            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTIONATION1:
+        elif self.get_parameter('map').get_parameter_value().integer_value == constant.MAP3:
+            if self.get_parameter('destination').get_parameter_value().integer_value == constant.DESTINATION1:
                 return [(0, medium_counter_clockwise_radian, 0), (velocity, 0, 400), (0, medium_clockwise_radian, 0), (velocity, 0, 400)]
             else:
                 return [(velocity, 0, 1750), (0, medium_clockwise_radian, 0), (velocity, 0, 300)]
