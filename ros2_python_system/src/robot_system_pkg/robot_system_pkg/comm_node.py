@@ -173,6 +173,11 @@ class CommNode(Node):
                 self.sensor_data_publisher.publish(msg)
                 self.isReceivingComm = False
                 self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
+                time.sleep(0.05) #
+            
+                self.control_robot()
+                self.ser.receive_acknowledgement()
+                time.sleep((self.delay) / 1000)
             except Exception as e:
                 print(e)
                 
@@ -187,11 +192,7 @@ class CommNode(Node):
                 # stop node for 500 ms
                 # time.sleep(0.5)
             # stop node for 200 ms to wait for response
-            time.sleep(0.05) #
-            
-            self.control_robot()
-            self.ser.receive_acknowledgement()
-            time.sleep(2000)
+
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers
