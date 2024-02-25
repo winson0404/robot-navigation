@@ -191,7 +191,7 @@ class CommNode(Node):
             
             self.control_robot()
             self.ser.receive_acknowledgement()
-            time.sleep((self.delay) / 1000)
+            time.sleep(2000)
         else:
             print(f"Doing motor task: {self.gotTask}")
             # check queue for subscribers
