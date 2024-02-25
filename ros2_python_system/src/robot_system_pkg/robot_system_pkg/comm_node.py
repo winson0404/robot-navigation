@@ -99,7 +99,7 @@ class CommNode(Node):
                         decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT], 
                         decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
-                        decision_map[constant.DECISION_BIG_ROTATE_COUNDECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISETER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE]
                     ]
 
