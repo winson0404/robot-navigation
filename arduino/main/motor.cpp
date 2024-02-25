@@ -78,6 +78,12 @@ namespace motor
     adjust_speed(LEFT_MOTOR, 120);
     adjust_speed(RIGHT_MOTOR, 120);
 
+    if (_delay == 500){
+      move_back();
+      delay(100);
+      move_stop();
+    }
+
     if (is_clockwise)
       abs_rotate_clockwise();
     else{
@@ -111,7 +117,7 @@ namespace motor
       adjust_speed(LEFT_MOTOR, speed);
       adjust_speed(RIGHT_MOTOR, speed);
     }
-    else if (speed < 0)
+    // else if (speed < 0)
     // {
     //   move_back(); // place holder cause motor dont accept speed to move wheel
 

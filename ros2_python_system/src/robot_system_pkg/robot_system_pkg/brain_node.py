@@ -253,10 +253,10 @@ class BrainNode(Node):
         elif model_conclusion == constant.SMALL_MIDDLE:
             model_hierachy = 3
             
-        elif model_conclusion == constant.MEDIUM_LEFT or sensor_conclusion == constant.MEDIUM_RIGHT:
+        elif model_conclusion == constant.MEDIUM_LEFT or model_conclusion == constant.MEDIUM_RIGHT:
             model_hierachy = 4
             
-        elif model_conclusion == constant.EDGE or sensor_conclusion == constant.FULL_OBSTACLE:
+        elif model_conclusion == constant.EDGE or model_conclusion == constant.FULL_OBSTACLE:
             model_hierachy = 5
 
         # make decision based on hierachy
