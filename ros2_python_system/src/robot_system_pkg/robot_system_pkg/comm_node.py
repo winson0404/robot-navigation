@@ -57,7 +57,7 @@ class CommNode(Node):
             
             self.ser.send_bytearray(send_data)
             self.ser.receive_acknowledgement()
-            time.sleep((delay+5) / 1000)
+            time.sleep((delay) / 1000)
             
     def predefined_path(self)->List[Tuple[float, float, int]]:
         # if map is 1, destination is 1, go to predefined path 1
@@ -182,7 +182,7 @@ class CommNode(Node):
                 # stop node for 500 ms
                 # time.sleep(0.5)
             # stop node for 200 ms to wait for response
-            time.sleep(0.2) #
+            time.sleep(0.05) #
             
             self.control_robot()
             self.ser.receive_acknowledgement()
