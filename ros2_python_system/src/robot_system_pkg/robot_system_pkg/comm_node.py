@@ -58,8 +58,11 @@ class CommNode(Node):
             
             self.ser.send_bytearray(send_data)
             self.ser.receive_acknowledgement()
-            time.sleep((delay) / 1000)
+            time.sleep(1)
             print("Done move")
+            
+        # quit node
+        rclpy.shutdown()
             
     def predefined_path(self)->List[Tuple[float, float, int]]:
         # if map is 1, destination is 1, go to predefined path 1
