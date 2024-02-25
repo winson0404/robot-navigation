@@ -246,6 +246,8 @@ class CommNode(Node):
             if self.ser.ser.in_waiting > 0:
                 data, byteCount, status = self.ser.receive_data(constant.STARTMARKER, constant.ENDMARKER)
                 if status == constant.ACKNOWLEDGEMENT_FAIL:
+                    print("ACK FAIL")
+                    print(data, byteCount, status)
                     return None, None, status
                 # print(f"status: {status}")
                 task, results = self.ser.postprocess(data, byteCount)

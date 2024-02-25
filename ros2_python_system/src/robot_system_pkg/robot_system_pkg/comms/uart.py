@@ -33,6 +33,7 @@ class UART_Serial:
             x = self.ser.read()
 
             if self.ser.in_waiting == 0:
+                print("End Marker not found")
                 return data, byteCount, status
         
 
