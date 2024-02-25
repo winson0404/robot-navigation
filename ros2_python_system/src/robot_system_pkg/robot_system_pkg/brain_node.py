@@ -276,7 +276,7 @@ class BrainNode(Node):
             print(f"Model conclusion: {model_decision}")
         # decision = model_decision
         decision_map = {
-            constant.DECISION_MOVE_FRONT: (velocity, 0.0),
+            constant.DECISION_MOVE_FRONT: (velocity, 0.0, constant.VELOCITY_PERIOD),
             constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE: (0.0, small_counter_clockwise_radian, 190),
             constant.DECISION_SMALL_ROTATE_CLOCKWISE: (0.0, small_clockwise_radian, 190),
             constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE: (0.0, medium_counter_clockwise_radian, 280),
@@ -317,11 +317,11 @@ class BrainNode(Node):
         
         velocity, radian, delay = decision_map[decision]
         if front_ir_reading==-100:
+            self.get_logger().info(f"Invalid sensor data")
             return 0.0, 0.0, 0
             
         delay = 0
         if velocity != 0.0:
-            self.get_logger().info(f"Invalid sensor data")
             return velocity, radian, constant.VELOCITY_PERIOD
         
         else:

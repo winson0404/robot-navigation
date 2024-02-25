@@ -31,8 +31,6 @@ class CommNode(Node):
         self.map = os.environ['MAP']
         self.destination = os.environ['DESTINATION']
         
-        breakpoint()
-        
         if self.mode == constant.NAVIGATION_MODE_ROAMING:
             
             self.create_timer(0.3, self.fetch_sensor_callback)
