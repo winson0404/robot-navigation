@@ -87,7 +87,7 @@ class UART_Serial:
         self.ser.write(list_to_bytearray(output))
         while self.ser.out_waiting > 0:
             pass
-        
+
     def receive_acknowledgement(self)->int:
         start_time = time.time()
         while True:

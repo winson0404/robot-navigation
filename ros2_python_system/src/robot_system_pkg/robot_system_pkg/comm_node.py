@@ -132,20 +132,22 @@ class CommNode(Node):
             self.isReceivingComm = True
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, constant.SENSOR_DATA_REQ, [], [])
             self.ser.send_bytearray(send_data)
-            print("Receiving sensor ack")
-            if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
-            # if False:
-                self.isReceivingComm = False
-                msg = SensorStatus()
-                msg.front_us = -100.0
-                msg.front_ir = -100
-                msg.left_ir = -100
-                msg.right_ir = -100
-                self.sensor_data_publisher.publish(msg)
-                print("Failed to request for sensor data")
-                # stop node for 500 ms
-                # time.sleep(0.5)
-                return
+            # print("Receiving sensor ack")
+            # if (self.ser.receive_acknowledgement() != constant.ACKNOWLEDGEMENT_SUCCESS):
+            # # if False:
+            #     print("Done receiving sensor ack")
+            #     self.isReceivingComm = False
+            #     msg = SensorStatus()
+            #     msg.front_us = -100.0
+            #     msg.front_ir = -100
+            #     msg.left_ir = -100
+            #     msg.right_ir = -100
+            #     self.sensor_data_publisher.publish(msg)
+            #     print("Failed to request for sensor data")
+            #     # stop node for 500 ms
+            #     # time.sleep(0.5)
+            #     return
+            # print("Done receiving sensor ack")
             task, results, status = self.receive_sensor_data_handler()
             # self.ser.send_acknowledgement(constant.STARTMARKER, constant.ENDMARKER, status)
             
@@ -174,12 +176,13 @@ class CommNode(Node):
                 self.sensor_data_publisher.publish(msg)
                 self.isReceivingComm = False
                 self.get_logger().info(f"Time taken to fetch sensor data: {(time.time() - start_time)*1000} ms")
-                time.sleep(0.05) #
+                # time.sleep(0.05) #
             
                 self.control_robot()
                 print("Receiving motor ack")
                 self.ser.receive_acknowledgement()
-                time.sleep((self.delay) / 1000)
+                print("Done receiving motor ack")
+                time.sleep(((self.delay) / 1000) + 0.05)
             except Exception as e:
                 print(e)
                 
