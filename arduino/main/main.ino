@@ -38,4 +38,5 @@ void loop()
     comms_state = constants::RECEIVE;
     task_status = constants::TASK_EMPTY;
   }
+  // Serial.println("running loop");
 }

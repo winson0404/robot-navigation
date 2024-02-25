@@ -53,7 +53,9 @@ namespace motor
     float velocity = ((float)p.data[0] )/ 100;
     float radian = ((float)p.data[1] )/ 100;
     int _delay = p.data[2];
-    Serial.println("Motor Task Received..");
+    Serial.println("Motor Task Received..");    
+    Serial.print("========================================================================Delay: ");
+    Serial.println(_delay);
 
     // move_motor_with_speed(speed);
     if (p.data[0] == 0)
@@ -92,6 +94,8 @@ namespace motor
     }
 
 
+    Serial.print("Delay: ");
+    Serial.println(_delay);
     if (_delay == 0)
       delay(time_needed);
     else
@@ -131,7 +135,8 @@ namespace motor
       adjust_speed(LEFT_MOTOR, speed);
       adjust_speed(RIGHT_MOTOR, speed);
     }
-
+    Serial.print("Delay: ");
+    Serial.println(_delay);
     delay(_delay);
     move_stop();
   }

@@ -106,6 +106,41 @@ class CommNode(Node):
                         decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE]
                     ]
+        elif self.map == constant.MAP2:
+            if self.destination == constant.DESTINATION1:
+                return [
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT]
+                    ]
+            else:
+                return [
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE]
+                    ]
+
+        elif self.map == constant.MAP3:
+            if self.destination == constant.DESTINATION1:
+                return [
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT]
+                    ]
+            else:
+                return [
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE]
+                    ]
 
             
         else:
@@ -182,6 +217,7 @@ class CommNode(Node):
                 # print("Receiving motor ack")
                 # self.ser.receive_acknowledgement()
                 # print("Done receiving motor ack")
+                print("Delay: ", self.delay)
                 time.sleep(((self.delay) / 1000) + 0.05)
             except Exception as e:
                 print(e)

@@ -321,7 +321,7 @@ class BrainNode(Node):
             self.get_logger().info(f"Invalid sensor data")
             return 0.0, 0.0, 0
             
-        delay = 0
+        # delay = 0
         if velocity != 0.0:
             return velocity, radian, constant.VELOCITY_PERIOD
         
