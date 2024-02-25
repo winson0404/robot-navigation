@@ -97,8 +97,8 @@ class BrainNode(Node):
             self.get_logger().info(f"Invalid sensor data\n")
             return 0.0, 0.0, 0
         
-        us_reading = us_threshold > self.front_us # 0 means obstacle, 1 means no obstacle\
-        front_ir_reading = (not self.front_ir) if self.front_ir != -100 else -100
+        us_reading = int(us_threshold > self.front_us) # 0 means obstacle, 1 means no obstacle\
+        front_ir_reading = int((not self.front_ir) if self.front_ir != -100 else -100)
         sensor_conclusion = -1
         model_conclusion = -1
         sensor_decision = -1
