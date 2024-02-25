@@ -47,8 +47,8 @@ class CommNode(Node):
         print(f"Running predefined path with MAP: {self.map}, DESTINATION: {self.destination}")
         for movement_set in predefined_path:
             velocity, radian, delay = movement_set
-            velocity = int(self.velocity*100)
-            radian = int(self.radian*100)
+            velocity = int(velocity*100)
+            radian = int(radian*100)
             print(f"Moveset: velocity: {velocity}, radian: {radian}, delay: {delay}")
             
             task = constant.MOTOR_MOVE
