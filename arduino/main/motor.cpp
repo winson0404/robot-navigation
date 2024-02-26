@@ -82,7 +82,7 @@ namespace motor
 
     if (_delay == 350){
       move_back();
-      delay(500);
+      delay(150);
       move_stop();
     }
 
