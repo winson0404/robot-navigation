@@ -85,9 +85,9 @@ class CommNode(Node):
             constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE: (0.0, medium_counter_clockwise_radian, 280),
             constant.DECISION_MEDIUM_ROTATE_CLOCKWISE: (0.0, medium_clockwise_radian, 280),
             constant.DECISION_MEDIUM_ROTATE_BOTH_DIRECTION: (0.0, random.choice([medium_counter_clockwise_radian, medium_clockwise_radian]), 280),
-            constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE: (0.0, big_counter_clockwise_radian, 380),
-            constant.DECISION_BIG_ROTATE_CLOCKWISE: (0.0, big_clockwise_radian, 380),
-            constant.DECISION_BIG_ROTATE_BOTH_DIRECTION: (0.0, random.choice([big_counter_clockwise_radian, big_clockwise_radian]), 380)
+            constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE: (0.0, big_counter_clockwise_radian, 360),
+            constant.DECISION_BIG_ROTATE_CLOCKWISE: (0.0, big_clockwise_radian, 360),
+            constant.DECISION_BIG_ROTATE_BOTH_DIRECTION: (0.0, random.choice([big_counter_clockwise_radian, big_clockwise_radian]), 360)
         }
         
         if self.map == constant.MAP1:

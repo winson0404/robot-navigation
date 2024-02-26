@@ -43,6 +43,8 @@ def calibrate_velocity():
                 if delay < 0:
                     radian = -1.5
                     delay = -delay
+                else:
+                    radian = 1.5
                 # print("2. Retrieve sensor data")
                 
                 print(f"Sending data of velocity: {0} and radian: {radian} with delay: {delay}")
@@ -57,7 +59,7 @@ def calibrate_velocity():
 
         except:
             print("Invalid input")
-            continue
+            breakpoint()
 
 if __name__ == "__main__":
     calibrate_velocity()
