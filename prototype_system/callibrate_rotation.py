@@ -19,6 +19,9 @@ def calibrate_rotation_angle():
         # radian, delay = user_input.split(" ")
         radian = 1
         delay = int(user_input)
+        if delay < 0:
+            radian = -1
+            delay = -delay
         # print("2. Retrieve sensor data")
         
         move = 1

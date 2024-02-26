@@ -16,9 +16,9 @@ def calibrate_velocity():
     while True:
         
         # velocity = int(float(input("Enter velocity): "))*100)
-        user_input = int(input("Enter velocity time"))
+        user_input = int(input("Enter velocity time: "))
         # velocity, delay = user_input.split(" ")
-        velocity = 150
+        velocity = 150*100
         # delay(int(delay))
         delay = user_input
         # print("2. Retrieve sensor data")
