@@ -27,7 +27,7 @@ def calibrate_velocity():
         
         if move == 1:
             
-            print(f"Sending data of velocity: {velocity} and radian: {0.0}")
+            print(f"Sending data of velocity: {velocity/100} and radian: {0.0} with delay: {delay}")
             task = 30
             data_size = [2, 2, 2]
             data = [velocity, 0, delay]
