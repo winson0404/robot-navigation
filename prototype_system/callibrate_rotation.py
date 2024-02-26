@@ -31,7 +31,7 @@ def calibrate_rotation_angle():
             print(f"Sending data of velocity: {0} and radian: {radian} with delay: {delay}")
             task = 30
             data_size = [2, 2, 2]
-            data = [0, radian*100, delay]
+            data = [0, int(radian*100), delay]
             send_data = structure_data(start_marker, end_marker, task, data_size, data)
             # breakpoint()
             sendToArduino(serial_port, send_data)
