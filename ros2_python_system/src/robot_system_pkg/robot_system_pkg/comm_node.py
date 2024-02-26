@@ -57,8 +57,8 @@ class CommNode(Node):
             send_data = structure_data(constant.STARTMARKER, constant.ENDMARKER, task, data_size, data)
             
             self.ser.send_bytearray(send_data)
-            self.ser.receive_acknowledgement()
-            time.sleep(1)
+            # self.ser.receive_acknowledgement()
+            # time.sleep(0.5)
             print("Done move")
             
         # quit node
