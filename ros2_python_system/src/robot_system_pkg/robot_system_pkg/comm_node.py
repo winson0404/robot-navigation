@@ -79,7 +79,11 @@ class CommNode(Node):
         
         decision_map = {
             constant.DECISION_MOVE_FRONT: (velocity, 0.0, 500),
-            constant.DECISION_MOVE_FRONT_SMALL: (velocity, 0.0, 100),
+            constant.DECISION_MOVE_FRONT_SMALL: (velocity, 0.0, 200),
+            constant.DECISION_MOVE_FRONT_BIG: (velocity, 0.0, 1000),
+            constant.DECISION_MOVE_FRONT_VERY_BIG: (velocity, 0.0, 5000),
+            constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE: (0.0, small_counter_clockwise_radian, 100),
+            constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE: (0.0, small_clockwise_radian, 100),
             constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE: (0.0, small_counter_clockwise_radian, 190),
             constant.DECISION_SMALL_ROTATE_CLOCKWISE: (0.0, small_clockwise_radian, 190),
             constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE: (0.0, medium_counter_clockwise_radian, 280),
@@ -94,57 +98,81 @@ class CommNode(Node):
             if self.destination == constant.DESTINATION1:
                 return [
                         decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MEDIUM_ROTATE_CLOCKWISE], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MEDIUM_ROTATE_CLOCKWISE],
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
+                        decision_map[constant.DECISION_MOVE_FRONT],
+                        decision_map[constant.DECISION_MOVE_FRONT],
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
+                        decision_map[constant.DECISION_MOVE_FRONT_SMALL],
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
-                        decision_map[constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE],
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_MOVE_FRONT],
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL]
                     ]
             else:
                 return [
+                        decision_map[constant.DECISION_MOVE_FRONT],  
+                        decision_map[constant.DECISION_MEDIUM_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT],
                         decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
                         decision_map[constant.DECISION_MOVE_FRONT],
                     ]
         elif self.map == constant.MAP2:
             if self.destination == constant.DESTINATION1:
                 return [
                         decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
-                        decision_map[constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE], 
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL]
                     ]
             else:
                 return [
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT],
+                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
                         decision_map[constant.DECISION_SMALL_ROTATE_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_SMALL_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_SMALL_ROTATE_CLOCKWISE]
+                        decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
+                        decision_map[constant.DECISION_MOVE_FRONT]
                     ]
 
         elif self.map == constant.MAP3:
             if self.destination == constant.DESTINATION1:
                 return [
-                        decision_map[constant.DECISION_MEDIUM_ROTATE_COUNTER_CLOCKWISE], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MEDIUM_ROTATE_CLOCKWISE], 
-                        decision_map[constant.DECISION_MOVE_FRONT]
+                        decision_map[constant.DECISION_MOVE_FRONT_VERY_BIG], 
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT_VERY_BIG], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT_BIG]
                     ]
             else:
                 return [
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
-                        decision_map[constant.DECISION_MOVE_FRONT], 
                         decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL],
-                        decision_map[constant.DECISION_MOVE_FRONT_SMALL]
+                        decision_map[constant.DECISION_BIG_ROTATE_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT_BIG], 
+                        decision_map[constant.DECISION_MOVE_FRONT_BIG], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
+                        decision_map[constant.DECISION_MOVE_FRONT_VERY_BIG]
                     ]
 
             
