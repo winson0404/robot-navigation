@@ -14,11 +14,11 @@ def calibrate_rotation_angle():
     start_marker = 60
     end_marker = 62
     while True:
-        user_input = input("Enter angle in radian: ")
+        user_input = input("Enter rotation time: ")
         
-        radian, delay = user_input.split(" ")
-        radian = int(float(radian)*100)
-        delay = int(delay)
+        # radian, delay = user_input.split(" ")
+        radian = 1
+        delay = int(user_input)
         # print("2. Retrieve sensor data")
         
         move = 1
