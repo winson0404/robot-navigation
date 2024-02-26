@@ -58,7 +58,7 @@ class CommNode(Node):
             
             self.ser.send_bytearray(send_data)
             # self.ser.receive_acknowledgement()
-            # time.sleep(0.5)
+            time.sleep(500)
             print("Done move")
             
         # quit node
