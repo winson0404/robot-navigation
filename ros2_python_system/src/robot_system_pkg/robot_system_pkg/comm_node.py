@@ -101,6 +101,7 @@ class CommNode(Node):
                         decision_map[constant.DECISION_MEDIUM_ROTATE_CLOCKWISE],
                         decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
                         decision_map[constant.DECISION_MOVE_FRONT],
+                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
                         decision_map[constant.DECISION_MOVE_FRONT],
                         decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
                         decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_CLOCKWISE],
