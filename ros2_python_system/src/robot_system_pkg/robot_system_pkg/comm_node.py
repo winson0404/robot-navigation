@@ -108,8 +108,9 @@ class CommNode(Node):
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL],
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
                         decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
-                        decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE], 
+                        # decision_map[constant.DECISION_ULTRA_SMALL_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT], 
+                        decision_map[constant.DECISION_BIG_ROTATE_COUNTER_CLOCKWISE], 
                         decision_map[constant.DECISION_MOVE_FRONT],
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL], 
                         decision_map[constant.DECISION_MOVE_FRONT_SMALL]
