@@ -33,6 +33,7 @@ class UART_Serial:
             x = self.ser.read()
 
             if self.ser.in_waiting == 0:
+                print("End Marker not found")
                 return data, byteCount, status
         
 
@@ -48,9 +49,13 @@ class UART_Serial:
             
         status = constants.ACKNOWLEDGEMENT_SUCCESS
         
-        if packet_length<=2 or byteCount != packet_length:
-            status = constants.ACKNOWLEDGEMENT_FAIL
+        if byteCount == 1:
+            return data, byteCount, status
         
+        elif byteCount != packet_length:
+            print(f"Packet length miss match: packet_length: {packet_length} vs byte_count: {byteCount}")
+            status = constants.ACKNOWLEDGEMENT_FAIL
+
         return data, byteCount, status
     
 
@@ -82,7 +87,7 @@ class UART_Serial:
         self.ser.write(list_to_bytearray(output))
         while self.ser.out_waiting > 0:
             pass
-        
+
     def receive_acknowledgement(self)->int:
         start_time = time.time()
         while True:

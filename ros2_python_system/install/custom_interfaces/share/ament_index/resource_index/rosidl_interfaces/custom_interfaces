@@ -1,5 +1,7 @@
 msg/InferenceResult.idl
 msg/InferenceResult.msg
+msg/MovementCommand.idl
+msg/MovementCommand.msg
 msg/SensorStatus.idl
 msg/SensorStatus.msg
 srv/ControlMovement.idl
